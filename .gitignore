@@ -3,3 +3,4 @@
 **/src/main/resources/apiKeys.properties
 **/src/main/resources/database.properties
 /target/
+/bin/
