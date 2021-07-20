@@ -94,6 +94,33 @@
 		    <version>6.2.0</version>
 		</dependency>
 		
+		<!-- CSV file reader -->
+		<dependency>
+		    <groupId>com.opencsv</groupId>
+		    <artifactId>opencsv</artifactId>
+		    <version>5.5</version>
+		</dependency>
+		
+		<!-- Command line interface -->
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        
+        <!-- Matrix lib. -->
+        <dependency>
+		    <groupId>org.ejml</groupId>
+		    <artifactId>ejml-all</artifactId>
+		    <version>0.38</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-math3</artifactId>
+		    <version>3.6.1</version>
+		</dependency>
+		
 
     </dependencies>
     <build>
