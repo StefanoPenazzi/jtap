@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
+import config.Config;
 import data.utils.io.CSV;
 
 public final class GTFS {
@@ -17,17 +18,19 @@ public final class GTFS {
 	private List<Trip> trips;
 	
 	private final String ROUTESFILE = "routes.csv"; 
-	private final String STOPSFILE = "routes.csv";
-	private final String STOPSTIMESFILE = "routes.csv";
-	private final String TRANSFERSFILE = "routes.csv";
-	private final String TRIPSFILE = "routes.csv";
+	private final String STOPSFILE = "stops.csv";
+	private final String STOPSTIMESFILE = "stop_times.csv";
+	private final String TRANSFERSFILE = "transfers.csv";
+	private final String TRIPSFILE = "trips.csv";
 	
 	private final String gtfsDirectory;
+	private Config config;
 	
 	@Inject
-	public GTFS() throws IOException{
+	public GTFS(Config config) throws IOException{
 		
-		gtfsDirectory = "";
+		this.config = config;
+		gtfsDirectory = this.config.getGTFSConfig().getGTFSDirectory();
 		initialize();
 	} 
 	
@@ -39,6 +42,20 @@ public final class GTFS {
 		this.trips = CSV.getList(new File(gtfsDirectory+TRIPSFILE),Trip.class,1);
 	}
 	
-	
+	public List<Route> getRoutes(){
+		return this.routes;
+	}
+	public List<Stop> getStops(){
+		return this.stops;
+	}
+	public List<StopTime> getStopTimes(){
+		return this.stopTimes;
+	}
+	public List<Transfer> getTransfers(){
+		return this.transfers;
+	}
+	public List<Trip> getTrips(){
+		return this.trips;
+	}
 
 }

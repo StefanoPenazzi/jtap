@@ -1,21 +1,29 @@
 package data.external.gtfs;
 
+import java.time.LocalTime;
 import java.util.Date;
 
+import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvCustomBindByPosition;
+import com.opencsv.bean.CsvDate;
+import com.opencsv.exceptions.CsvConstraintViolationException;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
 
 public final class StopTime {
 	
 	@CsvBindByPosition(position = 0)
 	private String tripId;
-	@CsvBindByPosition(position = 1)
-	private Date arrivalTime;
-	@CsvBindByPosition(position = 2)
-	private Date departureTime;
+	
+	@CsvCustomBindByPosition(position = 1, converter = LocalTimeConverterGTFS.class)
+	private LocalTime arrivalTime;
+	
+	@CsvCustomBindByPosition(position = 2, converter = LocalTimeConverterGTFS.class)
+	private LocalTime departureTime;
 	@CsvBindByPosition(position = 3)
 	private String stopId;
 	@CsvBindByPosition(position = 4)
-	private Boolean stopSequence;
+	private Byte stopSequence;
 	@CsvBindByPosition(position = 5)
 	private Boolean stopHeadsign;
 	@CsvBindByPosition(position = 6)
@@ -29,16 +37,16 @@ public final class StopTime {
 	public String getTripId() {
 		return this.tripId;
 	}
-	public Date getArrivalTime() {
+	public LocalTime getArrivalTime() {
 		return this.arrivalTime;
 	}
-	public Date getDepartureTime() {
+	public LocalTime getDepartureTime() {
 		return this.departureTime;
 	}
 	public String getStopId() {
 		return this.stopId;
 	}
-	public Boolean getStopSequence() {
+	public Byte getStopSequence() {
 		return this.stopSequence;
 	}
 	public Boolean getStopHeadsign() {

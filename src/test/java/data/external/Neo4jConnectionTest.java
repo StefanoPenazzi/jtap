@@ -20,5 +20,6 @@ class Neo4jConnectionTest {
 			System.out.println(res.get(0).toString());
 	    }
 	}
+	
 
 }
