@@ -1,4 +1,4 @@
-package data.external.gtfs;
+package data.external.rail;
 
 import com.opencsv.bean.CsvBindByPosition;
 

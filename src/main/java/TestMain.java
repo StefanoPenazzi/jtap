@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 import config.Config;
 import config.GTFSConfig;
 import controller.Controller;
-import data.external.gtfs.GTFS;
-import data.external.gtfs.Utils;
+import data.external.rail.GTFS;
+import data.external.rail.Utils;
 import picocli.CommandLine;
 
 public class TestMain implements Callable<Integer> {
@@ -39,7 +39,8 @@ public class TestMain implements Callable<Integer> {
 		Controller controller = new Controller(config);
 		controller.run();
 		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
-		Utils.getLinks(gtfs);
+		Utils.deleteGTFS("osm");
+		Utils.insertGTFSintoNEO4J(gtfs,"osm",controller.getInjector().getInstance(Config.class),"Intersection");
 		return 1;
 	}
 	

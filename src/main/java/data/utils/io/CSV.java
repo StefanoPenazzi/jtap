@@ -6,8 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.protobuf.Method;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -33,7 +35,7 @@ public static <T> List<T> getList(File fileName, Class<T> type, Integer skipLine
 	public static <T> void writeTo(File fileName,List<T> inputList) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
 		Class<T> type;
 		try (FileWriter writer = new FileWriter(fileName)) {
-		    ColumnPositionMappingStrategy<T> mappingStrategy =  new ColumnPositionMappingStrategy<T>();
+			HeaderColumnNameMappingStrategy<T> mappingStrategy =  new HeaderColumnNameMappingStrategy<T>();
 		    mappingStrategy.setType((Class<? extends T>) inputList.get(0).getClass());
 		    StatefulBeanToCsv<T> beanWriter = new StatefulBeanToCsvBuilder<T>(writer)
 		        .withMappingStrategy(mappingStrategy)
@@ -42,7 +44,6 @@ public static <T> List<T> getList(File fileName, Class<T> type, Integer skipLine
 		    beanWriter.write(inputList);
 		}
 	}
-	
 	
 	public static void writeTo(File fileName,String s) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
 

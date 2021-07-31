@@ -17,6 +17,16 @@
 		    <url>http://repo.nm.dev/maven/</url>
 		    <layout>default</layout>
 		</repository>
+	    <repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+		
+		<repository>
+			<id>osgeo</id>
+			<name>Geotools repository</name>
+			<url>http://download.osgeo.org/webdav/geotools</url>
+		</repository>
 	 </repositories>
 
     <dependencies>
@@ -147,6 +157,22 @@
 		    <artifactId>javatuples</artifactId>
 		    <version>1.2</version>
 		  </dependency>
+		  
+		  <dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-main</artifactId>
+			<version>21.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-referencing</artifactId>
+			<version>21.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-shapefile</artifactId>
+			<version>21.1</version>
+		</dependency>
 
     </dependencies>
     <build>

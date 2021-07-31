@@ -14,19 +14,30 @@ import jakarta.xml.bind.annotation.XmlElement;
 public final class Config {
 	
 	private GTFSConfig gtfsConfig;
+	private GeneralConfig generalConfig;
 	
 	@XmlElement(name = "gtfsConfig")
 	public GTFSConfig getGTFSConfig() {
 		return this.gtfsConfig;
 	}
 	
+	//@XmlElement(name = "generalConfig")
+	public GeneralConfig getGeneralConfig() {
+		return this.generalConfig;
+	}
+	
 	public void setGTFSConfig(GTFSConfig gtfsConfig) {
 		this.gtfsConfig = gtfsConfig;
 	}
 	
+	public void setGeneralConfig(GeneralConfig generalConfig) {
+		this.generalConfig = generalConfig;
+	}
+	
 	public Config() {}
-	public Config(GTFSConfig gtfsConfig) {
+	public Config(GTFSConfig gtfsConfig,GeneralConfig generalConfig) {
 		this.gtfsConfig = gtfsConfig;
+		this.generalConfig = generalConfig;
 	}
 	
 	public static Config of(File file) {
