@@ -1,4 +1,4 @@
-package data.external.rail;
+package data.external.rail.gtfs;
 
 import java.io.File;
 import java.io.IOException;

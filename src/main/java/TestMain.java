@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 import config.Config;
 import config.GTFSConfig;
 import controller.Controller;
-import data.external.rail.GTFS;
 import data.external.rail.Utils;
+import data.external.rail.gtfs.GTFS;
 import picocli.CommandLine;
 
 public class TestMain implements Callable<Integer> {

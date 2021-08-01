@@ -14,6 +14,9 @@ import org.neo4j.driver.Value;
 
 import config.Config;
 import data.external.neo4j.Neo4jConnection;
+import data.external.rail.gtfs.GTFS;
+import data.external.rail.gtfs.StopTime;
+import data.external.rail.gtfs.Transfer;
 import data.utils.geo.Gis;
 import data.utils.io.CSV;
 import data.utils.woods.kdTree.KdTree;
