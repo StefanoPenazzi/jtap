@@ -18,6 +18,7 @@ public class Neo4jConnection implements AutoCloseable {
 	private final String uri;
 	private final String username;
 	private final String password;
+	private Session session_ = null;
 	
 	public Neo4jConnection()
     {
@@ -89,13 +90,12 @@ public class Neo4jConnection implements AutoCloseable {
 		return res;
 	}
 	
-	
-	
 	@Override
     public void close() throws Exception
     {
         driver.close();
         logger.log(Level.INFO," Neo4j Driver Off ") ;
     }
+	
 
 }

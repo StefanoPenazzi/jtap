@@ -1,4 +1,4 @@
-package data.external.rail.gtfs;
+package core.graph.rail.gtfs;
 
 import java.util.Date;
 

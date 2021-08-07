@@ -1,4 +1,4 @@
-package data.external.rail;
+package core.graph.rail;
 
 import java.time.LocalTime;
 

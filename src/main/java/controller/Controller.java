@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import config.Config;
@@ -32,5 +33,13 @@ public class Controller implements ControllerI {
 	
 	public static com.google.inject.Injector getInjector(){
 		return injector;
+	}
+	
+	public static void emptyTempDirectory() {
+		File directory = new File(getInjector().getInstance(Config.class).getGeneralConfig().getTempDirectory());
+		File[] files = directory.listFiles();    
+		for(File file : files) {
+		  file.delete();
+		}
 	}
 }

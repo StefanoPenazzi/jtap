@@ -1,4 +1,4 @@
-package data.external.rail;
+package core.graph.rail;
 
 import java.io.File;
 import java.time.LocalTime;
@@ -13,15 +13,19 @@ import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 
 import config.Config;
+import core.graph.rail.gtfs.GTFS;
+import core.graph.rail.gtfs.StopTime;
+import core.graph.rail.gtfs.Transfer;
 import data.external.neo4j.Neo4jConnection;
-import data.external.rail.gtfs.GTFS;
-import data.external.rail.gtfs.StopTime;
-import data.external.rail.gtfs.Transfer;
 import data.utils.geo.Gis;
 import data.utils.io.CSV;
 import data.utils.woods.kdTree.KdTree;
 
 
+/**
+ * @author stefanopenazzi
+ *
+ */
 public final class Utils {
 	
 	public static String STOPSFILE = "/stops.csv";
@@ -30,6 +34,9 @@ public final class Utils {
 	public static String RAILNODE = "RailNode";
 	public static String RAILLINK = "RailLink";
 	public static String RAILTRANSFERLINK = "RailTransferLink";
+	public static String NODE = core.graph.Node.ROUTABLE.getValue();
+	public static String LINK = core.graph.Link.ROUTABLE.getValue();
+			
 	
 	/**
 	 * 
@@ -40,9 +47,9 @@ public final class Utils {
 	 * @param nodes : array containing the nodes types that have to be connected with the GTFS network
 	 * @throws Exception
 	 */
-	public static void insertGTFSintoNEO4J(GTFS gtfs,String database,Config config,String... nodes) throws Exception {
+	public static void insertRailGTFSintoNEO4J(GTFS gtfs,String database,Config config,String... nodes) throws Exception {
 		List<RailLink> railLinks = getRailLinks(gtfs);
-		List<RailTransferLink> transferLinks = getTransferLinks(gtfs);
+		List<RailTransferLink> transferLinks = getRailTransferLinks(gtfs);
 		String tempDirectory = config.getGeneralConfig().getTempDirectory();
 		//LOAD USING CSV
 		//NODES
@@ -58,24 +65,24 @@ public final class Utils {
 			
 			//NODES
 			conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+STOPSFILE+"\" AS csvLine "
-					+ "CREATE (p:"+RAILNODE+" {stop_id: csvLine.STOP_ID, stop_name: csvLine.STOP_NAME,"
+					+ "CREATE (p:"+RAILNODE+":"+NODE+" {stop_id: csvLine.STOP_ID, stop_name: csvLine.STOP_NAME,"
 					+ "stop_lat: toFloat(csvLine.STOP_LAT), stop_lon: toFloat(csvLine.STOP_LON)})",AccessMode.WRITE );
 			//LINKS RAIL
 			conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+RAILLINKSFILE+"\" AS csvLine "
 					+ "MATCH (sf:"+RAILNODE+" {stop_id:csvLine.STOP_FROM}),(st:"+RAILNODE+" {stop_id:csvLine.STOP_TO})"
-					+ "CREATE (sf)-[:RailLink {avg_travel_time:toFloat(csvLine.AVG_TRAVEL_TIME),connections_per_day:toInteger(csvLine.CONNECTIONS_PER_DAY),"
+					+ "CREATE (sf)-[:"+RAILLINK+" {avg_travel_time:toFloat(csvLine.AVG_TRAVEL_TIME),connections_per_day:toInteger(csvLine.CONNECTIONS_PER_DAY),"
 					+ "first_dep_time:csvLine.FIRST_DEP_TIME,last_dep_time:csvLine.LAST_DEP_TIME}]->(st)",AccessMode.WRITE );
 			//LINKS TRANSFER
 			conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+TRANSFERLINKSFILE+"\" AS csvLine "
 					+ "MATCH (sf:"+RAILNODE+" {stop_id:csvLine.STOP_FROM}),(st:"+RAILNODE+" {stop_id:csvLine.STOP_TO})"
-					+ "CREATE (sf)-[:TransferLink {avg_travel_time:toFloat(csvLine.AVG_TRAVEL_TIME)}]->(st)",AccessMode.WRITE );
+					+ "CREATE (sf)-[:"+RAILTRANSFERLINK+" {avg_travel_time:toFloat(csvLine.AVG_TRAVEL_TIME)}]->(st)",AccessMode.WRITE );
 	    }
 		
 		connectRailNodes(database,tempDirectory,nodes);
 		
 	}
 	
-	public static void deleteGTFS(String database) throws Exception {
+	public static void deleteRailGTFS(String database) throws Exception {
          try( Neo4jConnection conn = new Neo4jConnection()){  
 			//delete from the db all the rail nodes and links
 			conn.query(database,"MATCH (n:"+RAILNODE+") DETACH DELETE n;",AccessMode.WRITE );
@@ -119,7 +126,7 @@ public final class Utils {
 				}
 			}
 			
-			
+			//insert  otherNodes in a KD-TREE structure to facilitate the research of the closest to the railNode
 			KdTree kdt = new KdTree(2,kdtNodes);
 			List<RailRoadLink> links = new ArrayList<>();
 			
@@ -142,8 +149,6 @@ public final class Utils {
 						break;	
 				    }
 				}
-				System.out.println();
-				
 			}
 			
 			CSV.writeTo(new File(tempDirectory+"/Rail"+node+".csv"),links);
@@ -151,13 +156,16 @@ public final class Utils {
 				//TODO metti .csv nel file non solo nodew
 				conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+"/Rail"+node+".csv"+"\" AS csvLine "
 						+ "MATCH (sf:"+RAILNODE+" {stop_id:csvLine.STOP_FROM}),(st:"+node+" {node_osm_id:toInteger(csvLine.ROAD_TO)})"
-						+ "CREATE (sf)-[:Rail"+node+"Link {distance:toInteger(csvLine.DISTANCE)}]->(st)",AccessMode.WRITE );
+						+ "CREATE (sf)-[:Rail"+node+"Link {distance:toInteger(csvLine.DISTANCE),avg_travel_time:10}]->(st)",AccessMode.WRITE );
 			}
 		}
-		System.out.println();
 	}
 	
-	public static Map<Pair<String,String>, List<Connection>> getConnections(GTFS gtfs){
+	/**
+	 * @param gtfs
+	 * @return
+	 */
+	public static Map<Pair<String,String>, List<Connection>> getRailConnections(GTFS gtfs){
 		List<Connection> connections = new ArrayList<>();
 		List<StopTime> stopTime = gtfs.getStopTimes();
 		Map<String, List<StopTime>> tripStops = stopTime.stream()
@@ -182,9 +190,13 @@ public final class Utils {
 	
 	
 	
+	/**
+	 * @param gtfs
+	 * @return
+	 */
 	public static List<RailLink> getRailLinks(GTFS gtfs){
 		List<RailLink> links = new ArrayList<>();
-		Map<Pair<String,String>, List<Connection>> connections = getConnections(gtfs);
+		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs);
 		for (var entry : connections.entrySet()) {
 			
 			String from = entry.getKey().getValue0();
@@ -201,7 +213,11 @@ public final class Utils {
 		return links;
 	}
 	
-	public static List<RailTransferLink> getTransferLinks(GTFS gtfs){
+	/**
+	 * @param gtfs
+	 * @return
+	 */
+	public static List<RailTransferLink> getRailTransferLinks(GTFS gtfs){
 		List<RailTransferLink> transferLinks = new ArrayList<>();
 		List<Transfer> transfers = gtfs.getTransfers();
 		

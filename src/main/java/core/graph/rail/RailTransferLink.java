@@ -1,4 +1,4 @@
-package data.external.rail;
+package core.graph.rail;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
