@@ -1,12 +1,9 @@
 package core.graph;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.Record;
-
 import data.external.neo4j.Neo4jConnection;
 
 class UtilsTest {
