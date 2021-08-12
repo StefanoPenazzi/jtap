@@ -10,13 +10,10 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.neo4j.driver.AccessMode;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
-import org.neo4j.graphalgo.WeightedPath;
-import org.neo4j.graphdb.Node;
 
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.cross.CrossLink;
-import core.graph.rail.RailLink;
 import data.external.neo4j.Neo4jConnection;
 import data.utils.geo.Gis;
 import data.utils.io.CSV;
@@ -28,6 +25,18 @@ import data.utils.woods.kdTree.KdTree;
  */
 public class Utils {
 	
+	
+    public static <T extends NodeI> void insertNodesIntoNeo4J(String database,List<T> nodes,
+    		String tempDirectory,Class<T> nodeClass) throws Exception {
+		data.external.neo4j.Utils.insertNodes(database,tempDirectory,nodes);
+	}
+	
+	public static <T extends NodeI> void insertNodesIntoNeo4J(String database,String fileCsv,
+			String tempDirectory,Class<T> nodeClass) throws Exception {
+		
+		List<T> nodes = CSV.getListByHeaders(new File(fileCsv),nodeClass);
+		insertNodesIntoNeo4J(database,nodes,tempDirectory,nodeClass); 
+	}
 	
 	
 	/**
@@ -47,49 +56,32 @@ public class Utils {
 	 * @throws Exception
 	 */
 	public static List<Record>  getShortestPathAStar(final String database,final String graphName,final String nsLabel,final String nsPropertyKey,final String nsPropertyValue,
-			final String neLabel,final String nePropertyKey,final String nePropertyValue,
-			final String latitudeProperty,final String longitudeProperty,final String relationshipWeightProperty,
-			final String nodeIdRes) throws Exception {
-		
-		    String query = "MATCH (source:"+nsLabel+" {"+nsPropertyKey+": '"+nsPropertyValue+"'}), (target:"+neLabel+" {"+nePropertyKey+":'"+nePropertyValue+"'})"
-        			+ " CALL gds.beta.shortestPath.astar.stream('"+graphName+"', {"
-        			+ " sourceNode: id(source),"
-        			+ " targetNode: id(target),"
-        			+ " latitudeProperty: '"+latitudeProperty+"',"
-        			+ " longitudeProperty: '"+longitudeProperty+"',"
-        			+ " relationshipWeightProperty: '"+relationshipWeightProperty+"'"
-        			+ "}) "
-        			+ "YIELD index, sourceNode, targetNode, totalCost, nodeIds, costs "
-        			+ "RETURN "
-        			+ "index,"
-        			+ "gds.util.asNode(sourceNode)."+nodeIdRes+" AS sourceNodeName,"
-        			+ "gds.util.asNode(targetNode)."+nodeIdRes+" AS targetNodeName,"
-        			+ "totalCost,"
-        			+ "[nodeId IN nodeIds | gds.util.asNode(nodeId)."+nodeIdRes+"] AS nodeNames,"
-        			+ "costs "
-        			+ "ORDER BY index;";
-		    
-		    List<Record> res= data.external.neo4j.Utils.runQuery(database,query,AccessMode.READ);
-		
+		final String neLabel,final String nePropertyKey,final String nePropertyValue,
+		final String latitudeProperty,final String longitudeProperty,final String relationshipWeightProperty,
+		final String nodeIdRes) throws Exception {
+	
+	    String query = "MATCH (source:"+nsLabel+" {"+nsPropertyKey+": '"+nsPropertyValue+"'}), (target:"+neLabel+" {"+nePropertyKey+":'"+nePropertyValue+"'})"
+    			+ " CALL gds.beta.shortestPath.astar.stream('"+graphName+"', {"
+    			+ " sourceNode: id(source),"
+    			+ " targetNode: id(target),"
+    			+ " latitudeProperty: '"+latitudeProperty+"',"
+    			+ " longitudeProperty: '"+longitudeProperty+"',"
+    			+ " relationshipWeightProperty: '"+relationshipWeightProperty+"'"
+    			+ "}) "
+    			+ "YIELD index, sourceNode, targetNode, totalCost, nodeIds, costs "
+    			+ "RETURN "
+    			+ "index,"
+    			+ "gds.util.asNode(sourceNode)."+nodeIdRes+" AS sourceNodeName,"
+    			+ "gds.util.asNode(targetNode)."+nodeIdRes+" AS targetNodeName,"
+    			+ "totalCost,"
+    			+ "[nodeId IN nodeIds | gds.util.asNode(nodeId)."+nodeIdRes+"] AS nodeNames,"
+    			+ "costs "
+    			+ "ORDER BY index;";
+	    
+	    List<Record> res= data.external.neo4j.Utils.runQuery(database,query,AccessMode.READ);
 		return res;
 	}
 	
-	public static WeightedPath getShortestPathDijkstra(String weight,String graphName,final Node start, Node end) {
-		return null;
-	}
-	
-	/**
-	 * @param conn
-	 * @param database
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<Record> getCatalog(Neo4jConnection conn,String database) throws Exception{
-		List<Record> res = null;
-		res= conn.query(database," CALL gds.graph.list()"
-			 		+ " YIELD graphName,database, nodeCount, relationshipCount, schema;",AccessMode.READ);
-		return res;
-	}
 	
 	/**
 	 * @param <T>

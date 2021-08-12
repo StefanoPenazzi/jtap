@@ -22,6 +22,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.rail.RailLink;
 import data.utils.io.CSV;
+import data.utils.io.OS;
 
 /**
  * @author stefanopenazzi
@@ -106,7 +107,7 @@ public class Utils {
 	public static  String getLoadCSVLinkQuery(String file, Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty, String sfCsvProperty,
 			Class<? extends NodeI> stNodeElement, String stProperty, String stCsvProperty) throws Exception {
 		
-		//TODO separare questo in una classe per il controllo a se
+		
 		if(!linkElement.isAnnotationPresent(Neo4JLinkElement.class)) {
 			throw new Exception(linkElement.getName() +" is not annotated with Neo4JLinkElement");
 		}
@@ -186,7 +187,7 @@ public class Utils {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVNodeQuery(tempDirectory+"/"+fileName,nodes.get(0).getClass()),AccessMode.WRITE );
 	    }
-		//TODO cancella file 
+		OS.delete(new File(tempDirectory+"/"+fileName));
     }
     
     /**
@@ -217,7 +218,7 @@ public class Utils {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(tempDirectory+"/"+
 		fileName,linkElement,sfNodeElement,sfProperty,sfCsvProperty,stNodeElement,stProperty,stCsvProperty),AccessMode.WRITE );
-			//TODO cancella file
+		OS.delete(new File(tempDirectory+"/"+fileName));
 	    }
     }
     

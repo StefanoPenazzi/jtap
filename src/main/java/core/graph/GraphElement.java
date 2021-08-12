@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.opencsv.bean.CsvBindByName;
+
 import core.graph.annotations.GraphElementAnnotation;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 
@@ -35,7 +37,7 @@ public interface GraphElement {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	default Object getPropertyValue(String s) throws IllegalArgumentException, IllegalAccessException {
+	default Object getPropertyNeo4JValue(String s) throws IllegalArgumentException, IllegalAccessException {
 		Field[] fields = this.getClass().getFields();
 	    for(Field f : fields) {
 	    	if(f.isAnnotationPresent(Neo4JPropertyElement.class)) {
@@ -60,6 +62,24 @@ public interface GraphElement {
 	    	if(f.isAnnotationPresent(Neo4JPropertyElement.class)) {
 	    		if(f.getAnnotation(Neo4JPropertyElement.class).key().equals(s)) {
 	    			return f.getAnnotation(Neo4JPropertyElement.class).type();
+	    		}
+	    	}
+	    }
+	    return null;
+	 }
+	
+	/**
+	 * @param s
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	default String getCsvHeaderFromPropertyNeo4J(String s) throws IllegalArgumentException, IllegalAccessException {
+		Field[] fields = this.getClass().getFields();
+	    for(Field f : fields) {
+	    	if(f.isAnnotationPresent(Neo4JPropertyElement.class) && f.isAnnotationPresent(CsvBindByName.class)) {
+	    		if(f.getAnnotation(Neo4JPropertyElement.class).key().equals(s)) {
+	    			return f.getAnnotation(CsvBindByName.class).column();
 	    		}
 	    	}
 	    }

@@ -16,9 +16,7 @@ import data.utils.io.CSV;
 public class Utils {
 	
 	public static <T extends City> void insertCitiesIntoNeo4JFromCsv(String database,Config config,Class<T> cityClass) throws Exception {
-		
-		List<T> cities = CSV.getListByHeaders(new File(config.getGeoLocConfig().getCitiesFile()),cityClass);
-		data.external.neo4j.Utils.insertNodes(database,config.getGeneralConfig().getTempDirectory(),cities);
+		core.graph.Utils.insertNodesIntoNeo4J(database,config.getGeoLocConfig().getCitiesFile(),config.getGeneralConfig().getTempDirectory(),cityClass);
 	}
 	
 	public static <T extends City> void insertAndConnectCitiesIntoNeo4JFromCsv(String database,Config config,Class<T> cityClass,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {

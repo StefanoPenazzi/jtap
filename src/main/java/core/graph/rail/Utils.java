@@ -45,7 +45,6 @@ public final class Utils {
 	
 	public static void deleteRailGTFS(String database) throws Exception {
          try( Neo4jConnection conn = new Neo4jConnection()){  
-			//delete from the db all the rail nodes and links
 			conn.query(database,"MATCH (n:RailNode) DETACH DELETE n;",AccessMode.WRITE );
          }
 	}

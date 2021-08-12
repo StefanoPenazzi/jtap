@@ -64,10 +64,10 @@ public class TestMain implements Callable<Integer> {
 		cityConnMap.put(Stop.class, "id");
 		core.graph.Utils.setShortestDistCrossLink("osm", config.getGeneralConfig().getTempDirectory(),City.class,"city",cityConnMap);
 		
-		Map<Class<? extends NodeGeoI>,String> intersectionConnMap = new HashMap<>();
-		intersectionConnMap.put(City.class,"city");
-		intersectionConnMap.put(Stop.class, "id");
-		core.graph.Utils.setShortestDistCrossLink("osm", config.getGeneralConfig().getTempDirectory(),Intersection.class,"node_osm_id",intersectionConnMap);
+//		Map<Class<? extends NodeGeoI>,String> intersectionConnMap = new HashMap<>();
+//		intersectionConnMap.put(City.class,"city");
+//		intersectionConnMap.put(Stop.class, "id");
+//		core.graph.Utils.setShortestDistCrossLink("osm", config.getGeneralConfig().getTempDirectory(),Intersection.class,"node_osm_id",intersectionConnMap);
 		
 		return 1;
 	}
