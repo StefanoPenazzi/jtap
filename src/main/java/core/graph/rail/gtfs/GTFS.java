@@ -36,7 +36,7 @@ public final class GTFS {
 	
 	private void initialize() throws IOException {
 		this.routes = CSV.getList(new File(gtfsDirectory+ROUTESFILE),Route.class,1);
-		this.stops = CSV.getList(new File(gtfsDirectory+STOPSFILE),Stop.class,1);
+		this.stops = CSV.getListByHeaders(new File(gtfsDirectory+STOPSFILE),Stop.class);
 		this.stopTimes = CSV.getList(new File(gtfsDirectory+STOPSTIMESFILE),StopTime.class,1);
 		this.transfers = CSV.getList(new File(gtfsDirectory+TRANSFERSFILE),Transfer.class,1);
 		this.trips = CSV.getList(new File(gtfsDirectory+TRIPSFILE),Trip.class,1);

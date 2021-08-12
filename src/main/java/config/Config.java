@@ -15,6 +15,7 @@ public final class Config {
 	
 	private GTFSConfig gtfsConfig;
 	private GeneralConfig generalConfig;
+	private GeoLocConfig geoLocConfig;
 	
 	@XmlElement(name = "gtfsConfig")
 	public GTFSConfig getGTFSConfig() {
@@ -26,6 +27,10 @@ public final class Config {
 		return this.generalConfig;
 	}
 	
+	public GeoLocConfig getGeoLocConfig() {
+		return this.geoLocConfig;
+	}
+	
 	public void setGTFSConfig(GTFSConfig gtfsConfig) {
 		this.gtfsConfig = gtfsConfig;
 	}
@@ -33,11 +38,15 @@ public final class Config {
 	public void setGeneralConfig(GeneralConfig generalConfig) {
 		this.generalConfig = generalConfig;
 	}
+	public void setGeoLocConfig(GeoLocConfig geoLocConfig) {
+		this.geoLocConfig = geoLocConfig;
+	}
 	
 	public Config() {}
-	public Config(GTFSConfig gtfsConfig,GeneralConfig generalConfig) {
+	public Config(GTFSConfig gtfsConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig) {
 		this.gtfsConfig = gtfsConfig;
 		this.generalConfig = generalConfig;
+		this.geoLocConfig = geoLocConfig;
 	}
 	
 	public static Config of(File file) {

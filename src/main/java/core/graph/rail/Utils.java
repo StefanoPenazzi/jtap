@@ -1,6 +1,5 @@
 package core.graph.rail;
 
-import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,18 +8,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.javatuples.Pair;
 import org.neo4j.driver.AccessMode;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.Value;
-
 import config.Config;
+import core.graph.NodeGeoI;
 import core.graph.rail.gtfs.GTFS;
+import core.graph.rail.gtfs.Stop;
 import core.graph.rail.gtfs.StopTime;
 import core.graph.rail.gtfs.Transfer;
 import data.external.neo4j.Neo4jConnection;
-import data.utils.geo.Gis;
-import data.utils.io.CSV;
-import data.utils.woods.kdTree.KdTree;
-
 
 /**
  * @author stefanopenazzi
@@ -28,137 +22,32 @@ import data.utils.woods.kdTree.KdTree;
  */
 public final class Utils {
 	
-	public static String STOPSFILE = "/stops.csv";
-	public static String RAILLINKSFILE = "/links.csv";
-	public static String TRANSFERLINKSFILE = "/transfers.csv";
-	public static String RAILNODE = "RailNode";
-	public static String RAILLINK = "RailLink";
-	public static String RAILTRANSFERLINK = "RailTransferLink";
-	public static String NODE = core.graph.Node.ROUTABLE.getValue();
-	public static String LINK = core.graph.Link.ROUTABLE.getValue();
-			
-	
 	/**
-	 * 
-	 * https://stackoverflow.com/questions/45620367/unable-to-load-csv-file-into-neo4j
 	 * 
 	 * @param gtfs
 	 * @param database
 	 * @param nodes : array containing the nodes types that have to be connected with the GTFS network
 	 * @throws Exception
 	 */
-	public static void insertRailGTFSintoNEO4J(GTFS gtfs,String database,Config config,String... nodes) throws Exception {
-		List<RailLink> railLinks = getRailLinks(gtfs);
-		List<RailTransferLink> transferLinks = getRailTransferLinks(gtfs);
+	public static void insertRailGTFSintoNeo4J(GTFS gtfs,String database,Config config) throws Exception {
 		String tempDirectory = config.getGeneralConfig().getTempDirectory();
-		//LOAD USING CSV
-		//NODES
-		//save csv file with the nodes in the temp directory
-		CSV.writeTo(new File(tempDirectory+STOPSFILE),gtfs.getStops());
-		//RAIL_LINKS
-		CSV.writeTo(new File(tempDirectory+RAILLINKSFILE),railLinks);
-		//TRANSFERS LINKS
-		CSV.writeTo(new File(tempDirectory+TRANSFERLINKSFILE),transferLinks);
-		
-		
-		try( Neo4jConnection conn = new Neo4jConnection()){  
-			
-			//NODES
-			conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+STOPSFILE+"\" AS csvLine "
-					+ "CREATE (p:"+RAILNODE+":"+NODE+" {stop_id: csvLine.STOP_ID, stop_name: csvLine.STOP_NAME,"
-					+ "stop_lat: toFloat(csvLine.STOP_LAT), stop_lon: toFloat(csvLine.STOP_LON)})",AccessMode.WRITE );
-			//LINKS RAIL
-			conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+RAILLINKSFILE+"\" AS csvLine "
-					+ "MATCH (sf:"+RAILNODE+" {stop_id:csvLine.STOP_FROM}),(st:"+RAILNODE+" {stop_id:csvLine.STOP_TO})"
-					+ "CREATE (sf)-[:"+RAILLINK+" {avg_travel_time:toFloat(csvLine.AVG_TRAVEL_TIME),connections_per_day:toInteger(csvLine.CONNECTIONS_PER_DAY),"
-					+ "first_dep_time:csvLine.FIRST_DEP_TIME,last_dep_time:csvLine.LAST_DEP_TIME}]->(st)",AccessMode.WRITE );
-			//LINKS TRANSFER
-			conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+TRANSFERLINKSFILE+"\" AS csvLine "
-					+ "MATCH (sf:"+RAILNODE+" {stop_id:csvLine.STOP_FROM}),(st:"+RAILNODE+" {stop_id:csvLine.STOP_TO})"
-					+ "CREATE (sf)-[:"+RAILTRANSFERLINK+" {avg_travel_time:toFloat(csvLine.AVG_TRAVEL_TIME)}]->(st)",AccessMode.WRITE );
-	    }
-		
-		connectRailNodes(database,tempDirectory,nodes);
-		
+		data.external.neo4j.Utils.insertNodes(database,tempDirectory,gtfs.getStops());
+		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs)
+				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");
+		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailTransferLinks(gtfs)
+				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");	
+	}
+	
+	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String database,Config config,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
+		insertRailGTFSintoNeo4J(gtfs,database,config);
+		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),Stop.class,"id", nodeArrivalMap);
 	}
 	
 	public static void deleteRailGTFS(String database) throws Exception {
          try( Neo4jConnection conn = new Neo4jConnection()){  
 			//delete from the db all the rail nodes and links
-			conn.query(database,"MATCH (n:"+RAILNODE+") DETACH DELETE n;",AccessMode.WRITE );
+			conn.query(database,"MATCH (n:RailNode) DETACH DELETE n;",AccessMode.WRITE );
          }
-	}
-	
-	/**
-	 * @param database
-	 * @param nodes
-	 * @throws Exception 
-	 */
-	public static void connectRailNodes(String database,String tempDirectory,String... nodes) throws Exception {
-		
-		List<Record> railNodeRecords = null;
-		try( Neo4jConnection conn = new Neo4jConnection()){  
-			railNodeRecords = conn.query(database,"MATCH (n:"+RAILNODE+") RETURN n",AccessMode.READ);
-		}
-		
-		for(String node : nodes) {
-			
-			List<Record> otherNodeRecords = null;
-			StringBuilder sb = new StringBuilder();  
-			
-			try( Neo4jConnection conn = new Neo4jConnection()){  
-				otherNodeRecords = conn.query(database,"MATCH (n:"+node+") RETURN n",AccessMode.READ);
-			}
-			
-			//KDTREE contains all the node that need to be connected with railnodes.
-			List<KdTree.Node> kdtNodes = new ArrayList<>();
-			for(Record r: otherNodeRecords) {
-				
-				List<org.neo4j.driver.util.Pair<String, Value>> values = r.fields();
-				for (org.neo4j.driver.util.Pair<String, Value> nameValue: values) {
-				    if ("n".equals(nameValue.key())) {  // you named your node "p"
-				        Value value = nameValue.value();
-				        Double lat = value.get("lat").asDouble();
-				        Double lon = value.get("lon").asDouble();
-				        Integer sid = value.get("node_osm_id").asInt();
-				        kdtNodes.add(new KdTree.Node(lat,lon,sid));
-				    }
-				}
-			}
-			
-			//insert  otherNodes in a KD-TREE structure to facilitate the research of the closest to the railNode
-			KdTree kdt = new KdTree(2,kdtNodes);
-			List<RailRoadLink> links = new ArrayList<>();
-			
-			for(Record r: railNodeRecords) {
-				Double lat = null; 
-		        Double lon = null;
-		        String sid = null;
-				List<org.neo4j.driver.util.Pair<String, Value>> values = r.fields();
-				for (org.neo4j.driver.util.Pair<String, Value> nameValue: values) {
-				    if ("n".equals(nameValue.key())) {  // you named your node "p"
-				        Value value = nameValue.value();
-				        lat = value.get("stop_lat").asDouble();
-				        lon = value.get("stop_lon").asDouble();
-				        sid = value.get("stop_id").asString();
-				        //find the closest node to the railnode
-				        KdTree.Node n = kdt.findNearest(new KdTree.Node(
-								lat,lon,null));
-				        int dist = Gis.longDist(lat,lon,n.getCoords()[0],n.getCoords()[1]);
-						links.add(new RailRoadLink(sid,n.getValue().toString(),dist));
-						break;	
-				    }
-				}
-			}
-			
-			CSV.writeTo(new File(tempDirectory+"/Rail"+node+".csv"),links);
-			try(Neo4jConnection conn = new Neo4jConnection()){ 
-				//TODO metti .csv nel file non solo nodew
-				conn.query(database,"LOAD CSV WITH HEADERS FROM \"file:///"+tempDirectory+"/Rail"+node+".csv"+"\" AS csvLine "
-						+ "MATCH (sf:"+RAILNODE+" {stop_id:csvLine.STOP_FROM}),(st:"+node+" {node_osm_id:toInteger(csvLine.ROAD_TO)})"
-						+ "CREATE (sf)-[:Rail"+node+"Link {distance:toInteger(csvLine.DISTANCE),avg_travel_time:10}]->(st)",AccessMode.WRITE );
-			}
-		}
 	}
 	
 	/**
@@ -171,7 +60,6 @@ public final class Utils {
 		Map<String, List<StopTime>> tripStops = stopTime.stream()
 				 .sorted(Comparator.comparing(StopTime::getDepartureTime))
 				 .collect(Collectors.groupingBy(StopTime::getTripId));
-		
 		for (var entry : tripStops.entrySet()) {
 			List<StopTime> st = entry.getValue();
 		    for(int j=0;j<st.size()-1;j++) {
@@ -189,7 +77,6 @@ public final class Utils {
 	}
 	
 	
-	
 	/**
 	 * @param gtfs
 	 * @return
@@ -198,7 +85,6 @@ public final class Utils {
 		List<RailLink> links = new ArrayList<>();
 		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs);
 		for (var entry : connections.entrySet()) {
-			
 			String from = entry.getKey().getValue0();
 			String to = entry.getKey().getValue1();
 			Double avgTravelTime = entry.getValue().stream().mapToInt(Connection::getDuration).average().orElse(Double.NaN);
@@ -207,7 +93,6 @@ public final class Utils {
 					map(Connection::getDepartureTime).min(LocalTime::compareTo).orElse(null);
 			LocalTime lastDepartureTime = entry.getValue().stream().
 					map(Connection::getDepartureTime).max(LocalTime::compareTo).orElse(null);
-			
 			links.add(new RailLink(from,to,avgTravelTime,connectionsPerDay,firstDepartureTime,lastDepartureTime,"rail"));
 		}
 		return links;
@@ -220,24 +105,18 @@ public final class Utils {
 	public static List<RailTransferLink> getRailTransferLinks(GTFS gtfs){
 		List<RailTransferLink> transferLinks = new ArrayList<>();
 		List<Transfer> transfers = gtfs.getTransfers();
-		
 		List<Transfer> filteredTransfers = transfers
 				  .stream()
 				  .filter(e -> !e.getFromRouteId().equals(e.getToRouteId()))
 				  .collect(Collectors.toList());
-		
 		Map<Pair<String,String>, List<Transfer>> transferMap = filteredTransfers.stream()
 				  .collect(Collectors.groupingBy(c -> new Pair<String,String>(c.getFromStopId(), c.getToStopId())));
-		
         for (var entry : transferMap.entrySet()) {
-			
 			String from = entry.getKey().getValue0();
 			String to = entry.getKey().getValue1();
 			Double avgTravelTime = entry.getValue().stream().mapToInt(Transfer::getMinTransferTime).average().orElse(0.);
-			
 			transferLinks.add(new RailTransferLink(from,to,avgTravelTime));
 		}
-		
 		return transferLinks;
 	}
 	

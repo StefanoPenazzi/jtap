@@ -1,36 +1,40 @@
-package core.graph.rail;
+package core.graph.cross;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
 
 import core.graph.LinkI;
 import core.graph.annotations.GraphElementAnnotation.Neo4JLinkElement;
-import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JLinkElement(label="RailTransferLink")
-public class RailTransferLink implements LinkI {
+@Neo4JLinkElement(label="CrossLink")
+public class CrossLink implements LinkI {
 	
-	@CsvBindByName(column = "stop_from")
+	@CsvBindByName(column = "from")
 	@CsvBindByPosition(position = 0)
 	@Neo4JPropertyElement(key="from",type=Neo4JType.TOSTRING)
 	private String from;
-	@CsvBindByName(column = "stop_to")
+	@CsvBindByName(column = "to")
 	@CsvBindByPosition(position = 1)
 	@Neo4JPropertyElement(key="to",type=Neo4JType.TOSTRING)
 	private String to;
-	@CsvBindByName(column = "avg_travel_time")
+	@CsvBindByName(column = "distance")
 	@CsvBindByPosition(position = 2)
-	@Neo4JPropertyElement(key="avg_travel_time",type=Neo4JType.TOFLOAT)
-	private Double avgTravelTime;
+	@Neo4JPropertyElement(key="distance",type=Neo4JType.TOINTEGER)
+	private Integer distance;
+	@CsvBindByName(column = "avg_travel_time")
+	@CsvBindByPosition(position = 3)
+	@Neo4JPropertyElement(key="avg_travel_time",type=Neo4JType.TOINTEGER)
+	private Integer avgTravelTime;
 	
 	
-	public RailTransferLink() {}
+	public CrossLink() {}
 	
-	public RailTransferLink( String from,String to,Double avgTravelTime) {
+	public CrossLink( String from,String to,Integer distance,Integer avgTravelTime) {
 		this.from = from;
 		this.to = to;
+		this.distance = distance;
 		this.avgTravelTime = avgTravelTime;
 	}
 	
@@ -42,7 +46,11 @@ public class RailTransferLink implements LinkI {
 		return this.to; 
 	}
 	
-	public Double getAvgTravelTime(){
+	public Integer getDistance(){
+		return this.distance; 
+	}
+	
+	public Integer getAvgTravelTime(){
 		return this.avgTravelTime; 
 	}
 }
