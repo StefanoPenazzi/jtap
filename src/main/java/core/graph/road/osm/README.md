@@ -47,7 +47,7 @@ Open the terminal in the same directory in which you saved the OSM file (e.g. fr
 	
 Using Neo4J Desktop
 
-	--into can be found  
+--into can be found  
 	
 </div>
   
