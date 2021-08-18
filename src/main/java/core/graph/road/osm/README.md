@@ -42,7 +42,12 @@ Open the terminal in the same directory in which you saved the OSM file (e.g. fr
 <div align="justify">
  After you have cloned  <a href="https://github.com/neo4j-contrib/osm"> neo4j-contrib/osm </a> open the teminal in the repository directory (the same directory in which there is the folder /target).
 	
-	java -Xms1280m -Xmx1280m -cp "target/osm-0.2.3-neo4j-4.1.3.jar:target/dependency/*" org.neo4j.gis.osm.OSMImportTool --skip-duplicate-nodes --delete --into "/home/stefanopenazzi/.config/Neo4j Desktop/Application/relate-data/dbmss/dbms-89c39c47-9976-4493-97b5-cc391b6260aa" --database france2 /home/stefanopenazzi/projects/transit/neo4j/Scenarios/map
+	
+	java -Xms1280m -Xmx1280m -cp "target/osm-0.2.3-neo4j-4.1.3.jar:target/dependency/*" org.neo4j.gis.osm.OSMImportTool --skip-duplicate-nodes --delete --into "/home/stefanopenazzi/.config/Neo4j Desktop/Application/relate-data/dbmss/dbms-0000000-0000-4493-97b5-0000b6260aa" --database france2 /home/stefanopenazzi/projects/transit/neo4j/Scenarios/map
+	
+Using Neo4J Desktop
+
+	--into can be found  
 	
 </div>
   
