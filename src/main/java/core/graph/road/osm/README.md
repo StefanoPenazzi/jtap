@@ -31,11 +31,9 @@
   The first thing to do is dowloading the region/country we are interested into. This is possible using  <a href="https://download.geofabrik.de/europe.html"> geofabrik </a> .
 	There are no restriction on the format.
 
+Open the terminal in the same directory in which you saved the OSM file (e.g. france-latest.osm.pbf). The following line shows an example considering only trunk,trunk_link,motorway,motorway_junction,motorway_link. A new file called france-road-latest.osm.bz2 (with osm.bz2 format) is saved in the same directory of france-latest.osm.pbf. 
 	
-
-	2) osmium tags-filter liechtenstein-latest.osm.pbf w/highway r/type=restriction -o filtered.osm.pbf -f pbf,add_metadata=false
-        2.1) osmium tags-filter mayotte-latest.osm.bz2 w/highway=primary w/highway= w/highway=trunk w/highway=motorway r/type=restriction -o mayotte-road-latest.osm.bz2 -f osm.bz2,add_metadata=false
-        2.2) osmium tags-filter france-latest.osm.pbf w/highway=primary w/highway=primary_link w/highway=trunk w/highway=trunk_link w/highway=motorway w/highway=motorway_junction w/highway=motorway_link r/type=restriction -o france-road-latest.osm.bz2 -f osm.bz2,add_metadata=falseD
+        osmium tags-filter france-latest.osm.pbf w/highway=primary w/highway=primary_link w/highway=trunk w/highway=trunk_link w/highway=motorway w/highway=motorway_junction w/highway=motorway_link r/type=restriction -o france-road-latest.osm.bz2 -f osm.bz2,add_metadata=falseD
   
 </div>
   
