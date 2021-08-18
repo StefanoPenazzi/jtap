@@ -21,16 +21,16 @@
   Before starting using the <a href="https://github.com/neo4j-contrib/osm"> neo4j-contrib/osm </a>, it is necessary to obtain an OSM file
   containing the road network. 
   Usually the OSM file comes with a huge amount of things that are not related with the road network it self. It is then necessary 
-  filter only what we need based on the level of detail of the road network we want to import in Neo4j. In order to do that we can rely on 
+  filter only what we need based on the level of detail of the road network we want to import in Neo4j. In order to do that, we can rely on 
   the <a href="https://osmcode.org/osmium-tool/manual.html"> osmium-tool</a>
   
   Ubuntu:
 
    	sudo apt install osmium-tool
    
-  Ex:
+  The first thing to do is dowloading the region/country we are interested into. This is possible using  <a href="https://download.geofabrik.de/europe.html"> geofabrik </a>
 
-	1) Download a region/country from https://download.geofabrik.de/europe.html  (osm.pbf)
+	
 
 	2) osmium tags-filter liechtenstein-latest.osm.pbf w/highway r/type=restriction -o filtered.osm.pbf -f pbf,add_metadata=false
         2.1) osmium tags-filter mayotte-latest.osm.bz2 w/highway=primary w/highway= w/highway=trunk w/highway=motorway r/type=restriction -o mayotte-road-latest.osm.bz2 -f osm.bz2,add_metadata=false
