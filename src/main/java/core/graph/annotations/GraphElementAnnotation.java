@@ -47,5 +47,13 @@ public interface GraphElementAnnotation {
 		public String key();
 		public Neo4JType type();
 	}
+	
+	@Inherited
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public @interface Neo4JPropertyElementMethod {
+		public String key();
+		public Neo4JType type();
+	}
 
 }

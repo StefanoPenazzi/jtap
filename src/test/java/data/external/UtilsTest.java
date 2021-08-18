@@ -23,9 +23,20 @@ class UtilsTest {
 	}
 	
 	@Test
+	void createGraphCatalog1Test() throws Exception {
+		Neo4jConnection conn = new Neo4jConnection();
+		
+		data.external.neo4j.Utils.createGraphCatalog(conn,"france2",
+				"intersections-graph",
+				"MATCH (n) WHERE n:RoadNode RETURN id(n) AS id, labels(n) AS labels,n.lat AS lat, n.lon AS lon",
+				"MATCH (n)-[r:RoadLink]->(m) WHERE (n:RoadNode)AND(m:RoadNode) RETURN id(n) AS source, id(m) AS target, type(r) AS type,r.avg_travel_time AS avg_travel_time");
+		conn.close();
+	}
+	
+	@Test
 	void getCatalogTest() throws Exception {
 		Neo4jConnection conn = new Neo4jConnection();
-		List<Record> res = data.external.neo4j.Utils.getCatalog(conn,"osm");
+		List<Record> res = data.external.neo4j.Utils.getCatalog(conn,"france2");
 		System.out.println();
 		conn.close();
 	}
@@ -33,7 +44,7 @@ class UtilsTest {
 	@Test
 	void deleteFromCatalogTest() throws Exception {
 		Neo4jConnection conn = new Neo4jConnection();
-		data.external.neo4j.Utils.deleteGraphCatalog(conn,"osm","train-city-intersections-graph");
+		data.external.neo4j.Utils.deleteGraphCatalog(conn,"france2","intersections-graph");
 		System.out.println();
 		conn.close();
 	}

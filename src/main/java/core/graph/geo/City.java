@@ -8,7 +8,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JNodeElement(labels={"CityNode","RoutableNode"})
+@Neo4JNodeElement(labels={"CityNode"})
 public class City implements NodeGeoI{
 	
 	

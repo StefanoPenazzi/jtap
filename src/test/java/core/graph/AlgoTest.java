@@ -11,8 +11,8 @@ class AlgoTest {
 
 	@Test
 	void ShortestPathAStarTest() throws Exception {
-		List<Record> rec = core.graph.Utils.getShortestPathAStar("osm","train-city-intersections-graph", "CityNode", 
-				"city", "Nancy", "CityNode","city", "Laval", "lat", "lon", "avg_travel_time", "nodeId");
+		List<Record> rec = core.graph.Utils.getShortestPathAStar("france2","intersections-graph", "RoadNode", 
+				"node_osm_id", "1012744632", "RoadNode","node_osm_id", "3282509284", "lat", "lon", "avg_travel_time", "node_osm_id");
 		System.out.println();
 	}
 

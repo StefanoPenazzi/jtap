@@ -25,6 +25,9 @@ import data.utils.woods.kdTree.KdTree;
  */
 public class Utils {
 	
+	private static final double WALKSPEED = 1.39;    //m/s
+	private static final double CARSPEED = 13.9;    //m/s
+	
 	
     public static <T extends NodeI> void insertNodesIntoNeo4J(String database,List<T> nodes,
     		String tempDirectory,Class<T> nodeClass) throws Exception {
@@ -60,7 +63,7 @@ public class Utils {
 		final String latitudeProperty,final String longitudeProperty,final String relationshipWeightProperty,
 		final String nodeIdRes) throws Exception {
 	
-	    String query = "MATCH (source:"+nsLabel+" {"+nsPropertyKey+": '"+nsPropertyValue+"'}), (target:"+neLabel+" {"+nePropertyKey+":'"+nePropertyValue+"'})"
+	    String query = "MATCH (source:"+nsLabel+" {"+nsPropertyKey+": "+nsPropertyValue+"}), (target:"+neLabel+" {"+nePropertyKey+":"+nePropertyValue+"})"
     			+ " CALL gds.beta.shortestPath.astar.stream('"+graphName+"', {"
     			+ " sourceNode: id(source),"
     			+ " targetNode: id(target),"
@@ -94,7 +97,7 @@ public class Utils {
 	 * @param propNodeArrival
 	 * @throws Exception
 	 */
-	public static <T extends NodeGeoI,K extends NodeGeoI>  void setShortestDistCrossLink(String database,String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture,Class<K> nodeArrival,String propNodeArrival) throws Exception {
+	public static <T extends NodeGeoI,K extends NodeGeoI>  void setShortestDistCrossLink(String database,String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture,Class<K> nodeArrival,String propNodeArrival,Boolean twoWays) throws Exception {
 		
 		String labelNodeDeparture = null;
 		String labelNodeArrival =null;
@@ -147,6 +150,7 @@ public class Utils {
 		//insert  arrivalNodes in a KD-TREE structure to facilitate the research of the closest to the departureNode
 		KdTree kdt = new KdTree(2,kdtNodes);
 		List<CrossLink> links = new ArrayList<>();
+		List<CrossLink> links2Dir = new ArrayList<>();
 		
 		for(Record r: nodeDepartureRecords) {
 			Double lat = null; 
@@ -165,7 +169,11 @@ public class Utils {
 				        KdTree.Node n = kdt.findNearest(new KdTree.Node(
 								lat,lon,null));
 				        int dist = Gis.longDist(lat,lon,n.getCoords()[0],n.getCoords()[1]);
-						links.add(new CrossLink(sid,n.getValue().toString(),dist,0));
+				        int avgTravelTime = (int)(dist/CARSPEED);
+				        links.add(new CrossLink(sid,n.getValue().toString(),dist,avgTravelTime));
+						if(twoWays) {
+							links2Dir.add(new CrossLink(n.getValue().toString(),sid,dist,avgTravelTime));
+						}
 						break;	
 			        }
 			    }
@@ -174,7 +182,13 @@ public class Utils {
 		
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,links
 				,CrossLink.class,nodeDeparture,propNodeDeparture,"from",nodeArrival,propNodeArrival,"to");	
+		if(twoWays) {
+			data.external.neo4j.Utils.insertLinks(database,tempDirectory,links2Dir
+					,CrossLink.class,nodeArrival,propNodeArrival,"from",nodeDeparture,propNodeDeparture,"to");
+		}
 	}
+	
+
 	
 	/**
 	 * @param <T>
@@ -185,13 +199,15 @@ public class Utils {
 	 * @param nodeArrivalMap
 	 * @throws Exception
 	 */
-	public static <T extends NodeGeoI> void setShortestDistCrossLink(String database,String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture, Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
+	public static <T extends NodeGeoI> void setShortestDistCrossLink(String database,String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture, Map<Class<? extends NodeGeoI>,String> nodeArrivalMap,Boolean twoWays) throws Exception {
 		
 		Iterator it = nodeArrivalMap.entrySet().iterator();
 	    while (it.hasNext()) {
 	    	Map.Entry<Class<? extends NodeGeoI>,String> pair = (Map.Entry)it.next();
-	    	setShortestDistCrossLink(database,tempDirectory,nodeDeparture,propNodeDeparture,pair.getKey(),pair.getValue());
+	    	setShortestDistCrossLink(database,tempDirectory,nodeDeparture,propNodeDeparture,pair.getKey(),pair.getValue(),twoWays);
 	    }
 	}
+	
+	
 
 }

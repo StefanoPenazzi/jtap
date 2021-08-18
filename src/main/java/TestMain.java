@@ -14,7 +14,8 @@ import core.graph.geo.City;
 import core.graph.rail.Utils;
 import core.graph.rail.gtfs.GTFS;
 import core.graph.rail.gtfs.Stop;
-import core.graph.road.Intersection;
+import core.graph.road.osm.Intersection;
+import core.graph.road.osm.RoadNode;
 import picocli.CommandLine;
 
 public class TestMain implements Callable<Integer> {
@@ -46,28 +47,32 @@ public class TestMain implements Callable<Integer> {
 		controller.run();
 		controller.emptyTempDirectory();
 		
-		//insert subgraphs
-		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
-		core.graph.rail.Utils.deleteRailGTFS("osm");
-		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"osm",controller.getInjector().getInstance(Config.class));
+		//Road
+		//core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j("france2");
 		
-		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv("osm",controller.getInjector().getInstance(Config.class),City.class);
+		//insert GTFS
+		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
+		core.graph.rail.Utils.deleteRailGTFS("france2");
+		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"france2",controller.getInjector().getInstance(Config.class));
+		
+		//insert cities
+		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv("france2",controller.getInjector().getInstance(Config.class),City.class);
 		
 		//connections between subgraphs
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
-		railConnMap.put(Intersection.class,"node_osm_id");
-		railConnMap.put(City.class, "city");
-		core.graph.Utils.setShortestDistCrossLink("osm", config.getGeneralConfig().getTempDirectory(),Stop.class,"id",railConnMap);
+		railConnMap.put(RoadNode.class,"node_osm_id");
+		//railConnMap.put(City.class, "city");
+		core.graph.Utils.setShortestDistCrossLink("france2", config.getGeneralConfig().getTempDirectory(),Stop.class,"id",railConnMap,true);
 		
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
-		cityConnMap.put(Intersection.class,"node_osm_id");
+		cityConnMap.put(RoadNode.class,"node_osm_id");
 		cityConnMap.put(Stop.class, "id");
-		core.graph.Utils.setShortestDistCrossLink("osm", config.getGeneralConfig().getTempDirectory(),City.class,"city",cityConnMap);
+		core.graph.Utils.setShortestDistCrossLink("france2", config.getGeneralConfig().getTempDirectory(),City.class,"city",cityConnMap,true);
 		
 //		Map<Class<? extends NodeGeoI>,String> intersectionConnMap = new HashMap<>();
-//		intersectionConnMap.put(City.class,"city");
+//		intersectionConnMap.put(City.class,"node_osm_id");
 //		intersectionConnMap.put(Stop.class, "id");
-//		core.graph.Utils.setShortestDistCrossLink("osm", config.getGeneralConfig().getTempDirectory(),Intersection.class,"node_osm_id",intersectionConnMap);
+//		core.graph.Utils.setShortestDistCrossLink("france2", config.getGeneralConfig().getTempDirectory(),Intersection.class,"node_osm_id",intersectionConnMap);
 		
 		return 1;
 	}

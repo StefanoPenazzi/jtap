@@ -35,12 +35,15 @@ public final class Utils {
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs)
 				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailTransferLinks(gtfs)
-				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");	
+				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");
+		try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,"CREATE INDEX RailNodeIndex FOR (n:RailNode) ON (n.id)",AccessMode.WRITE);
+		}
 	}
 	
 	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String database,Config config,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
 		insertRailGTFSintoNeo4J(gtfs,database,config);
-		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),Stop.class,"id", nodeArrivalMap);
+		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),Stop.class,"id", nodeArrivalMap,true);
 	}
 	
 	public static void deleteRailGTFS(String database) throws Exception {

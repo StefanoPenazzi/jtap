@@ -1,4 +1,4 @@
-package core.graph.road;
+package core.graph.road.osm;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
@@ -8,8 +8,9 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JNodeElement(labels={"Intersection"})
-public class Intersection implements NodeGeoI {
+
+@Neo4JNodeElement(labels={"RoadNode"})
+public class RoadNode implements NodeGeoI {
 	
 	@CsvBindByName(column = "node_osm_id")
 	@CsvBindByPosition(position = 0)
