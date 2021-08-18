@@ -28,7 +28,8 @@
 
    	sudo apt install osmium-tool
    
-  The first thing to do is dowloading the region/country we are interested into. This is possible using  <a href="https://download.geofabrik.de/europe.html"> geofabrik </a>
+  The first thing to do is dowloading the region/country we are interested into. This is possible using  <a href="https://download.geofabrik.de/europe.html"> geofabrik </a> .
+	There are no restriction on the format.
 
 	
 
