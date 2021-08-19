@@ -153,6 +153,7 @@ A new istance of the Config class can be obtained through
 ```
 Config config = Config.of(configFile.toFile());
 ```
+The parameters is an object of type File which provides the .XML file  
  
 </div>
 </body>
