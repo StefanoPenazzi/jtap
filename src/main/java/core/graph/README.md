@@ -4,7 +4,7 @@
 </head>
 <body>
   
- <p align="center">
+<p align="center">
   <img width="400" height="200" src="src/main/resources/images/graph/gen_graph.PNG">
 </p>
   
