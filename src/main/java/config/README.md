@@ -30,6 +30,24 @@ Input data as settings and directories are provided to JTAP through the config f
 </config>
 ```
  
+In order to add new information that can be used at runtime in JTAP the following procedure must be respected:
+ 
+<ul>
+  <li>Create a new element and its children in the config file
+ 
+   ```
+   <config>
+      <newElement>
+           <firstChild>hello</firstChild>
+           <secondChild>JTAP</secondChild>
+      </newElement>
+   </config>
+   ```
+  </li>
+  <li></li>
+  <li></li>
+</ul>
+ 
 </div>
 </body>
 </html>
