@@ -66,7 +66,7 @@ To check that the previous steps have been successful:
 	
 If the schema is wrong or a new OSM model is required it is possible to follow the same procedure after deleting the relations of the previous one
 ```
-Call apoc.periodic.iterate("cypher runtime=slotted Match (n)-[r]->(m) RETURN r limit 10000000", "delete r",{batchSize:100000});
+Call apoc.periodic.iterate("cypher runtime=slotted Match (n)-[r:NODE|FIRST_NODE|TAGS|MEMBER|BBOX]->(m) RETURN r limit 10000000", "delete r",{batchSize:100000});
 ```
 and the nodes of the previous one
 ```
@@ -76,10 +76,19 @@ The two previous queries take a while...
 	
 </div>
   
+<h1>Routable road network in Neo4j</h1>
+<div align="justify">
+To help build graphs that can be used for routing, two procedures can be used:
 
-  
+<ul>
+<li>spatial.osm.routeIntersection(node,false,false,false) </li>
+<li>spatial.osm.routePointOfInterest(node,ways) </li>
+</ul>
+
+These can be installed into an installation of Neo4j by copying the osm-0.2.3-neo4j-4.1.3-procedures.jar file into the plugins folder, and restarting the database.
+
+</div>
   
 
-  
 </body>
 </html>
