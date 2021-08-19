@@ -38,13 +38,49 @@ In order to add new information that can be used at runtime in JTAP the followin
    ```
    <config>
       <newElement>
-           <firstChild>hello</firstChild>
-           <secondChild>JTAP</secondChild>
+           <firstChildDirectory>hello</firstChildDirectory>
+           <secondChildDirectory>JTAP</secondChildDirectory>
       </newElement>
    </config>
    ```
   </li>
-  <li></li>
+  <li>Create a class that can host the information</li>
+ ```
+  @XmlRootElement(name = "newElement")
+  public class NewElementConfig implements Serializable {
+
+      private static final long serialVersionUID = 1L;
+
+      private String firstChildDirectory;
+      private String secondChildDirectory;
+
+      public NewElementConfig() {}
+
+      public NewElementConfig(String firstChildDirectory,String secondChildDirectory) {
+          this.firstChildDirectory = firstChildDirectory;
+      }
+
+      @XmlElement(name = "firstChildDirectory",required = true)
+      public String getFirstChildDirectory() {
+          return this.firstChildDirectory;
+      }
+
+      public void setFirstChildDirectory(String firstChildDirectory) {
+          this.firstChildDirectory = firstChildDirectory;
+      }
+ 
+      @XmlElement(name = "secondChildDirectory",required = true)
+      public String getSecondChildDirectory() {
+          return this.secondChildDirectory;
+      }
+
+      public void setSecondChildDirectory(String secondChildDirectory) {
+          this.secondChildDirectory = secondChildDirectory;
+      }
+  }
+ ```
+
+ 
   <li></li>
 </ul>
  
