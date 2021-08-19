@@ -56,9 +56,20 @@ try( Neo4jConnection conn = new Neo4jConnection()){
   
 <h1>Insert nodes</h1>
 <div align="justify">
-In order to add new nodes to the database it is necessary a class annotated with @Neo4JNodeElement(labels={"Neo4j Label1","Neo4j Label2"}) which implements NodeI.
-Moreover, each field of the class that need to be added as a property of the node in neo4j need to be annotated with @Neo4JPropertyElement(key="Neo4J property key",type=Neo4JType.TOSTRING). The second parameter of the annotation is the type of the property in neo4j. 
-All the queries that require a consistent transfer of data are performed using a bulk data import. This means that a CSV file representing the list of nodes (and their properties) is used to load the nodes in neo4j. Therefore, each field is also annotated with @CsvBindByName(column = "property name in CSV"). The column name in the CSV file can be differnet from the key name in neo4j. 
+In order to add new nodes to the database it is necessary a class annotated with
+```	
+@Neo4JNodeElement(labels={"Neo4j Label1","Neo4j Label2"}) which implements NodeI.
+```
+Moreover, each field of the class that need to be added as a property of the node in neo4j need to be annotated with
+```
+@Neo4JPropertyElement(key="Neo4J property key",type=Neo4JType.TOSTRING)
+```
+The second parameter of the annotation is the type of the property in neo4j. 
+All the queries that require a consistent transfer of data are performed using a bulk data import. This means that a CSV file representing the list of nodes (and their properties) is used to load the nodes in neo4j. Therefore, each field is also annotated with 
+```
+@CsvBindByName(column = "property name in CSV")
+```
+The column name in the CSV file can be differnet from the key name in neo4j. 
   
 ```
 @Neo4JNodeElement(labels={"CityNode"})
