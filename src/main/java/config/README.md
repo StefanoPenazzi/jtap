@@ -44,8 +44,9 @@ In order to add new information that can be used at runtime in JTAP the followin
    </config>
    ```
   </li>
-  <li>Create a class that can host the information</li>
- ```
+  <li>Create a class that can host the information
+ 
+   ```
   @XmlRootElement(name = "newElement")
   public class NewElementConfig implements Serializable {
 
@@ -79,6 +80,7 @@ In order to add new information that can be used at runtime in JTAP the followin
       }
   }
  ```
+   </li>
 
  
   <li></li>
