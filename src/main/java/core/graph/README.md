@@ -45,6 +45,7 @@ neo4j_username=hello
 neo4j_password=jtap
 ```
 This informations are used in the class <i> data.external.neo4j.Neo4jConnection </i> to access the database. 
+The database can be queried usign the following
   
 ```
 try( Neo4jConnection conn = new Neo4jConnection()){  
