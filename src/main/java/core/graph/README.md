@@ -56,7 +56,9 @@ try( Neo4jConnection conn = new Neo4jConnection()){
   
 <h1>Insert nodes</h1>
 <div align="justify">
-In order to add new nodes to the database it is necessary a class that implements NodeI
+In order to add new nodes to the database it is necessary a class annotated with @Neo4JNodeElement(labels={"Neo4j Label1","Neo4j Label2"}) which implements NodeI.
+Moreover, each field of the class that need to be added as a property of the node in neo4j need to be annotated with @Neo4JPropertyElement(key="Neo4J property key",type=Neo4JType.TOSTRING). The second parameter of the annotation is the type of the property in neo4j. 
+All the queries that require a consistent transfer of data are performed using a bulk data import. This means that a CSV file representing the list of nodes (and their properties) is used to load the nodes in neo4j. Therefore, each field is also annotated with @CsvBindByName(column = "property name in CSV"). The column name in the CSV file can be differnet from the key name in neo4j. 
   
 ```
 @Neo4JNodeElement(labels={"CityNode"})
@@ -109,13 +111,17 @@ public class City implements NodeGeoI{
 }
 ```
 
-
-Nodes can be added to the database through the static method 
+The class <i>core.graph.Utils</i> contains static methods to add nodes in the database.
+Nodes from a List can be added to the database through the static method 
 ```
 public static <T extends NodeI> void insertNodesIntoNeo4J(String database,List<T> nodes,String tempDirectory,Class<T> nodeClass)
 ```
-in the class <i>core.graph.Utils</i>
-This methods requires also a temporary directory in which saves the CSV file created for the bulk data import.
+Nodes from a CSV file can be added to the database through the static method 
+```
+public static <T extends NodeI> void insertNodesIntoNeo4J(String database,String fileCsv,String tempDirectory,Class<T> nodeClass)
+```
+These methods require also a temporary directory in which save the CSV file created for the bulk data import.
+	
 </div>
   
 <h1>Insert links</h1>
