@@ -7,7 +7,7 @@
   
 <h1>Requirements</h1>
  <ul>
-  <li>An installation of Neo4j (>4.2.5) <a href="https://neo4j.com/download/"> Neo4j download</a> </li>
+  <li>Neo4j (>4.2.5) <a href="https://neo4j.com/download/"> Neo4j download</a> </li>
   <li>Last version of osmium-tool <a href="https://osmcode.org/osmium-tool/manual.html"> osmium-tool</a></li>
 </ul>
   
