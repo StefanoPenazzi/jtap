@@ -35,7 +35,7 @@ public class Utils {
 	 *  <p> The links between two nodes are labeled with RoadLink. The link's properties are 
 	 *  distance [m], lenght, count, avg_travel_time [s] </p>
 	 *  
-	 *  <p> The RoadNodes are indexed using the node_osm_id property. This make much more
+	 *  <p> The RoadNodes are indexed using the node_osm_id property. This makes much more
 	 *  faster the later queries using node_osm_id to find a specific node </p>
 	 *  
 	 * 
