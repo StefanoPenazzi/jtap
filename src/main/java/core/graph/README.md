@@ -20,6 +20,14 @@ You can download neo4j desktopt from <a href=""https://neo4j.com/download/"> her
   
 If you want to get familiar with neo4j you can find a nice tutorial <a href="https://neo4j.com/developer/get-started/"> here </a>
 </div>
+  
+<h1>Create a new database</h1>
+<div align="justify">
+If you are using neo4j desktop, we suggest to create a new project and dbms. In the dbms you are able to create a new database that we call here HelloJTAP. It is foundamenta that in the next steps HelloJTAP is running when we perform the queries on it. 
+Using neo4j browser you can verify that HelloJTAP is been created and it is empty.
+  
+
+</div>
  
   
 </body>
