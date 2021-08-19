@@ -23,16 +23,28 @@ If you want to get familiar with neo4j you can find a nice tutorial <a href="htt
   
 <h1>Create a new database</h1>
 <div align="justify">
-If you are using neo4j desktop, we suggest to create a new project and dbms. In the dbms you are able to create a new database that we call here HelloJTAP. It is foundamenta that in the next steps HelloJTAP is running when we perform the queries on it. 
+If you are using neo4j desktop, we suggest to create a new project and dbms. In the dbms you are able to create a new database that we call here HelloJTAP. It is foundamenta that in the next steps HelloJTAP is running when we perform the queries on it through the API. 
 Using neo4j browser you can verify that HelloJTAP is been created and it is empty.
 
 ```
 :USE HelloJTAP
 ```
 ```
-call db.schema.visualization()
+CALL db.schema.visualization()
 ```
 
+</div>
+  
+<h1>Query Neo4j from JTAP</h1>
+<div align="justify">
+
+To query neo4j from JTAP a java driver is used <i> org.neo4j.driver </i>. The first thing to do is create a new properties file <i> database.properties </i> in src/main/resources
+```
+neo4j_uri=neo4j://localhost:5763
+neo4j_username=hello
+neo4j_password=jtap
+```
+  
 </div>
  
   
