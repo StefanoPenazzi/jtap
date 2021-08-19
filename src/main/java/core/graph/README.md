@@ -46,11 +46,25 @@ After creating the dbms it is necessary setup its config file.
 	# This setting constrains all `LOAD CSV` import files to be under the `import` directory. Remove or comment it out to
 	# allow files to be loaded from anywhere in the filesystem; this introduces possible security problems. See the
 	# `LOAD CSV` section of the manual for details.
-	dbms.directories.import=import
+	# dbms.directories.import=import
 	```
 	
   </li>
-  <li> </li>
+  <li>Configure memory.
+	
+	```
+	# Java Heap Size: by default the Java heap size is dynamically calculated based
+	# on available system resources. Uncomment these lines to set specific initial
+	# and maximum heap size.
+	dbms.memory.heap.initial_size=4800m
+	dbms.memory.heap.max_size=4800m
+
+	# The amount of memory to use for mapping the store files.
+	# The default page cache memory assumes the machine is dedicated to running
+	# Neo4j, and is heuristically set to 50% of RAM minus the Java heap size.
+	dbms.memory.pagecache.size=5300m
+	```
+  </li>
 </ul>
 
   
