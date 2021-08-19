@@ -56,7 +56,66 @@ try( Neo4jConnection conn = new Neo4jConnection()){
   
 <h1>Insert nodes</h1>
 <div align="justify">
+In order to add new nodes to the database it is necessary a class that implements NodeI
+  
+```
+@Neo4JNodeElement(labels={"CityNode"})
+public class City implements NodeGeoI{
+	
+	@CsvBindByName(column = "city")
+	@Neo4JPropertyElement(key="city",type=Neo4JType.TOSTRING)
+	private String city;
+	
+	@CsvBindByName(column = "lat")
+	@Neo4JPropertyElement(key="lat",type=Neo4JType.TOFLOAT)
+	private Double lat;
+	
+	@CsvBindByName(column = "lng")
+	@Neo4JPropertyElement(key="lon",type=Neo4JType.TOFLOAT)
+	private Double lon;
+	
+	@CsvBindByName(column = "country")
+	@Neo4JPropertyElement(key="country",type=Neo4JType.TOSTRING)
+	private String country;
+	
+	@CsvBindByName(column = "population")
+	@Neo4JPropertyElement(key="population",type=Neo4JType.TOINTEGER)
+	private Integer population;
+	
+	public String getId() {
+		return this.city;
+	}
+	
+	public String getCity() {
+		return this.city;
+	}
+	
+	public Double getLat() {
+		return this.lat;
+	}
+	
+	public Double getLon() {
+		return this.lon;
+	}
+	
+	public String getCountry() {
+		return this.country;
+	}
+	
+	public Integer getPopulation() {
+		return this.population;
+	}
+  
+}
+```
 
+
+Nodes can be added to the database through the static method 
+```
+public static <T extends NodeI> void insertNodesIntoNeo4J(String database,List<T> nodes,String tempDirectory,Class<T> nodeClass)
+```
+in the class <i>core.graph.Utils</i>
+This methods requires also a temporary directory in which saves the CSV file created for the bulk data import.
 </div>
   
 <h1>Insert links</h1>
