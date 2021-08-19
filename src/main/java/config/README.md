@@ -44,7 +44,7 @@ In order to add new information that can be used at runtime in JTAP the followin
    </config>
    ```
   </li>
-  <li>Create a class that can host the information
+  <li>Create a class that can host newElement
  
    ```
   @XmlRootElement(name = "newElement")
@@ -83,7 +83,69 @@ In order to add new information that can be used at runtime in JTAP the followin
    </li>
 
  
-  <li></li>
+  <li>Add NewElementConfig into the Config class
+ 
+   ```
+@XmlRootElement(name = "config")
+@XmlAccessorType(XmlAccessType.FIELD)
+public final class Config {
+	
+     private GTFSConfig gtfsConfig;
+     private GeneralConfig generalConfig;
+     private GeoLocConfig geoLocConfig;
+     private NewElementConfig newElementConfig; 
+
+     @XmlElement(name = "gtfsConfig")
+     public GTFSConfig getGTFSConfig() {
+        return this.gtfsConfig;
+     }
+
+     public GeneralConfig getGeneralConfig() {
+        return this.generalConfig;
+     }
+
+     public GeoLocConfig getGeoLocConfig() {
+        return this.geoLocConfig;
+     }
+   
+     public NewElementConfig get getNewElementConfig() {
+        return this.newElementConfig;
+     }
+
+     public void setGTFSConfig(GTFSConfig gtfsConfig) {
+        this.gtfsConfig = gtfsConfig;
+     }
+
+     public void setGeneralConfig(GeneralConfig generalConfig) {
+        this.generalConfig = generalConfig;
+     }
+     public void setGeoLocConfig(GeoLocConfig geoLocConfig) {
+        this.geoLocConfig = geoLocConfig;
+     }
+   
+     public void setNewElementConfig(NewElementConfig newElementConfig) {
+        this.newElementConfig = newElementConfig;
+     }
+
+     public Config() {}
+     public Config(GTFSConfig gtfsConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,NewElementConfig  newElementConfig) {
+        this.gtfsConfig = gtfsConfig;
+        this.generalConfig = generalConfig;
+        this.geoLocConfig = geoLocConfig;
+        this.newElementConfig = newElementConfig
+     }
+
+     public static Config of(File file) {
+         return XML.read(file, Config.class);
+     }
+
+     public void write(File file) throws JAXBException {
+         XML.write(file,this);
+     }
+}
+   ```
+  
+  </li>
 </ul>
  
 </div>
