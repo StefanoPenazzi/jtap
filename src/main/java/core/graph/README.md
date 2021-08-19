@@ -60,9 +60,9 @@ try( Neo4jConnection conn = new Neo4jConnection()){
 In order to add new nodes to the database it is necessary a class annotated with
 
 ```	
-@Neo4JNodeElement(labels={"Neo4j Label1","Neo4j Label2"}) which implements NodeI.
+@Neo4JNodeElement(labels={"Neo4j Label1","Neo4j Label2"})
 ```
-Moreover, each field of the class that need to be added as a property of the node in neo4j need to be annotated with
+which implements NodeI. Moreover, each field of the class that need to be added as a property of the node in neo4j need to be annotated with
 
 ```
 @Neo4JPropertyElement(key="Neo4J property key",type=Neo4JType.TOSTRING)
@@ -141,6 +141,53 @@ These methods require also a temporary directory in which save the CSV file crea
   
 <h1>Insert links</h1>
 <div align="justify">
+	
+```
+@Neo4JLinkElement(label="CrossLink")
+public class CrossLink implements LinkI {
+	
+	@CsvBindByName(column = "from")
+	@Neo4JPropertyElement(key="from",type=Neo4JType.TOSTRING)
+	private String from;
+	
+	@CsvBindByName(column = "to")
+	@Neo4JPropertyElement(key="to",type=Neo4JType.TOSTRING)
+	private String to;
+	
+	@CsvBindByName(column = "distance")
+	@Neo4JPropertyElement(key="distance",type=Neo4JType.TOINTEGER)
+	private Integer distance;
+	
+	@CsvBindByName(column = "avg_travel_time")
+	@Neo4JPropertyElement(key="avg_travel_time",type=Neo4JType.TOINTEGER)
+	private Integer avgTravelTime;
+	
+	public CrossLink() {}
+	
+	public CrossLink( String from,String to,Integer distance,Integer avgTravelTime) {
+		this.from = from;
+		this.to = to;
+		this.distance = distance;
+		this.avgTravelTime = avgTravelTime;
+	}
+	
+	public String getFrom() {
+		return this.from;
+	}
+	
+	public String getTo(){
+		return this.to; 
+	}
+	
+	public Integer getDistance(){
+		return this.distance; 
+	}
+	
+	public Integer getAvgTravelTime(){
+		return this.avgTravelTime; 
+	}
+}
+```
 
 </div>
  
