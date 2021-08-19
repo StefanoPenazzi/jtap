@@ -39,6 +39,19 @@ CALL db.schema.visualization()
 <div align="justify">
 </div>
 After creating the dbms it is necessary setup its config file.
+ <ul>
+  <li>Change permissions load from CSV file. Disabling the security restriction that Neo4j has to limit only to importing from import folders.
+
+	```
+	# This setting constrains all `LOAD CSV` import files to be under the `import` directory. Remove or comment it out to
+	# allow files to be loaded from anywhere in the filesystem; this introduces possible security problems. See the
+	# `LOAD CSV` section of the manual for details.
+	dbms.directories.import=import
+	```
+	
+  </li>
+  <li> </li>
+</ul>
 
   
 <h1>Query Neo4j from JTAP</h1>
