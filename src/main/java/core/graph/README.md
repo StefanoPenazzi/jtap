@@ -25,7 +25,13 @@ If you want to get familiar with neo4j you can find a nice tutorial <a href="htt
 <div align="justify">
 If you are using neo4j desktop, we suggest to create a new project and dbms. In the dbms you are able to create a new database that we call here HelloJTAP. It is foundamenta that in the next steps HelloJTAP is running when we perform the queries on it. 
 Using neo4j browser you can verify that HelloJTAP is been created and it is empty.
-  
+
+```
+:USE HelloJTAP
+```
+```
+call db.schema.visualization()
+```
 
 </div>
  
