@@ -40,7 +40,7 @@ osmium tags-filter france-latest.osm.pbf w/highway=primary w/highway=primary_lin
 </div>
 
 	
-<h1>OSM Neo4j setup</h1>
+<h1>OSM Model in Neo4j</h1>
 <div align="justify">
  After you have cloned  <a href="https://github.com/neo4j-contrib/osm"> neo4j-contrib/osm </a> open the teminal in the repository directory (the same directory in which there is the folder /target).
 	
@@ -52,9 +52,19 @@ java -Xms1280m -Xmx1280m -cp "target/osm-0.2.3-neo4j-4.1.3.jar:target/dependency
 <ul>
   <li>--into (directory of the dbms. This can be found opening the  <a href="https://neo4j.com/developer/neo4j-desktop/#desktop-open-terminal">dbms terminal</a>) </li>
   <li>--database (name of an already created database in the dbms) </li>
+  <li> the last argument is the OSM file you want to import into Neo4J </li>
 </ul>
 
+To check that the previous steps have been successful:
 
+<ul>
+  <li> Run the dbms </li>
+  <li> Use the database containing the OSM model
+	```
+	  :use dbname
+	```
+  </li>
+</ul>
 	
 </div>
   
