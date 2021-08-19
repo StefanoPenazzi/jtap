@@ -59,12 +59,21 @@ To check that the previous steps have been successful:
 
 <ul>
   <li> Run the dbms </li>
-  <li> Use the database containing the OSM model
-	```
-	  :use dbname
-	```
-  </li>
+  <li> Use the database containing the OSM model (:use dbname)</li>
+  <li> Visualize the schema (call db.schema.visualization())</li>
+  <li> Check if the schema contains the following nodes: OSMNode, OSMWayNode, OSMTags, OSMWay, OSM, Bounds</li>
 </ul>
+	
+If the schema is wrong or a new OSM model is required it is possible to follow the same procedure after deleting the relations of the previous one
+
+	```
+	Call apoc.periodic.iterate("cypher runtime=slotted Match (n)-[r]->(m) RETURN r limit 10000000", "delete r",{batchSize:100000});
+        ```
+and the nodes of the previous one
+	```
+	Call apoc.periodic.iterate("cypher runtime=slotted Match (n:OSMNode:OSMWayNode:OSMTags:OSMWay:OSM:Bounds) RETURN n limit 10000000", "delete n",{batchSize:100000});
+	```
+The two previous queries take a while...
 	
 </div>
   
