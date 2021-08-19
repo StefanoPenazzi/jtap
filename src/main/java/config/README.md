@@ -147,6 +147,12 @@ public final class Config {
   
   </li>
 </ul>
+	
+A new istance of the Config class can be obtained through
+
+```
+Config config = Config.of(configFile.toFile());
+```
  
 </div>
 </body>
