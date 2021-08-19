@@ -85,7 +85,8 @@ To help build graphs that can be used for routing, two procedures can be used:
 <li>spatial.osm.routePointOfInterest(node,ways) </li>
 </ul>
 
-These can be installed into an installation of Neo4j by copying the osm-0.2.3-neo4j-4.1.3-procedures.jar file into the plugins folder, and restarting the database.
+These can be installed into an installation of Neo4j by copying the  <a href="https://github.com/neo4j-contrib/osm#building"> osm-0.2.3-neo4j-4.1.3-procedures.jar </a> file into the plugins folder, and restarting the database.
+
 
 </div>
   
