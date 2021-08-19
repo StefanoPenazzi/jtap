@@ -50,8 +50,8 @@ java -Xms1280m -Xmx1280m -cp "target/osm-0.2.3-neo4j-4.1.3.jar:target/dependency
 
 
 <ul>
-  <li>--into directory of the neo4j installation </li>
-  <li>--database name of an already created database into data/databases/ </li>
+  <li>--into (directory of the dbms. This can be found opening the  <a href="https://neo4j.com/developer/neo4j-desktop/#desktop-open-terminal">dbms terminal</a>) </li>
+  <li>--database (name of an already created database in the dbms) </li>
 </ul>
 
 
