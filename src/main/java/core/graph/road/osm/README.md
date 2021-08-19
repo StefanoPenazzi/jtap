@@ -88,7 +88,7 @@ To help build graphs that can be used for routing, two procedures can be used:
 
 These can be installed into an installation of Neo4j by copying the  <a href="https://github.com/neo4j-contrib/osm#building"> osm-0.2.3-neo4j-4.1.3-procedures.jar </a> file into the plugins folder, and restarting the database.
 
-The routable road network can be generated using the static method setOSMRoadNetworkIntoNeo4j in the Utils class 
+The routable road network can be generated using the static method  <i>setOSMRoadNetworkIntoNeo4j </i> in the Utils class 
 
 
 </div>
