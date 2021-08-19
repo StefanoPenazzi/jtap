@@ -50,6 +50,7 @@ java -Xms1280m -Xmx1280m -cp "target/osm-0.2.3-neo4j-4.1.3.jar:target/dependency
 
 
 <ul>
+  <li><a href="https://github.com/neo4j-contrib/osm#building"> osm-0.2.3-neo4j-4.1.3-procedures.jar </a></li>
   <li>--into (directory of the dbms. This can be found opening the  <a href="https://neo4j.com/developer/neo4j-desktop/#desktop-open-terminal">dbms terminal</a>) </li>
   <li>--database (name of an already created database in the dbms) </li>
   <li> the last argument is the OSM file you want to import into Neo4J </li>
