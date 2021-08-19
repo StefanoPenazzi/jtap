@@ -48,7 +48,7 @@ This informations are used in the class <i> data.external.neo4j.Neo4jConnection 
   
 ```
 try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query(database,"your query",AccessMode.READ );
+ conn.query(database,"your query",AccessMode.READ );
 }
 ```
   
