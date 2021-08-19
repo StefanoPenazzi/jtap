@@ -126,14 +126,14 @@ public class City implements NodeGeoI{
 }
 ```
 
-The class <i>core.graph.Utils</i> contains static methods to add nodes in the database.
+The class <i>data.external.neo4j</i> contains static methods to add nodes in the database.
 Nodes from a List can be added to the database through the static method 
 ```
-public static <T extends NodeI> void insertNodesIntoNeo4J(String database,List<T> nodes,String tempDirectory,Class<T> nodeClass)
+public static <T extends NodeI> void insertNodes(String database,String tempDirectory,List<T> nodes)
 ```
 Nodes from a CSV file can be added to the database through the static method 
 ```
-public static <T extends NodeI> void insertNodesIntoNeo4J(String database,String fileCsv,String tempDirectory,Class<T> nodeClass)
+public static <T extends NodeI> void insertNodes(String database,String tempDirectory,String fileCsv)
 ```
 These methods require also a temporary directory in which save the CSV file created for the bulk data import.
 	
@@ -217,7 +217,19 @@ public class CrossLink implements LinkI {
 	}
 }
 ```
-
+	
+The class <i>data.external.neo4j</i> contains static methods to add links in the database.
+Links from a List can be added to the database through the static method 
+```
+public static <T extends LinkI> void insertLinks(String database,String tempDirectory,List<T> links,Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty, String sfCsvProperty,Class<? extends NodeI> stNodeElement, String stProperty, String stCsvProperty) 
+```
+Links from a CSV file can be added to the database through the static method 
+```
+public static <T extends LinkI> void insertLinks(String database,String tempDirectory,String fileCsv,Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty, String sfCsvProperty,Class<? extends NodeI> stNodeElement, String stProperty, String stCsvProperty)
+```
+These methods require also a temporary directory in which save the CSV file created for the bulk data import.
+	
+It is worth noting that if the node property selected to search the start/end node of a link is not a property index this query will be very slow.  
 </div>
  
   
