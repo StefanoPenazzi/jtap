@@ -168,8 +168,6 @@ All the queries that require a consistent transfer of data are performed using a
 @CsvBindByName(column = "property name in CSV")
 ```
 The column name in the CSV file can be differnet from the key name in neo4j. 
-  
-```
 	
 ```
 @Neo4JLinkElement(label="CrossLink")
@@ -220,10 +218,12 @@ public class CrossLink implements LinkI {
 	
 The class <i>data.external.neo4j</i> contains static methods to add links in the database.
 Links from a List can be added to the database through the static method 
+
 ```
 public static <T extends LinkI> void insertLinks(String database,String tempDirectory,List<T> links,Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty, String sfCsvProperty,Class<? extends NodeI> stNodeElement, String stProperty, String stCsvProperty) 
 ```
 Links from a CSV file can be added to the database through the static method 
+
 ```
 public static <T extends LinkI> void insertLinks(String database,String tempDirectory,String fileCsv,Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty, String sfCsvProperty,Class<? extends NodeI> stNodeElement, String stProperty, String stCsvProperty)
 ```
