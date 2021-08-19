@@ -39,6 +39,7 @@ CALL db.schema.visualization()
 <div align="justify">
 
 To query neo4j from JTAP a java driver is used <i> org.neo4j.driver </i>. The first thing to do is create a new properties file named <i> database.properties </i> in src/main/resources . In the file you need to add the neo4j_uri, neo4j_username, neo4j_password.
+
 ```
 neo4j_uri=neo4j://localhost:5763
 neo4j_username=hello
@@ -57,15 +58,18 @@ try( Neo4jConnection conn = new Neo4jConnection()){
 <h1>Insert nodes</h1>
 <div align="justify">
 In order to add new nodes to the database it is necessary a class annotated with
+
 ```	
 @Neo4JNodeElement(labels={"Neo4j Label1","Neo4j Label2"}) which implements NodeI.
 ```
 Moreover, each field of the class that need to be added as a property of the node in neo4j need to be annotated with
+
 ```
 @Neo4JPropertyElement(key="Neo4J property key",type=Neo4JType.TOSTRING)
 ```
 The second parameter of the annotation is the type of the property in neo4j. 
 All the queries that require a consistent transfer of data are performed using a bulk data import. This means that a CSV file representing the list of nodes (and their properties) is used to load the nodes in neo4j. Therefore, each field is also annotated with 
+
 ```
 @CsvBindByName(column = "property name in CSV")
 ```
