@@ -38,11 +38,18 @@ CALL db.schema.visualization()
 <h1>Query Neo4j from JTAP</h1>
 <div align="justify">
 
-To query neo4j from JTAP a java driver is used <i> org.neo4j.driver </i>. The first thing to do is create a new properties file <i> database.properties </i> in src/main/resources
+To query neo4j from JTAP a java driver is used <i> org.neo4j.driver </i>. The first thing to do is create a new properties file named <i> database.properties </i> in src/main/resources . In the file you need to add the neo4j_uri, neo4j_username, neo4j_password.
 ```
 neo4j_uri=neo4j://localhost:5763
 neo4j_username=hello
 neo4j_password=jtap
+```
+This informations are used in the class <i> data.external.neo4j.Neo4jConnection </i> to access the database. 
+  
+```
+try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,"your query",AccessMode.READ );
+}
 ```
   
 </div>
