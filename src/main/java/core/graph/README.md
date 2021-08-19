@@ -62,7 +62,7 @@ In order to add new nodes to the database it is necessary a class annotated with
 ```	
 @Neo4JNodeElement(labels={"Neo4j Label1","Neo4j Label2"})
 ```
-which implements NodeI. Moreover, each field of the class that need to be added as a property of the node in neo4j need to be annotated with
+which implements NodeI. Moreover, each field of the class that needs to be added as a property of the node in neo4j need to be annotated with
 
 ```
 @Neo4JPropertyElement(key="Neo4J property key",type=Neo4JType.TOSTRING)
@@ -137,10 +137,39 @@ public static <T extends NodeI> void insertNodesIntoNeo4J(String database,String
 ```
 These methods require also a temporary directory in which save the CSV file created for the bulk data import.
 	
+It is worth noting that the search queries performance is heavily affected by the use of indexes. Create a single-property index for nodes is highly recommended.
+This can be don in JTAP using
+
+```
+try( Neo4jConnection conn = new Neo4jConnection()){  
+    conn.query(database,"CREATE INDEX IndexName FOR (n:NodeLabel) ON (n.NodePropertyKey)",AccessMode.WRITE);
+}
+```
+
+	
 </div>
   
 <h1>Insert links</h1>
 <div align="justify">
+	
+In order to add new links to the database it is necessary a class annotated with
+```	
+@Neo4JLinkElement(label="Neo4J label")
+```
+which implements LinkI. Only one label is allowed per link, in contrast to the node which allows multiple labels .Moreover, each field of the class that needs to be added as a property of the node in neo4j need to be annotated with
+
+```
+@Neo4JPropertyElement(key="Neo4J property key",type=Neo4JType.TOSTRING)
+```
+The second parameter of the annotation is the type of the property in neo4j. 
+All the queries that require a consistent transfer of data are performed using a bulk data import. This means that a CSV file representing the list of nodes (and their properties) is used to load the nodes in neo4j. Therefore, each field is also annotated with 
+
+```
+@CsvBindByName(column = "property name in CSV")
+```
+The column name in the CSV file can be differnet from the key name in neo4j. 
+  
+```
 	
 ```
 @Neo4JLinkElement(label="CrossLink")
