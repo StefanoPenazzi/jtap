@@ -34,6 +34,12 @@ CALL db.schema.visualization()
 ```
 
 </div>
+	
+<h1>Setup Neo4J Config</h1>
+<div align="justify">
+</div>
+After creating the dbms it is necessary setup its config file.
+
   
 <h1>Query Neo4j from JTAP</h1>
 <div align="justify">
