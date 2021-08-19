@@ -16,7 +16,7 @@ In order to exploit the maximum potential (efficiency and reusability) of the ne
   
 <h1>Install Neo4J</h1>
 <div align="justify">
-You can download neo4j desktopt from here "https://neo4j.com/download/"
+You can download neo4j desktopt from <a href=""https://neo4j.com/download/"> here </a>
 </div>
  
   
