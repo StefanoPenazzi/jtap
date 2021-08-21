@@ -4,8 +4,9 @@
 </head>
 <body>
 
+<h1>Controller</h1>
 <div align="justify">
-JTAP follows the SOLID design principals.
+JTAP follows the  <a href="https://www.baeldung.com/solid-principles"> SOLID design principals</a>
 
 <ul>
   <li>Single Responsibility</li>
@@ -15,8 +16,13 @@ JTAP follows the SOLID design principals.
   <li>Dependency Inversion</li>
 </ul>
   
-Life is easier with IoC
- <a href="https://github.com/google/guice">Guice</a>
+The dependency inversion is obtined in JTAP using <a href="https://github.com/google/guice">Guice</a>. The controller manage the binds and the Injector.
+The default binds between interfaces and implementations are defined in the controllor
+  
+private static List<AbstractModule> modules = Collections.singletonList(new DefaultModule());
+
+
+
 </div>
 
   
