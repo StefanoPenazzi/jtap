@@ -18,8 +18,10 @@ JTAP follows the  <a href="https://www.baeldung.com/solid-principles"> SOLID des
   
 The dependency inversion is obtined in JTAP using <a href="https://github.com/google/guice">Guice</a>. The controller manage the binds and the Injector.
 The default binds between interfaces and implementations are defined in the controllor
-  
+
+```
 private static List<AbstractModule> modules = Collections.singletonList(new DefaultModule());
+```
 
 
 
