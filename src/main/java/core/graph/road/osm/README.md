@@ -34,7 +34,7 @@
 Open the terminal in the same directory in which you saved the OSM file (e.g. france-latest.osm.pbf). The following line shows an example considering only trunk, trunk_link, motorway, motorway_junction, motorway_link. A new file called france-road-latest.osm.bz2 (with osm.bz2 format) is saved in the same directory of france-latest.osm.pbf. 
 
 ```
-osmium tags-filter france-latest.osm.pbf w/highway=primary w/highway=primary_link w/highway=trunk w/highway=trunk_link w/highway=motorway w/highway=motorway_junction w/highway=motorway_link r/type=restriction -o france-road-latest.osm.bz2 -f osm.bz2,add_metadata=falseD
+osmium tags-filter france-latest.osm.pbf w/highway=primary w/highway=primary_link w/highway=trunk w/highway=trunk_link w/highway=motorway w/highway=motorway_junction w/highway=motorway_link r/type=restriction n/amenity n/tourism -o france-road-latest.osm.bz2 -f osm.bz2,add_metadata=falseD
 ```
   
 </div>
