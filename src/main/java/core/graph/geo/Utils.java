@@ -26,5 +26,21 @@ public class Utils {
 		insertCitiesIntoNeo4JFromCsv(database,config,cityClass);
 		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),cityClass,"id", nodeArrivalMap,true);
 	}
+	
+	/**
+	 * @param database
+	 * @throws Exception
+	 */
+	public static void addCityFacStatNode(String database) throws Exception {
+		try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,"MATCH (cit:CityNode) WITH DISTINCT cit.city AS cities UNWIND cities AS cn CREATE (g:CityFacStatNode {city:cn}) With g,cn Match(cit:CityNode) where cit.city=cn create(cit)-[j:STAT]->(g);",AccessMode.WRITE);
+			conn.query(database,"match (n:CityNode)-[r:CrossLink]->(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
+					+ "WITH DISTINCT f.tourism AS tourism,n.city AS cn,f AS ot UNWIND tourism AS tt WITH count(ot.tourism = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
+					+ "RETURN count(*);",AccessMode.WRITE);
+			conn.query(database,"match (n:CityNode)-[r:CrossLink]->(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
+					+ "WITH DISTINCT f.amenity AS amenities,n.city AS cn,f AS ot UNWIND amenities AS tt WITH count(ot.amenity = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
+					+ "RETURN count(*); ",AccessMode.WRITE);
+		}
+	}
 
 }

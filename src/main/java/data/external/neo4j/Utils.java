@@ -131,11 +131,13 @@ public class Utils {
 		Field stFiled = FieldUtils.getFieldsListWithAnnotation(stNodeElement, Neo4JPropertyElement.class).stream().filter(v -> v.getAnnotation(Neo4JPropertyElement.class)
 				.key().equals(stProperty)).findFirst().orElse(null);
 		
-		return "LOAD CSV WITH HEADERS FROM \"file:///"+file+"\" AS "+CSVLINE +
+		String res = "USING PERIODIC COMMIT 1000 LOAD CSV WITH HEADERS FROM \"file:///"+file+"\" AS "+CSVLINE +
 				" MATCH (sf:"+sfNodeElement.getAnnotation(Neo4JNodeElement.class).labels()[0]+" {"+sfProperty+":"+sfFiled.getAnnotation(Neo4JPropertyElement.class).type()+"(" +
 		CSVLINE+"."+sfCsvProperty+")}),(st:"+
 		stNodeElement.getAnnotation(Neo4JNodeElement.class).labels()[0]+" {"+stProperty+":"+stFiled.getAnnotation(Neo4JPropertyElement.class).type()+"(" +CSVLINE+"."+stCsvProperty+")}) "+
 		getCSVLinkString(linkElement,"sf","st");
+		
+		return res;
 	}
     
     /**
@@ -187,7 +189,7 @@ public class Utils {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVNodeQuery(tempDirectory+"/"+fileName,nodes.get(0).getClass()),AccessMode.WRITE );
 	    }
-		OS.delete(new File(tempDirectory+"/"+fileName));
+		//OS.delete(new File(tempDirectory+"/"+fileName));
     }
     
     /**
@@ -218,8 +220,8 @@ public class Utils {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(tempDirectory+"/"+
 		fileName,linkElement,sfNodeElement,sfProperty,sfCsvProperty,stNodeElement,stProperty,stCsvProperty),AccessMode.WRITE );
-		OS.delete(new File(tempDirectory+"/"+fileName));
 	    }
+		OS.delete(new File(tempDirectory+"/"+fileName));
     }
     
     /**
