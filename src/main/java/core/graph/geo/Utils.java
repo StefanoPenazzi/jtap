@@ -30,6 +30,15 @@ public class Utils {
 	/**
 	 * @param database
 	 * @throws Exception
+	 * 
+	 * The queries in this method consider the fact that the FacilityNodes are already connected with the CityNodes. 
+	 * FacilityNodes can be connected to CityNodes using core.graph.facility.osm.Utils.facilitiesIntoNeo4j(db) <br>
+	 * 
+	 * The method add new nodes labeled with CityFacStatNode containing a map of useful information for the attractiveness 
+	 * of the city. The CityFacStatNode are connected with CityNodes through the relation labeled with STAT <br>
+	 * 
+	 * <font color="red"> This method can take some time in case the FacilityNodes are many </font>
+	 * 
 	 */
 	public static void addCityFacStatNode(String database) throws Exception {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
