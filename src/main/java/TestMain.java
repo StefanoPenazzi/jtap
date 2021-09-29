@@ -57,7 +57,7 @@ public class TestMain implements Callable<Integer> {
 		//connect cities and facilities
 		core.graph.facility.osm.Utils.facilitiesIntoNeo4j(db);
 		//create the CityFacStatNodes
-		
+		core.graph.geo.Utils.addCityFacStatNode(db);
 		
 		
 		//connections between subgraphs

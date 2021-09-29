@@ -1,4 +1,4 @@
-package core.population;
+package core.graph.population;
 
 import java.util.HashMap;
 
