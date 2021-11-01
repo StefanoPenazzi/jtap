@@ -1,10 +1,7 @@
 package core.graph.population;
 
 import org.neo4j.driver.AccessMode;
-
 import config.Config;
-import core.graph.LinkI;
-import core.graph.NodeI;
 import core.graph.geo.City;
 import data.external.neo4j.Neo4jConnection;
 
@@ -14,11 +11,7 @@ public class Utils {
 	public static void insertStdPopulationFromCsv(String database,Config config,Class<StdAgentImpl> sai) throws Exception {
 		//insert nodes 
 		core.graph.Utils.insertNodesIntoNeo4J(database,config.getPopulationConfig().getAgentFile(),config.getGeneralConfig().getTempDirectory(),sai);
-		
-		try( Neo4jConnection conn = new Neo4jConnection()){ 
-			//conn.query(database,"DROP INDEX AgentNodeIndex",AccessMode.WRITE);
-			conn.query(database,"CREATE INDEX AgentNodeIndex FOR (n:AgentNode) ON (n.agent_id)",AccessMode.WRITE);
-		}
+		data.external.neo4j.Utils.createIndex(database,"AgentNode","agent_id");
 		
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			//city

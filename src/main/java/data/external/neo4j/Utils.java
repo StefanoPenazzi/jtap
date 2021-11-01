@@ -261,4 +261,52 @@ public class Utils {
 			 		+ " YIELD graphName,database, nodeCount, relationshipCount, schema;",AccessMode.READ);
 		return res;
 	}
+	
+	/**
+	 * @param database
+	 * @param label
+	 * @param property
+	 * @throws Exception
+	 */
+	public static void createIndex(String database, String label, String property) throws Exception {
+		try( Neo4jConnection conn = new Neo4jConnection()){
+			String q = "CREATE INDEX IF NOT EXISTS AgentNodeIndex FOR (n:"+label+") ON (n."+property+")";
+			conn.query(database,q,AccessMode.WRITE);
+		}
+	}
+	
+	/**
+	 * @param conn
+	 * @param database
+	 * @param label
+	 * @param property
+	 * @throws Exception
+	 */
+	public static void createIndex(Neo4jConnection conn,String database, String label, String property) throws Exception {
+		String q = "CREATE INDEX IF NOT EXISTS AgentNodeIndex FOR (n:"+label+") ON (n."+property+")";
+	}
+
+    /**
+     * @param database
+     * @param label
+     * @param property
+     * @throws Exception 
+     */
+    public static void deleteIndex(String database, String label, String property) throws Exception {
+    	try( Neo4jConnection conn = new Neo4jConnection()){
+			String q = "DROP INDEX ON:"+label+"("+property+")";
+			conn.query(database,q,AccessMode.WRITE);
+		}
+	}
+    
+    /**
+     * @param conn
+     * @param database
+     * @param label
+     * @param property
+     */
+    public static void deleteIndex(Neo4jConnection conn, String database, String label, String property) {
+		String q = "DROP INDEX ON:"+label+"("+property+")";
+		conn.query(database,q,AccessMode.WRITE);
+	}
 }

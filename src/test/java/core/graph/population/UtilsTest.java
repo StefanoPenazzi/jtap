@@ -1,11 +1,7 @@
 package core.graph.population;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
-
 import org.junit.jupiter.api.Test;
-
 import config.Config;
 import controller.Controller;
 
