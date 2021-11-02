@@ -48,18 +48,35 @@ public final class Utils {
 	
 	public static void deleteRailGTFS(String database) throws Exception {
          try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query(database,"MATCH (n:RailNode) DETACH DELETE n;",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
          }
 	}
 	
 	/**
+	 * The connections are generated considering the trip. This means that connection
+     * between two not consecutive stops are also considered if in the same trip
+     * 
+	 * a--->b--->c--->d
+	 * \        /    /
+	 *   ----->     /
+	 *   \         /
+	 *     ------>
+	 *     
+	 * If the not direct connections are not intended to be considered, this must 
+	 * be specified in the config file 
+	 *  
+	 * 
 	 * @param gtfs
 	 * @return
 	 */
-	public static Map<Pair<String,String>, List<Connection>> getRailConnections(GTFS gtfs){
+	public static Map<Pair<String,String>, List<Connection>> getRailConnections(GTFS gtfs, Boolean directConnections){
 		List<Connection> connections = new ArrayList<>();
 		List<StopTime> stopTime = gtfs.getStopTimes();
 		Map<String, List<StopTime>> tripStops = stopTime.stream()
+				 .filter(x -> x.getTripId().contains("2021-07-18"))
 				 .sorted(Comparator.comparing(StopTime::getDepartureTime))
 				 .collect(Collectors.groupingBy(StopTime::getTripId));
 		for (var entry : tripStops.entrySet()) {
@@ -71,6 +88,16 @@ public final class Utils {
 		    			st.get(j+1).getArrivalTime().toSecondOfDay()-
 	                    		  st.get(j).getDepartureTime().toSecondOfDay());
 		    	connections.add(c);
+		    }
+		    if(directConnections) {
+		    	for(int j=2;j<st.size()-1;j++) {
+			    	Connection c = new Connection(st.get(0).getStopId(),
+			    			st.get(j).getStopId(),
+			    			st.get(0).getDepartureTime(),
+			    			st.get(j).getArrivalTime().toSecondOfDay()-
+		                    		  st.get(0).getDepartureTime().toSecondOfDay());
+			    	connections.add(c);
+			    }
 		    }
 		}
 		Map<Pair<String,String>, List<Connection>> connectionsMap = connections.stream()
@@ -85,7 +112,7 @@ public final class Utils {
 	 */
 	public static List<RailLink> getRailLinks(GTFS gtfs){
 		List<RailLink> links = new ArrayList<>();
-		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs);
+		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs,true);
 		for (var entry : connections.entrySet()) {
 			String from = entry.getKey().getValue0();
 			String to = entry.getKey().getValue1();

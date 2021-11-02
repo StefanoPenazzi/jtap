@@ -10,34 +10,36 @@ import jakarta.xml.bind.annotation.XmlElement;
 
 
 @XmlRootElement(name = "config")
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlAccessorType(XmlAccessType.FIELD)
 public final class Config {
 	
-	private GTFSConfig gtfsConfig;
+	private RailConfig railConfig;
 	private GeneralConfig generalConfig;
 	private GeoLocConfig geoLocConfig;
 	private PopulationConfig populationConfig;
 	
-	@XmlElement(name = "gtfsConfig")
-	public GTFSConfig getGTFSConfig() {
-		return this.gtfsConfig;
+	@XmlElement(name = "railConfig")
+	public RailConfig getRailConfig() {
+		return this.railConfig;
 	}
 	
-	//@XmlElement(name = "generalConfig")
+	@XmlElement(name = "generalConfig")
 	public GeneralConfig getGeneralConfig() {
 		return this.generalConfig;
 	}
 	
+	@XmlElement(name = "geoLocConfig")
 	public GeoLocConfig getGeoLocConfig() {
 		return this.geoLocConfig;
 	}
 	
+	@XmlElement(name = "populationConfig")
 	public PopulationConfig getPopulationConfig() {
 		return this.populationConfig;
 	}
 	
-	public void setGTFSConfig(GTFSConfig gtfsConfig) {
-		this.gtfsConfig = gtfsConfig;
+	public void setRailConfig(RailConfig railConfig) {
+		this.railConfig = railConfig;
 	}
 	
 	public void setGeneralConfig(GeneralConfig generalConfig) {
@@ -51,10 +53,11 @@ public final class Config {
 	}
 	
 	public Config() {}
-	public Config(GTFSConfig gtfsConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig) {
-		this.gtfsConfig = gtfsConfig;
+	public Config(RailConfig railConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,PopulationConfig populationConfig) {
+		this.railConfig = railConfig;
 		this.generalConfig = generalConfig;
 		this.geoLocConfig = geoLocConfig;
+		this.populationConfig = populationConfig;
 	}
 	
 	public static Config of(File file) {
