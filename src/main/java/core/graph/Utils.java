@@ -209,5 +209,11 @@ public class Utils {
 	}
 	
 	
+	public static Boolean isAnnotationField(Class<? extends GraphElement> graphElement,String property) {
+		return  FieldUtils.getFieldsListWithAnnotation(graphElement, Neo4JPropertyElement.class).stream()
+				.filter(f -> f.getAnnotation(Neo4JPropertyElement.class)
+						.key().equals(property)).toArray().length == 1? true:false;
+	}
+	
 
 }

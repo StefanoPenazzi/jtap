@@ -52,6 +52,7 @@ public final class Utils {
         	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
         	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
 			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query(database,"DROP INDEX RailNodeIndex IF EXISTS",AccessMode.WRITE );
          }
 	}
 	

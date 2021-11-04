@@ -31,6 +31,7 @@ class UtilsTest {
 		core.graph.rail.Utils.deleteRailGTFS(db);
 		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,db,controller.getInjector().getInstance(Config.class));
 		
+
 		//connections between subgraphs
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
 		railConnMap.put(RoadNode.class,"node_osm_id");
