@@ -16,6 +16,7 @@ public final class RoutingGraph {
 	private final List<Class<? extends NodeGeoI>> nodes;
 	private final List<Class<? extends LinkI>> links;
 	private final String weight;
+	private Boolean cached = false;
 	
 	public RoutingGraph(String id,List<Class<? extends NodeGeoI>> nodes,List<Class<? extends LinkI>> links, String weight) throws Exception {
 		this.id = id;
@@ -46,7 +47,7 @@ public final class RoutingGraph {
 		
 	}
 	
-	private String graphCachingQuery() throws Exception {
+	private String graphCachingCypherQuery() throws Exception {
 		
 		StringBuffer res = new StringBuffer();
 		res.append("CALL gds.graph.create.cypher('");
@@ -88,15 +89,47 @@ public final class RoutingGraph {
 		return res.toString();
 	}
 	
-	
+	//Native should be faster than cypher
+    private String graphCachingNativeQuery() throws Exception {
+    	StringBuffer res = new StringBuffer();
+    	res.append("CALL gds.graph.create('");
+    	res.append(this.id);
+    	res.append("',[");
+    	
+    	String sn = "";
+		for(Class<? extends NodeGeoI> cn: nodes) {
+			sn += "'";
+			sn += cn.getAnnotation(Neo4JNodeElement.class).labels()[0];
+			sn += "',";
+		}
+		sn = sn.substring(0, sn.length() - 1);
+		res.append(sn);
+    	res.append("],[");
+    	String sl = "";
+		for(Class<? extends LinkI> li: links) {
+			sl += "'";
+			sl += li.getAnnotation(Neo4JLinkElement.class).label();
+			sl += "',";
+		}
+		sl = sl.substring(0, sl.length() - 1);
+		res.append(sl);
+		res.append("],{ nodeProperties: ['lat','lon'],relationshipProperties: '");
+		res.append(this.weight);
+    	res.append("'}) YIELD graphName RETURN graphName");
+    	
+    	
+		return res.toString();
+	}
+    
 	public void graphCaching(Neo4jConnection conn,String database) throws Exception {
-		String s = graphCachingQuery();
+		String s = graphCachingNativeQuery();
 		conn.query(database,s,AccessMode.WRITE );
+		cached = true;
 	}
 	
 	public void graphCaching(String database) throws Exception {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
-			String s = graphCachingQuery();
+			String s = graphCachingCypherQuery();
 			conn.query(database,s,AccessMode.WRITE );
 	    }
 	}
@@ -116,5 +149,8 @@ public final class RoutingGraph {
 		return this.weight;
 	};
 	
-
+	public Boolean cached() {
+		return this.cached;
+	}
+	
 }

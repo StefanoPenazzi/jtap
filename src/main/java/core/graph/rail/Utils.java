@@ -90,6 +90,7 @@ public final class Utils {
 	                    		  st.get(j).getDepartureTime().toSecondOfDay());
 		    	connections.add(c);
 		    }
+		    //TODO avg travel time 
 		    if(directConnections) {
 		    	for(int j=2;j<st.size()-1;j++) {
 			    	Connection c = new Connection(st.get(0).getStopId(),
@@ -113,7 +114,7 @@ public final class Utils {
 	 */
 	public static List<RailLink> getRailLinks(GTFS gtfs){
 		List<RailLink> links = new ArrayList<>();
-		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs,true);
+		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs,false);
 		for (var entry : connections.entrySet()) {
 			String from = entry.getKey().getValue0();
 			String to = entry.getKey().getValue1();

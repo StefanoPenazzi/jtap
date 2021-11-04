@@ -48,6 +48,19 @@ public class Utils {
 	}
 	
 	/**
+	 * @param database
+	 * @param query
+	 * @param am
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<Record> runQuery( Neo4jConnection conn,String database, String query, AccessMode am ) throws Exception {
+		List<Record> res = null;
+		res = conn.query(database,query,am);
+		return res;
+	}
+	
+	/**
 	 * @param file
 	 * @param element
 	 * @return
