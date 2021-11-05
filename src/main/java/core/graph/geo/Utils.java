@@ -51,4 +51,13 @@ public class Utils {
 					+ "RETURN count(*); ",AccessMode.WRITE);
 		}
 	}
+	
+	public static void deleteCities(String database) throws Exception {
+		try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:CityNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:CityNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:CityNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query(database,"DROP INDEX CityNodeIndex IF EXISTS",AccessMode.WRITE );
+		}
+	} 
 }

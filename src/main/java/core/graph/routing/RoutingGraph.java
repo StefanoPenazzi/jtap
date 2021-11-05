@@ -3,6 +3,7 @@ package core.graph.routing;
 import java.util.List;
 
 import org.neo4j.driver.AccessMode;
+import org.neo4j.driver.Record;
 
 import core.graph.LinkI;
 import core.graph.NodeGeoI;
@@ -123,6 +124,10 @@ public final class RoutingGraph {
     
 	public void graphCaching(Neo4jConnection conn,String database) throws Exception {
 		String s = graphCachingNativeQuery();
+		
+		List<Record> rec = conn.query(database,"CALL gds.graph.exists('"+this.id+"') YIELD exists RETURN exists",AccessMode.READ);
+		
+		conn.query(database,"CALL gds.graph.drop('"+this.id+"') YIELD graphName;",AccessMode.WRITE);
 		conn.query(database,s,AccessMode.WRITE );
 		cached = true;
 	}

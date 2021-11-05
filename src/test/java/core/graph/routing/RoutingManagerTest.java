@@ -24,16 +24,12 @@ class RoutingManagerTest {
 		List<Class<? extends NodeGeoI>> nodes = new ArrayList<>();
 		List<Class<? extends LinkI>> links = new ArrayList<>();
 		nodes.add(City.class);
-		nodes.add(Stop.class);
+		//nodes.add(Stop.class);
 		nodes.add(RoadNode.class);
-		
-		links.add(RailLink.class);
+		//links.add(RailLink.class);
 		links.add(CrossLink.class);
 		links.add(RoadLink.class);
-		
-		
 		RoutingGraph rg = new RoutingGraph("train-intersections-graph-2",nodes,links,"avg_travel_time");
-		
 		RoutingManager rm = new RoutingManager();
 		rm.addNewRoutingGraph(rg);
 		List<Record> res = rm.getRoute(null, null, null, null, null, null, null);
