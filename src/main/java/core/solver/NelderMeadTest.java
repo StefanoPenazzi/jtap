@@ -23,12 +23,11 @@ public class NelderMeadTest {
 	final SimplexOptimizer so = new SimplexOptimizer(sc);
 	
 	
-	
 	public void run() {
 		
 		//optimizer.build(startpoint);
 		org.apache.commons.math3.optim.PointValuePair pvp = so.optimize(optimizer, 
-				new ObjectiveFunction(new MultivariateFunctionTest()),GoalType.MINIMIZE,new MaxIter(10000000),new MaxEval(10000000),
+				new ObjectiveFunction(new MultivariateFunctionTest1()),GoalType.MINIMIZE,new MaxIter(10000000),new MaxEval(10000000),
 				new InitialGuess(new double[] {1d,1d})); //
 		System.out.print(""); 
 	}
@@ -38,6 +37,14 @@ public class NelderMeadTest {
 		@Override
 		public double value(double[] point) {
 			double res = Math.pow(point[0],2)+Math.pow(Math.E,Math.pow(point[1], 4))-30;
+			return res;
+		}
+	}
+	
+	class MultivariateFunctionTest1 implements MultivariateFunction{
+		@Override
+		public double value(double[] point) {
+			double res = Math.sin(point[0])/point[0] + Math.sin(point[1])/point[1];
 			return res;
 		}
 	}

@@ -1,7 +1,7 @@
 package core.models;
 
 
-public class ObjectiveFunctionCTAP_01 extends AbstractObjectiveFunctionCTAP {
+public class ObjectiveFunctionCTAP_01 extends ObjectiveFunctionCTAP {
 
 	private final double[] activityLocationCostRate;
 	private final double costOfTimeRate;

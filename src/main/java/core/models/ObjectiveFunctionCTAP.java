@@ -1,6 +1,6 @@
 package core.models;
 
-public abstract class AbstractObjectiveFunctionCTAP implements ObjectiveFunctionI {
+public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	
 	private final int nActivities;
@@ -20,7 +20,7 @@ public abstract class AbstractObjectiveFunctionCTAP implements ObjectiveFunction
 	
 	
 	
-	public AbstractObjectiveFunctionCTAP( int nActivities,
+	public ObjectiveFunctionCTAP( int nActivities,
 			                     int[] activitiesSequence,
 								 int[] locations,
 								 double[] percentageOfTimeTargetActivity,
@@ -49,7 +49,6 @@ public abstract class AbstractObjectiveFunctionCTAP implements ObjectiveFunction
 		 this.monetaryBudget = monetaryBudget;
 		 this.timeRelatedBudget = timeRelatedBudget;
 	}
-	
 	
 	public double getValue(double[] ts, double[] te) {
 		double res = 0;
@@ -89,14 +88,21 @@ public abstract class AbstractObjectiveFunctionCTAP implements ObjectiveFunction
 	}
 	
 	private double getPullFactor(int i,double[] ts, double[] te) {
-		return locationPerception[i]*1;
+		//TODO insert attractiveness function
+		return locationPerception[i]*1;                               
 	}
 	
-	public abstract double costActivityLocation(int i,double ts, double te); 
+	public double costActivityLocation(int i,double ts, double te) {
+		return 0;
+	}
 	
-	public abstract double costOfTime(double ts, double te); 
+	public double costOfTime(double ts, double te) {
+		return 0;
+	}
 	
-	public abstract double attractiveness(int i,double t);
+	public double attractiveness(int i,double t) {
+		return 0;
+	}
 	
 	private double getStateValue(int activity,double[] ts, double[] te) {
 		double res = 0;
