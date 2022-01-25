@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.Record;
@@ -30,7 +31,9 @@ class RoutingManagerTest {
 		RoutingGraph rg = new RoutingGraph("train-intersections-graph-2",nodes,links,"avg_travel_time");
 		RoutingManager rm = new RoutingManager();
 		rm.addNewRoutingGraph(rg);
-		List<Record> res = rm.getRoute(null, null, null, null, null, null, null);
+		City city = new City();
+		//List<Record> res = rm.getSourceTargetRoute("train-intersections-graph-2",city,city,"city","Paris","city","Pessac","avg_travel_time");
+		Map<String,Double> res_1 = rm.getSSSP_AsMap("train-intersections-graph-2",city,"city","Paris","city","avg_travel_time");
 		System.out.println();
 		rm.close();
 	}

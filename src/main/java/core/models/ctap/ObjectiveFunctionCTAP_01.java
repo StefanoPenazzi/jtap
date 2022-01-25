@@ -1,4 +1,4 @@
-package core.models;
+package core.models.ctap;
 
 
 public class ObjectiveFunctionCTAP_01 extends ObjectiveFunctionCTAP {

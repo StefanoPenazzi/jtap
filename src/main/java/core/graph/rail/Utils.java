@@ -43,7 +43,7 @@ public final class Utils {
 	
 	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String database,Config config,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
 		insertRailGTFSintoNeo4J(gtfs,database,config);
-		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),Stop.class,"id", nodeArrivalMap,true);
+		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),Stop.class,"id", nodeArrivalMap,1);
 	}
 	
 	public static void deleteRailGTFS(String database) throws Exception {

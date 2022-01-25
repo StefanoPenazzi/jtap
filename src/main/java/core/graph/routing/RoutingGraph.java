@@ -126,8 +126,9 @@ public final class RoutingGraph {
 		String s = graphCachingNativeQuery();
 		
 		List<Record> rec = conn.query(database,"CALL gds.graph.exists('"+this.id+"') YIELD exists RETURN exists",AccessMode.READ);
-		
-		conn.query(database,"CALL gds.graph.drop('"+this.id+"') YIELD graphName;",AccessMode.WRITE);
+		if(rec.get(0).values().get(0).isTrue()) {
+			conn.query(database,"CALL gds.graph.drop('"+this.id+"') YIELD graphName;",AccessMode.WRITE);
+		}
 		conn.query(database,s,AccessMode.WRITE );
 		cached = true;
 	}

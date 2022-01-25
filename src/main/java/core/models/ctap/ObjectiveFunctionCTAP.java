@@ -1,4 +1,6 @@
-package core.models;
+package core.models.ctap;
+
+import core.models.ObjectiveFunctionI;
 
 public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	

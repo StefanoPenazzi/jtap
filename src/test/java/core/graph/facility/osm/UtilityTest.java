@@ -16,7 +16,7 @@ class UtilityTest {
 		
 		Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
 		facilityConnMap.put(City.class,"city");
-		core.graph.Utils.setShortestDistCrossLink("france2", "/home/stefanopenazzi/projects/jtap/temp/",FacilityNode.class,"node_osm_id",facilityConnMap,true);
+		core.graph.Utils.setShortestDistCrossLink("france2", "/home/stefanopenazzi/projects/jtap/temp/",FacilityNode.class,"node_osm_id",facilityConnMap,3);
 	}
 
 }

@@ -97,7 +97,7 @@ public class Utils {
 	 * @param propNodeArrival
 	 * @throws Exception
 	 */
-	public static <T extends NodeGeoI,K extends NodeGeoI>  void setShortestDistCrossLink(String database,String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture,Class<K> nodeArrival,String propNodeArrival,Boolean twoWays) throws Exception {
+	public static <T extends NodeGeoI,K extends NodeGeoI>  void setShortestDistCrossLink(String database,String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture,Class<K> nodeArrival,String propNodeArrival,int direction) throws Exception {
 		
 		String labelNodeDeparture = null;
 		String labelNodeArrival =null;
@@ -170,8 +170,10 @@ public class Utils {
 								lat,lon,null));
 				        int dist = Gis.longDist(lat,lon,n.getCoords()[0],n.getCoords()[1]);
 				        int avgTravelTime = (int)(dist/CARSPEED);
-				        links.add(new CrossLink(sid,n.getValue().toString(),dist,avgTravelTime));
-						if(twoWays) {
+				        if(direction == 1 || direction == 3) {
+				        	links.add(new CrossLink(sid,n.getValue().toString(),dist,avgTravelTime));
+				        }
+						if(direction == 2 || direction == 3) {
 							links2Dir.add(new CrossLink(n.getValue().toString(),sid,dist,avgTravelTime));
 						}
 						break;	
@@ -180,9 +182,11 @@ public class Utils {
 			}
 		}
 		
+		if(direction == 1 || direction == 3) {
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,links
 				,CrossLink.class,nodeDeparture,propNodeDeparture,"from",nodeArrival,propNodeArrival,"to");	
-		if(twoWays) {
+		}
+		if(direction == 2 || direction == 3) {
 			data.external.neo4j.Utils.insertLinks(database,tempDirectory,links2Dir
 					,CrossLink.class,nodeArrival,propNodeArrival,"from",nodeDeparture,propNodeDeparture,"to");
 		}
@@ -197,14 +201,17 @@ public class Utils {
 	 * @param nodeDeparture
 	 * @param propNodeDeparture
 	 * @param nodeArrivalMap
+	 * @param direction            1: dep->arr 2:arr->dep 3: dep <-> arr
 	 * @throws Exception
 	 */
-	public static <T extends NodeGeoI> void setShortestDistCrossLink(String database,String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture, Map<Class<? extends NodeGeoI>,String> nodeArrivalMap,Boolean twoWays) throws Exception {
+	public static <T extends NodeGeoI> void setShortestDistCrossLink(String database,
+			String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture,
+			Map<Class<? extends NodeGeoI>,String> nodeArrivalMap,int direction) throws Exception {
 		
 		Iterator it = nodeArrivalMap.entrySet().iterator();
 	    while (it.hasNext()) {
 	    	Map.Entry<Class<? extends NodeGeoI>,String> pair = (Map.Entry)it.next();
-	    	setShortestDistCrossLink(database,tempDirectory,nodeDeparture,propNodeDeparture,pair.getKey(),pair.getValue(),twoWays);
+	    	setShortestDistCrossLink(database,tempDirectory,nodeDeparture,propNodeDeparture,pair.getKey(),pair.getValue(),direction);
 	    }
 	}
 	

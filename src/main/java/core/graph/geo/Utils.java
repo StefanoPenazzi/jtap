@@ -24,7 +24,7 @@ public class Utils {
 	
 	public static <T extends City> void insertAndConnectCitiesIntoNeo4JFromCsv(String database,Config config,Class<T> cityClass,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
 		insertCitiesIntoNeo4JFromCsv(database,config,cityClass);
-		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),cityClass,"id", nodeArrivalMap,true);
+		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),cityClass,"id", nodeArrivalMap,3);
 	}
 	
 	/**
