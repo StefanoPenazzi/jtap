@@ -7,10 +7,21 @@ public class ObjectiveFunctionCTAP_01 extends ObjectiveFunctionCTAP {
 	private final double costOfTimeRate;
 	
 	
-	public ObjectiveFunctionCTAP_01(int nActivities, int[] activitiesSequence, int[] locations,
-			double[] percentageOfTimeTargetActivity, double[] durationTargetActivity, double[] locationPerception,
-			double[] sigmaActivityCalibration, double[] tauActivityCalibration, double[] gammaActivityCalibration,
-			double[] travelCost, double[] travelTime, double monetaryBudget, double timeRelatedBudget, double[] activityLocationCostRate, double costOfTimeRate) {
+	public ObjectiveFunctionCTAP_01(int nActivities,
+			int[] activitiesSequence,
+			int[] locations,
+			double[] percentageOfTimeTargetActivity,
+			double[] durationTargetActivity,
+			double[] locationPerception,
+			double[] sigmaActivityCalibration,
+			double[] tauActivityCalibration,
+			double[] gammaActivityCalibration,
+			double[] travelCost,
+			double[] travelTime,
+			double monetaryBudget,
+			double timeRelatedBudget,
+			double[] activityLocationCostRate,
+			double costOfTimeRate) {
 		super(nActivities, activitiesSequence, locations, percentageOfTimeTargetActivity, durationTargetActivity,
 				locationPerception, sigmaActivityCalibration, tauActivityCalibration, gammaActivityCalibration, travelCost,
 				travelTime, monetaryBudget, timeRelatedBudget);

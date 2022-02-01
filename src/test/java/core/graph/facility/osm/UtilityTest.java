@@ -14,9 +14,11 @@ class UtilityTest {
 	void neo4jOSMFacilityTest() throws Exception {
 		//core.graph.facility.osm.Utils.facilitiesIntoNeo4j("france2");
 		
-		Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
-		facilityConnMap.put(City.class,"city");
-		core.graph.Utils.setShortestDistCrossLink("france2", "/home/stefanopenazzi/projects/jtap/temp/",FacilityNode.class,"node_osm_id",facilityConnMap,3);
+		//Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
+		//facilityConnMap.put(City.class,"city");
+		//core.graph.Utils.setShortestDistCrossLink("france2", "/home/stefanopenazzi/projects/jtap/temp/",FacilityNode.class,"node_osm_id",facilityConnMap,3);
+		
+		core.graph.geo.Utils.addCityFacStatNode("france2");
 	}
 
 }

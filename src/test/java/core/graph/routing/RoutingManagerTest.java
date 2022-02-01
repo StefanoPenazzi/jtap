@@ -33,8 +33,12 @@ class RoutingManagerTest {
 		rm.addNewRoutingGraph(rg);
 		City city = new City();
 		//List<Record> res = rm.getSourceTargetRoute("train-intersections-graph-2",city,city,"city","Paris","city","Pessac","avg_travel_time");
+		long start = System.currentTimeMillis();
 		Map<String,Double> res_1 = rm.getSSSP_AsMap("train-intersections-graph-2",city,"city","Paris","city","avg_travel_time");
-		System.out.println();
+		Map<String,Double> res_2 = rm.getSSSP_AsMap("train-intersections-graph-2",city,"city","Courcouronnes","city","avg_travel_time");
+		long end = System.currentTimeMillis();
+		long elapsedTime = end - start;
+		System.out.println(elapsedTime);
 		rm.close();
 	}
 
