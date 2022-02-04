@@ -1,20 +1,29 @@
 package core.dataset;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.inject.Inject;
+
+import config.Config;
 import core.graph.NodeGeoI;
 import core.graph.routing.RoutingGraph;
 import core.graph.routing.RoutingManager;
+
 
 public class RoutesMap {
 	
 	private Map<String,Map<String,Map<String,Double>>> map;
 	private List<RoutingGraph> projections;
 	private RoutingManager rm = new RoutingManager();
+	@Inject private Config config;
+	
 	
 	public RoutesMap(List<RoutingGraph> projections) throws Exception {
 		this.projections = projections;
@@ -53,8 +62,24 @@ public class RoutesMap {
 		
 	}
     
-    public void save() {
-    	
+    public void saveCSV() {
+    	String eol = System.getProperty("line.separator");
+    	try (Writer writer = new FileWriter(config.getGeneralConfig().getOutputDirectory()+"/")) {
+    	  for (Map.Entry<String,Map<String,Map<String,Double>>> entry : this.map.entrySet()) {
+    	    writer.append(entry.getKey()).append(',');
+    	    for (Map.Entry<String,Map<String,Double>> entry_1 : entry.getValue().entrySet()) {
+    	    	writer.append(entry_1.getKey()).append(',');
+    	    	for (Map.Entry<String,Double> entry_2 : entry_1.getValue().entrySet()) {
+        	    	writer.append(entry_2.getKey()).append(',');
+        	    	writer.append(entry_2.getValue().toString())
+        	    	.append(',')
+        	    	.append(eol);
+    	    	}
+    	    }
+    	  }
+    	} catch (IOException ex) {
+    	  ex.printStackTrace(System.err);
+    	}
     }
     
     public void close() throws Exception {
@@ -149,5 +174,6 @@ public class RoutesMap {
     	
     }
 	
-
+    
+    
 }

@@ -40,6 +40,7 @@ class RoutingManagerTest {
 		long elapsedTime = end - start;
 		System.out.println(elapsedTime);
 		rm.close();
+		
 	}
 
 }
