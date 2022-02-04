@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 import config.Config;
@@ -22,12 +23,13 @@ public class RoutesMap {
 	
 	private Map<String,Map<String,Map<String,Double>>> map  = new HashMap<>();
 	private List<RoutingGraph> projections = new ArrayList<>();
-	private RoutingManager rm = new RoutingManager();
+	private RoutingManager rm;
 	private Config config;
 	
 	@Inject 
-	public RoutesMap(Config config){
+	public RoutesMap(Config config,RoutingManager rm){
 		this.config = config;
+		this.rm = rm;
 	}
 	
 	
@@ -49,6 +51,7 @@ public class RoutesMap {
 	public void addSourceTargetRoutesFromNeo4j(List<SourceTargetRouteRequest> str ) {
 		
 	}
+	
     public void addSourceRoutesFromNeo4j(List<SourceRoutesRequest> srr ) throws Exception {
     	for(SourceRoutesRequest req: srr) {
     		Map<String,Double> res = rm.getSSSP_AsMap(req.getRg(),
@@ -78,16 +81,25 @@ public class RoutesMap {
     	String eol = System.getProperty("line.separator");
     	try (Writer writer = new FileWriter(config.getGeneralConfig().getOutputDirectory()+"RoutesMap.csv")) {
     	  for (Map.Entry<String,Map<String,Map<String,Double>>> entry : this.map.entrySet()) {
-    	    writer.append(entry.getKey()).append(',');
     	    for (Map.Entry<String,Map<String,Double>> entry_1 : entry.getValue().entrySet()) {
-    	    	writer.append(entry_1.getKey()).append(',');
     	    	for (Map.Entry<String,Double> entry_2 : entry_1.getValue().entrySet()) {
-        	    	writer.append(entry_2.getKey()).append(',');
-        	    	writer.append(entry_2.getValue().toString())
-        	    	.append(eol);
+    	    		 writer.append(entry.getKey()).append(',');
+    	    		 writer.append(entry_1.getKey()).append(',');
+        	    	 writer.append(entry_2.getKey()).append(',');
+        	    	 writer.append(entry_2.getValue().toString())
+        	    	 .append(eol);
     	    	}
     	    }
     	  }
+    	} catch (IOException ex) {
+    	  ex.printStackTrace(System.err);
+    	}
+    }
+    
+    public void saveJson() {
+    	ObjectMapper mapper = new ObjectMapper();
+    	try (Writer writer = new FileWriter(config.getGeneralConfig().getOutputDirectory()+"RoutesMap.txt")) {
+    	     writer.append(mapper.writeValueAsString(map));
     	} catch (IOException ex) {
     	  ex.printStackTrace(System.err);
     	}

@@ -50,7 +50,7 @@ class datasetTest {
 		//srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",city,"city","Courcouronnes","city","avg_travel_time"));
 		srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",city,"city","Paris","city","avg_travel_time"));
 		rm.addSourceRoutesFromNeo4j(srr);
-		rm.saveCSV();
+		rm.saveJson();
 		System.out.println();
 		rm.close();
 		

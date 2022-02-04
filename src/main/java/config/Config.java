@@ -19,6 +19,7 @@ public final class Config {
 	private GeneralConfig generalConfig;
 	private GeoLocConfig geoLocConfig;
 	private PopulationConfig populationConfig;
+	private Neo4JConfig neo4JConfig;
 	
 	@XmlElement(name = "railConfig")
 	public RailConfig getRailConfig() {
@@ -40,10 +41,14 @@ public final class Config {
 		return this.populationConfig;
 	}
 	
+	@XmlElement(name = "neo4JConfig")
+	public Neo4JConfig getNeo4JConfig() {
+		return this.neo4JConfig;
+	}
+	
 	public void setRailConfig(RailConfig railConfig) {
 		this.railConfig = railConfig;
 	}
-	
 	public void setGeneralConfig(GeneralConfig generalConfig) {
 		this.generalConfig = generalConfig;
 	}
@@ -53,15 +58,19 @@ public final class Config {
 	public void setPopulationConfig(PopulationConfig populationConfig) {
 		this.populationConfig = populationConfig;
 	}
+	public void setNeo4JConfig(Neo4JConfig neo4JConfig) {
+		this.neo4JConfig = neo4JConfig;
+	}
 	
 	@Inject
 	public Config() {}
 	
-	public Config(RailConfig railConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,PopulationConfig populationConfig) {
+	public Config(RailConfig railConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,PopulationConfig populationConfig,Neo4JConfig neo4JConfig) {
 		this.railConfig = railConfig;
 		this.generalConfig = generalConfig;
 		this.geoLocConfig = geoLocConfig;
 		this.populationConfig = populationConfig;
+		this.neo4JConfig = neo4JConfig;
 	}
 	
 	public static Config of(File file) {

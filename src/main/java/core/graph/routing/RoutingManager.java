@@ -10,6 +10,7 @@ import org.neo4j.driver.Record;
 
 import com.google.inject.Inject;
 
+import config.Config;
 import core.graph.NodeGeoI;
 import data.external.neo4j.Neo4jConnection;
 
@@ -18,11 +19,13 @@ public final class RoutingManager {
 	private Map<String,RoutingGraph>  routingGraphMap = new HashMap<>();
 	private final Neo4jConnection conn;
 	private final String database;
+	private Config config;
 	
 	@Inject
-	public RoutingManager() {
+	public RoutingManager(Config config) {
 		conn = new Neo4jConnection();
-		database = "france2";
+		this.config = config;
+		database = this.config.getNeo4JConfig().getDatabase();
 	}
 	
 	
