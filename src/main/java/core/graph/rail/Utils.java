@@ -29,10 +29,10 @@ public final class Utils {
 	 * @param nodes : array containing the nodes types that have to be connected with the GTFS network
 	 * @throws Exception
 	 */
-	public static void insertRailGTFSintoNeo4J(GTFS gtfs,String database,Config config) throws Exception {
+	public static void insertRailGTFSintoNeo4J(GTFS gtfs,String day,String database,Config config) throws Exception {
 		String tempDirectory = config.getGeneralConfig().getTempDirectory();
 		data.external.neo4j.Utils.insertNodes(database,tempDirectory,gtfs.getStops());
-		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs)
+		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs,day)
 				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailTransferLinks(gtfs)
 				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");
@@ -41,8 +41,8 @@ public final class Utils {
 		}
 	}
 	
-	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String database,Config config,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
-		insertRailGTFSintoNeo4J(gtfs,database,config);
+	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String day,String database,Config config,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
+		insertRailGTFSintoNeo4J(gtfs,day,database,config);
 		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),Stop.class,"id", nodeArrivalMap,1);
 	}
 	
@@ -73,13 +73,22 @@ public final class Utils {
 	 * @param gtfs
 	 * @return
 	 */
-	public static Map<Pair<String,String>, List<Connection>> getRailConnections(GTFS gtfs, Boolean directConnections){
+	public static Map<Pair<String,String>, List<Connection>> getRailConnections(GTFS gtfs, Boolean directConnections, String day){
 		List<Connection> connections = new ArrayList<>();
 		List<StopTime> stopTime = gtfs.getStopTimes();
-		Map<String, List<StopTime>> tripStops = stopTime.stream()
-				 .filter(x -> x.getTripId().contains("2021-07-18"))
-				 .sorted(Comparator.comparing(StopTime::getDepartureTime))
-				 .collect(Collectors.groupingBy(StopTime::getTripId));
+		Map<String, List<StopTime>> tripStops = null;
+		if(day != null) {
+			tripStops = stopTime.stream()
+					 .filter(x -> x.getTripId().contains(day))
+					 .sorted(Comparator.comparing(StopTime::getDepartureTime))
+					 .collect(Collectors.groupingBy(StopTime::getTripId));
+		}
+		else {
+			tripStops = stopTime.stream()
+					 .sorted(Comparator.comparing(StopTime::getDepartureTime))
+					 .collect(Collectors.groupingBy(StopTime::getTripId));
+		}
+		
 		for (var entry : tripStops.entrySet()) {
 			List<StopTime> st = entry.getValue();
 		    for(int j=0;j<st.size()-1;j++) {
@@ -112,9 +121,9 @@ public final class Utils {
 	 * @param gtfs
 	 * @return
 	 */
-	public static List<RailLink> getRailLinks(GTFS gtfs){
+	public static List<RailLink> getRailLinks(GTFS gtfs,String day){
 		List<RailLink> links = new ArrayList<>();
-		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs,false);
+		Map<Pair<String,String>, List<Connection>> connections = getRailConnections(gtfs,false,day);
 		for (var entry : connections.entrySet()) {
 			String from = entry.getKey().getValue0();
 			String to = entry.getKey().getValue1();

@@ -29,7 +29,7 @@ class UtilsTest {
 		//insert GTFS
 		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
 		core.graph.rail.Utils.deleteRailGTFS(db);
-		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,db,controller.getInjector().getInstance(Config.class));
+		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18",db,controller.getInjector().getInstance(Config.class));
 		
 
 		//connections between subgraphs
