@@ -3,6 +3,7 @@ package core.dataset;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,20 +20,31 @@ import core.graph.routing.RoutingManager;
 
 public class RoutesMap {
 	
-	private Map<String,Map<String,Map<String,Double>>> map;
-	private List<RoutingGraph> projections;
+	private Map<String,Map<String,Map<String,Double>>> map  = new HashMap<>();
+	private List<RoutingGraph> projections = new ArrayList<>();
 	private RoutingManager rm = new RoutingManager();
-	@Inject private Config config;
+	private Config config;
+	
+	@Inject 
+	public RoutesMap(Config config){
+		this.config = config;
+	}
 	
 	
-	public RoutesMap(List<RoutingGraph> projections) throws Exception {
-		this.projections = projections;
-		this.map = new HashMap<>();
-		for (RoutingGraph rg: projections) {
+	public void addProjection(RoutingGraph projection) throws Exception {
+		this.rm.addNewRoutingGraph(projection);
+		map.put(projection.getId(), new HashMap<>());
+	    this.projections.add(projection);
+	}
+	
+	public void addProjections(List<RoutingGraph> projections_) throws Exception {
+		for (RoutingGraph rg: projections_) {
 			this.rm.addNewRoutingGraph(rg);
 			map.put(rg.getId(), new HashMap<>());
 		}
+		this.projections.addAll(projections_);
 	}
+	
 	
 	public void addSourceTargetRoutesFromNeo4j(List<SourceTargetRouteRequest> str ) {
 		
@@ -64,7 +76,7 @@ public class RoutesMap {
     
     public void saveCSV() {
     	String eol = System.getProperty("line.separator");
-    	try (Writer writer = new FileWriter(config.getGeneralConfig().getOutputDirectory()+"/")) {
+    	try (Writer writer = new FileWriter(config.getGeneralConfig().getOutputDirectory()+"RoutesMap.csv")) {
     	  for (Map.Entry<String,Map<String,Map<String,Double>>> entry : this.map.entrySet()) {
     	    writer.append(entry.getKey()).append(',');
     	    for (Map.Entry<String,Map<String,Double>> entry_1 : entry.getValue().entrySet()) {
@@ -72,7 +84,6 @@ public class RoutesMap {
     	    	for (Map.Entry<String,Double> entry_2 : entry_1.getValue().entrySet()) {
         	    	writer.append(entry_2.getKey()).append(',');
         	    	writer.append(entry_2.getValue().toString())
-        	    	.append(',')
         	    	.append(eol);
     	    	}
     	    }

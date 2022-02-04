@@ -2,6 +2,8 @@ package config;
 
 import java.io.File;
 
+import com.google.inject.Inject;
+
 import data.utils.io.XML;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.annotation.*;
@@ -52,7 +54,9 @@ public final class Config {
 		this.populationConfig = populationConfig;
 	}
 	
+	@Inject
 	public Config() {}
+	
 	public Config(RailConfig railConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,PopulationConfig populationConfig) {
 		this.railConfig = railConfig;
 		this.generalConfig = generalConfig;
