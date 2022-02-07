@@ -22,7 +22,7 @@ import core.graph.routing.RoutingGraph;
 import core.graph.routing.RoutingManager;
 
 
-public class RoutesMap {
+public class RoutesMap implements DatasetMapI {
 	
 	private Map<String,Map<String,Map<String,Double>>> map  = new HashMap<>();
 	private List<RoutingGraph> projections = new ArrayList<>();
