@@ -8,8 +8,8 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JNodeElement(labels={"RailNode"},properties= {})
-public final class Stop implements NodeGeoI {
+@Neo4JNodeElement(labels={"RailNode"})
+public final class RailNode implements NodeGeoI {
 	
 	@CsvBindByName(column = "stop_id")
 	@Neo4JPropertyElement(key="id",type=Neo4JType.TOSTRING)

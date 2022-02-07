@@ -3,7 +3,7 @@ package core.graph.facility.osm;
 import org.neo4j.driver.AccessMode;
 
 import config.Config;
-import core.graph.geo.City;
+import core.graph.geo.CityNode;
 import data.external.neo4j.Neo4jConnection;
 
 public class Utils {

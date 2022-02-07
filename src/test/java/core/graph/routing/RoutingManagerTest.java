@@ -12,9 +12,9 @@ import org.neo4j.driver.Record;
 import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
-import core.graph.geo.City;
+import core.graph.geo.CityNode;
 import core.graph.rail.RailLink;
-import core.graph.rail.gtfs.Stop;
+import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
 

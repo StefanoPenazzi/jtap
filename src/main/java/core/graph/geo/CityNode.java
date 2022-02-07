@@ -8,8 +8,8 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JNodeElement(labels={"CityNode"},properties= {})
-public class City implements NodeGeoI{
+@Neo4JNodeElement(labels={"CityNode"})
+public class CityNode implements NodeGeoI{
 	
 	
 	@CsvBindByName(column = "city")

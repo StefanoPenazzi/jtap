@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import config.Config;
 import controller.Controller;
 import core.graph.NodeGeoI;
-import core.graph.geo.City;
+import core.graph.geo.CityNode;
 import core.graph.rail.gtfs.GTFS;
-import core.graph.rail.gtfs.Stop;
+import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadNode;
 
 class UtilsTest {
@@ -35,11 +35,11 @@ class UtilsTest {
 		//connections between subgraphs
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
 		railConnMap.put(RoadNode.class,"node_osm_id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),Stop.class,"id",railConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),RailNode.class,"id",railConnMap,3);
 		
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
-		cityConnMap.put(Stop.class, "id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),City.class,"city",cityConnMap,3);
+		cityConnMap.put(RailNode.class, "id");
+		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),CityNode.class,"city",cityConnMap,3);
 		
 	}
 

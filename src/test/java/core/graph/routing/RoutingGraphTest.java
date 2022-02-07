@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
-import core.graph.geo.City;
+import core.graph.geo.CityNode;
 import core.graph.rail.RailLink;
 import core.graph.rail.RailTransferLink;
-import core.graph.rail.gtfs.Stop;
+import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
 
@@ -23,8 +23,8 @@ class RoutingGraphTest {
 	void test() throws Exception {
 		List<Class<? extends NodeGeoI>> nodes = new ArrayList<>();
 		List<Class<? extends LinkI>> links = new ArrayList<>();
-		nodes.add(City.class);
-		nodes.add(Stop.class);
+		nodes.add(CityNode.class);
+		nodes.add(RailNode.class);
 		nodes.add(RoadNode.class);
 		
 		links.add(RailLink.class);

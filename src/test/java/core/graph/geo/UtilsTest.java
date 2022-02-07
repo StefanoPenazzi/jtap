@@ -11,7 +11,7 @@ import config.Config;
 import controller.Controller;
 import core.graph.NodeGeoI;
 import core.graph.rail.gtfs.GTFS;
-import core.graph.rail.gtfs.Stop;
+import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadNode;
 
 
@@ -30,13 +30,13 @@ class UtilsTest {
 		core.graph.geo.Utils.deleteCities(db);
 		
 		//insert cities
-		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(db,controller.getInjector().getInstance(Config.class),City.class);
+		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(db,controller.getInjector().getInstance(Config.class),CityNode.class);
 
 		//connect cities
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
 		cityConnMap.put(RoadNode.class,"node_osm_id");
-		cityConnMap.put(Stop.class, "id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),City.class,"city",cityConnMap,3);
+		cityConnMap.put(RailNode.class, "id");
+		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),CityNode.class,"city",cityConnMap,3);
 		
 		
 	}

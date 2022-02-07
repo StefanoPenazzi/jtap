@@ -9,7 +9,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
 
-@Neo4JNodeElement(labels={"RoadNode"},properties= {})
+@Neo4JNodeElement(labels={"RoadNode"})
 public class RoadNode implements NodeGeoI {
 	
 	@CsvBindByName(column = "node_osm_id")

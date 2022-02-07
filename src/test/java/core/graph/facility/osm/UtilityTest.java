@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import core.graph.NodeGeoI;
-import core.graph.geo.City;
+import core.graph.geo.CityNode;
 
 class UtilityTest {
 

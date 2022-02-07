@@ -11,7 +11,7 @@ import org.neo4j.driver.AccessMode;
 import config.Config;
 import core.graph.NodeGeoI;
 import core.graph.rail.gtfs.GTFS;
-import core.graph.rail.gtfs.Stop;
+import core.graph.rail.gtfs.RailNode;
 import core.graph.rail.gtfs.StopTime;
 import core.graph.rail.gtfs.Transfer;
 import data.external.neo4j.Neo4jConnection;
@@ -33,9 +33,9 @@ public final class Utils {
 		String tempDirectory = config.getGeneralConfig().getTempDirectory();
 		data.external.neo4j.Utils.insertNodes(database,tempDirectory,gtfs.getStops());
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs,day)
-				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");
+				,RailLink.class,core.graph.rail.gtfs.RailNode.class,"id","stop_from",core.graph.rail.gtfs.RailNode.class,"id","stop_to");
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailTransferLinks(gtfs)
-				,RailLink.class,core.graph.rail.gtfs.Stop.class,"id","stop_from",core.graph.rail.gtfs.Stop.class,"id","stop_to");
+				,RailLink.class,core.graph.rail.gtfs.RailNode.class,"id","stop_from",core.graph.rail.gtfs.RailNode.class,"id","stop_to");
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,"CREATE INDEX RailNodeIndex FOR (n:RailNode) ON (n.id)",AccessMode.WRITE);
 		}
@@ -43,7 +43,7 @@ public final class Utils {
 	
 	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String day,String database,Config config,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
 		insertRailGTFSintoNeo4J(gtfs,day,database,config);
-		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),Stop.class,"id", nodeArrivalMap,1);
+		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),RailNode.class,"id", nodeArrivalMap,1);
 	}
 	
 	public static void deleteRailGTFS(String database) throws Exception {

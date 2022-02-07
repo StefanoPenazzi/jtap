@@ -31,7 +31,6 @@ public interface GraphElementAnnotation {
 	@Target(ElementType.TYPE)
 	public @interface Neo4JNodeElement {
 		public String[] labels();
-		public String[] properties();
 	}
 	
 	@Inherited

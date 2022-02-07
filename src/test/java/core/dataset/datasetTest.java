@@ -13,7 +13,7 @@ import core.dataset.RoutesMap.SourceRoutesRequest;
 import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
-import core.graph.geo.City;
+import core.graph.geo.CityNode;
 import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
 import core.graph.routing.RoutingGraph;
@@ -34,7 +34,7 @@ class datasetTest {
 		
 		List<Class<? extends NodeGeoI>> nodes = new ArrayList<>();
 		List<Class<? extends LinkI>> links = new ArrayList<>();
-		nodes.add(City.class);
+		nodes.add(CityNode.class);
 		nodes.add(RoadNode.class);
 		links.add(CrossLink.class);
 		links.add(RoadLink.class);
@@ -45,10 +45,10 @@ class datasetTest {
 		
 		RoutesMap rm = controller.getInjector().getInstance(RoutesMap.class);
 		rm.addProjections(rgs);
-		City city = new City();
+		CityNode cityNode = new CityNode();
 		List<SourceRoutesRequest> srr = new ArrayList<>();
 		//srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",city,"city","Courcouronnes","city","avg_travel_time"));
-		srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",city,"city","Paris","city","avg_travel_time"));
+		srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",cityNode,"city","Paris","city","avg_travel_time"));
 		//rm.addSourceRoutesFromNeo4j(srr);
 		rm.addNewRoutesFromJson();
 		//rm.saveJson();

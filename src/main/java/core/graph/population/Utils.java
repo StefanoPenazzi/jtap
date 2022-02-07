@@ -2,7 +2,7 @@ package core.graph.population;
 
 import org.neo4j.driver.AccessMode;
 import config.Config;
-import core.graph.geo.City;
+import core.graph.geo.CityNode;
 import data.external.neo4j.Neo4jConnection;
 
 
@@ -16,7 +16,7 @@ public class Utils {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			//city
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getResidenceFile(),
-					AgentGeoLink.class,StdAgentImpl.class,"agent_id","agent_id",City.class,"city","city"),AccessMode.WRITE );
+					AgentGeoLink.class,StdAgentImpl.class,"agent_id","agent_id",CityNode.class,"city","city"),AccessMode.WRITE );
 			//families
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getFamilyFile(),
 					AgentFamilyLink.class,StdAgentImpl.class,"agent_id","agent_from_id",StdAgentImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );

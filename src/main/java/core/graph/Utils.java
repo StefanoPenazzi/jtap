@@ -225,6 +225,12 @@ public class Utils {
 						.key().equals(property)).toArray().length == 1? true:false;
 	}
 	
+	/**
+	 * @param <T>
+	 * @param map
+	 * @param nodeClass
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
 	public static <T extends GraphElement> T map2GraphElement(Map<String,Object> map,Class<T> nodeClass) {
 			T tsp = null;

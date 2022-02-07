@@ -12,7 +12,7 @@ import data.utils.io.CSV;
 public final class GTFS {
 	
 	private List<Route> routes;
-	private List<Stop> stops;
+	private List<RailNode> railNodes;
 	private List<StopTime> stopTimes;
 	private List<Transfer> transfers;
 	private List<Trip> trips;
@@ -36,7 +36,7 @@ public final class GTFS {
 	
 	private void initialize() throws IOException {
 		this.routes = CSV.getList(new File(gtfsDirectory+ROUTESFILE),Route.class,1);
-		this.stops = CSV.getListByHeaders(new File(gtfsDirectory+STOPSFILE),Stop.class);
+		this.railNodes = CSV.getListByHeaders(new File(gtfsDirectory+STOPSFILE),RailNode.class);
 		this.stopTimes = CSV.getList(new File(gtfsDirectory+STOPSTIMESFILE),StopTime.class,1);
 		this.transfers = CSV.getList(new File(gtfsDirectory+TRANSFERSFILE),Transfer.class,1);
 		this.trips = CSV.getList(new File(gtfsDirectory+TRIPSFILE),Trip.class,1);
@@ -45,8 +45,8 @@ public final class GTFS {
 	public List<Route> getRoutes(){
 		return this.routes;
 	}
-	public List<Stop> getStops(){
-		return this.stops;
+	public List<RailNode> getStops(){
+		return this.railNodes;
 	}
 	public List<StopTime> getStopTimes(){
 		return this.stopTimes;
