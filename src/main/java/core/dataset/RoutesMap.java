@@ -1,5 +1,6 @@
 package core.dataset;
 
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
@@ -76,6 +79,18 @@ public class RoutesMap {
     public void addNewRoutesFromCSV() {
 		
 	}
+    public void addNewRoutesFromJson() throws IOException {
+    	ObjectMapper mapper = new ObjectMapper();
+    	FileInputStream inputStream = new FileInputStream(config.getRoutingConfig().getJsonFile());
+    	try {
+    	    String json = IOUtils.toString(inputStream);
+    	    this.map = mapper.readValue(json, Map.class);
+    	    System.out.println();
+    	    
+    	} finally {
+    	    inputStream.close();
+    	}
+   	}
     
     public void saveCSV() {
     	String eol = System.getProperty("line.separator");
