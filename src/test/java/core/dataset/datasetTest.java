@@ -54,7 +54,5 @@ class datasetTest {
 		//rm.saveJson();
 		System.out.println();
 		rm.close();
-		
 	}
-
 }

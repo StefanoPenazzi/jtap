@@ -283,7 +283,7 @@ public class Utils {
 	 */
 	public static void createIndex(String database, String label, String property) throws Exception {
 		try( Neo4jConnection conn = new Neo4jConnection()){
-			String q = "CREATE INDEX IF NOT EXISTS AgentNodeIndex FOR (n:"+label+") ON (n."+property+")";
+			String q = "CREATE INDEX AgentNodeIndex IF NOT EXISTS FOR (n:"+label+") ON (n."+property+")";
 			conn.query(database,q,AccessMode.WRITE);
 		}
 	}
@@ -296,7 +296,7 @@ public class Utils {
 	 * @throws Exception
 	 */
 	public static void createIndex(Neo4jConnection conn,String database, String label, String property) throws Exception {
-		String q = "CREATE INDEX IF NOT EXISTS AgentNodeIndex FOR (n:"+label+") ON (n."+property+")";
+		String q = "CREATE INDEX AgentNodeIndex IF NOT EXISTS FOR (n:"+label+") ON (n."+property+")";
 	}
 
     /**
