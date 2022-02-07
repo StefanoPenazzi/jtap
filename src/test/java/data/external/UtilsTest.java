@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.Record;
 
+import core.graph.population.StdAgentImpl;
 import data.external.neo4j.Neo4jConnection;
 
 class UtilsTest {
@@ -47,6 +48,13 @@ class UtilsTest {
 		data.external.neo4j.Utils.deleteGraphCatalog(conn,"france2","intersections-graph");
 		System.out.println();
 		conn.close();
+	}
+	
+	@Test
+	void importNodesTest() throws Exception {
+		try( Neo4jConnection conn = new Neo4jConnection()){  
+			data.external.neo4j.Utils.importNodes(conn,"france2",StdAgentImpl.class);
+		}
 	}
 
 }

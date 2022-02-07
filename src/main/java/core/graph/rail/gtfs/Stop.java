@@ -8,7 +8,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JNodeElement(labels={"RailNode"})
+@Neo4JNodeElement(labels={"RailNode"},properties= {})
 public final class Stop implements NodeGeoI {
 	
 	@CsvBindByName(column = "stop_id")

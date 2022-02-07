@@ -8,7 +8,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JNodeElement(labels={"FacilityNode"})
+@Neo4JNodeElement(labels={"FacilityNode"},properties= {})
 public class FacilityNode implements NodeGeoI {
 		
 		@CsvBindByName(column = "node_osm_id")

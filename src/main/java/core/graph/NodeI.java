@@ -1,5 +1,8 @@
 package core.graph;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 
 /**
@@ -31,5 +34,6 @@ public interface NodeI extends GraphElement {
 			return false;
 		}
 	}
+	
 
 }

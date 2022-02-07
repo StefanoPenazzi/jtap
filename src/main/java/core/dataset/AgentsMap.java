@@ -3,15 +3,19 @@ package core.dataset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.inject.Inject;
+
+import config.Config;
 import core.graph.NodeI;
 
-public class AgentsMap {
+public class AgentsMap implements DatasetMapI {
 	
 	List<NodeI> agents  = new ArrayList<>();
+	private Config config;
 	
-	
-	public AgentsMap() {
-		
+	@Inject
+	public AgentsMap(Config config) {
+		this.config = config;
 	}
 	
 	public void getAgentsFromNeo4J() {

@@ -1,6 +1,8 @@
 package core.graph;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +20,7 @@ import data.external.neo4j.Neo4jConnection;
 import data.utils.geo.Gis;
 import data.utils.io.CSV;
 import data.utils.woods.kdTree.KdTree;
+
 
 /**
  * @author stefanopenazzi
@@ -221,6 +224,59 @@ public class Utils {
 				.filter(f -> f.getAnnotation(Neo4JPropertyElement.class)
 						.key().equals(property)).toArray().length == 1? true:false;
 	}
+	
+	@SuppressWarnings("deprecation")
+	public static <T extends GraphElement> T map2GraphElement(Map<String,Object> map,Class<T> nodeClass) {
+			T tsp = null;
+			try {
+				tsp = nodeClass.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			Field[] fields = nodeClass.getDeclaredFields();
+		    for(Field field: fields) {
+		    	Annotation[] annotations = field.getDeclaredAnnotations();
+				for(Annotation annotation : annotations){
+					String fieldName = null;
+				    if(annotation instanceof Neo4JPropertyElement){
+				    	field.setAccessible(true);
+				    	Neo4JPropertyElement myAnnotation = (Neo4JPropertyElement) annotation;
+				    	fieldName =  myAnnotation.key();
+				        Object res = map.get(fieldName);
+				        if(res != null) {
+				        	try {
+						        if (Integer.class.isAssignableFrom(field.getType())) {
+									field.set(tsp, ((Number)res).intValue());
+						        } else if (Double.class.isAssignableFrom(field.getType())) {
+						        	field.set(tsp, (Double)res);
+						        } else if (Float.class.isAssignableFrom(field.getType())) {
+						        	field.set(tsp, (Float)res);
+						        } else if (String.class.isAssignableFrom(field.getType())) {
+						        	field.set(tsp, (String)res);
+						        } else if (Boolean.class.isAssignableFrom(field.getType())) {
+						        	field.set(tsp, (Boolean)res);
+					        	} else if (Long.class.isAssignableFrom(field.getType())) {
+						        	field.set(tsp, (Long)res);
+						        }
+						        else {
+						        	//run exception
+						        }
+					        } catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (IllegalArgumentException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							}
+					        field.setAccessible(false);
+				        }
+				    }
+				}
+		}
+		return tsp;
+	} 
 	
 
 }

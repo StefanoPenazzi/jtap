@@ -1,7 +1,9 @@
 package data.external.neo4j;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import com.opencsv.bean.CsvBindByName;
 
 import config.Config;
 import core.graph.LinkI;
+import core.graph.NodeGeoI;
 import core.graph.NodeI;
 import core.graph.annotations.GraphElementAnnotation.Neo4JLinkElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
@@ -236,6 +239,20 @@ public class Utils {
 	    }
 		OS.delete(new File(tempDirectory+"/"+fileName));
     }
+    
+    
+    public static <T extends NodeI> List<T> importNodes(Neo4jConnection conn,String database,Class<T> nodeClass) throws Exception{
+    	List<T> result = new ArrayList<>(); 
+    	Constructor<T> nodeConstructor = nodeClass.getConstructor();
+    	T node =  nodeConstructor.newInstance(); 
+    	String query = "match (n:"+node.getLabels()[0]+") return n";
+	    List<Record> records = runQuery(conn,database,query,AccessMode.READ);
+	    for(Record rec: records) {
+	    	result.add(core.graph.Utils.map2GraphElement(rec.values().get(0).asMap(),nodeClass));
+	    }
+	    return result;
+    }
+    
     
     /**
 	 * @param conn
