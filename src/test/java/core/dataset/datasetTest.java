@@ -14,6 +14,7 @@ import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
 import core.graph.geo.CityNode;
+import core.graph.population.StdAgentImpl;
 import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
 import core.graph.routing.RoutingGraph;
@@ -54,5 +55,19 @@ class datasetTest {
 		//rm.saveJson();
 		System.out.println();
 		rm.close();
+	}
+	
+	@Test
+	void populationTest() throws Exception {
+		
+		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
+		Controller controller = new Controller(config);
+		controller.run();
+		controller.emptyTempDirectory();
+		
+		AgentsMap am = controller.getInjector().getInstance(AgentsMap.class);
+		am.getAgentsFromNeo4J(StdAgentImpl.class);
+		System.out.println();
+		
 	}
 }

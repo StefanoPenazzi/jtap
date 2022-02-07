@@ -253,6 +253,21 @@ public class Utils {
 	    return result;
     }
     
+    public static <T extends NodeI> List<T> importNodes(String database,Class<T> nodeClass) throws Exception{
+    	List<T> result = new ArrayList<>(); 
+    	Constructor<T> nodeConstructor = nodeClass.getConstructor();
+    	T node =  nodeConstructor.newInstance(); 
+    	String query = "match (n:"+node.getLabels()[0]+") return n";
+    	List<Record> records = null;
+    	try( Neo4jConnection conn = new Neo4jConnection()){  
+    		records = runQuery(conn,database,query,AccessMode.READ);
+    	}
+	    for(Record rec: records) {
+	    	result.add(core.graph.Utils.map2GraphElement(rec.values().get(0).asMap(),nodeClass));
+	    }
+	    return result;
+    }
+    
     
     /**
 	 * @param conn

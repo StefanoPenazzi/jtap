@@ -8,24 +8,17 @@ import com.google.inject.Inject;
 import config.Config;
 import core.graph.NodeI;
 
-public class AgentsMap implements DatasetMapI {
+public class AgentsMap <T extends NodeI> implements DatasetMapI {
 	
-	List<NodeI> agents  = new ArrayList<>();
+	List<T> agents  = new ArrayList<>();
 	private Config config;
 	
 	@Inject
 	public AgentsMap(Config config) {
-		this.config = config;
+		this.config = config; 
 	}
 	
-	public void getAgentsFromNeo4J() {
-		
+	public void getAgentsFromNeo4J(Class<T> agentClass) throws Exception {
+		agents = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),agentClass);
 	}
-	
-	//import the agents from the DB
-	
-	//select agent
-	
-	//create random agent
-
 }
