@@ -281,9 +281,9 @@ public class Utils {
 	 * @param property
 	 * @throws Exception
 	 */
-	public static void createIndex(String database, String label, String property) throws Exception {
+	public static void createIndex(String database, String indexName ,String label, String property) throws Exception {
 		try( Neo4jConnection conn = new Neo4jConnection()){
-			String q = "CREATE INDEX AgentNodeIndex IF NOT EXISTS FOR (n:"+label+") ON (n."+property+")";
+			String q = "CREATE INDEX "+indexName+" IF NOT EXISTS FOR (n:"+label+") ON (n."+property+")";
 			conn.query(database,q,AccessMode.WRITE);
 		}
 	}
@@ -295,8 +295,8 @@ public class Utils {
 	 * @param property
 	 * @throws Exception
 	 */
-	public static void createIndex(Neo4jConnection conn,String database, String label, String property) throws Exception {
-		String q = "CREATE INDEX AgentNodeIndex IF NOT EXISTS FOR (n:"+label+") ON (n."+property+")";
+	public static void createIndex(Neo4jConnection conn,String indexName, String database, String label, String property) throws Exception {
+		String q = "CREATE INDEX "+indexName+" IF NOT EXISTS FOR (n:"+label+") ON (n."+property+")";
 	}
 
     /**
@@ -320,6 +320,28 @@ public class Utils {
      */
     public static void deleteIndex(Neo4jConnection conn, String database, String label, String property) {
 		String q = "DROP INDEX ON:"+label+"("+property+")";
+		conn.query(database,q,AccessMode.WRITE);
+	}
+    
+    /**
+     * @param database
+     * @param indexName
+     */
+    public static void deleteIndex(String database, String indexName) throws Exception {
+    	try( Neo4jConnection conn = new Neo4jConnection()){
+			String q = "DROP INDEX "+indexName+" IF EXISTS";
+			conn.query(database,q,AccessMode.WRITE);
+		}
+	}
+    
+    /**
+     * @param conn
+     * @param database
+     * @param label
+     * @param property
+     */
+    public static void deleteIndex(Neo4jConnection conn, String database, String indexName) {
+		String q = "DROP INDEX "+indexName+" IF EXISTS";
 		conn.query(database,q,AccessMode.WRITE);
 	}
 }

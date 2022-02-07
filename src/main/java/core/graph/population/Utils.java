@@ -11,7 +11,7 @@ public class Utils {
 	public static void insertStdPopulationFromCsv(String database,Config config,Class<StdAgentImpl> sai) throws Exception {
 		//insert nodes 
 		core.graph.Utils.insertNodesIntoNeo4J(database,config.getPopulationConfig().getAgentFile(),config.getGeneralConfig().getTempDirectory(),sai);
-		data.external.neo4j.Utils.createIndex(database,"AgentNode","agent_id");
+		data.external.neo4j.Utils.createIndex(database,"AgentNodeIndex","AgentNode","agent_id");
 		
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			//city
@@ -25,4 +25,13 @@ public class Utils {
 					AgentFamilyLink.class,StdAgentImpl.class,"agent_id","agent_from_id",StdAgentImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );
 		}
 	}
+	
+	public static void deletePopulation(String database) throws Exception {
+		try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:AgentNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:AgentNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:AgentNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query(database,"DROP INDEX AgentNodeIndex IF EXISTS",AccessMode.WRITE );
+		}
+	} 
 }

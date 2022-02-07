@@ -14,10 +14,6 @@ public class StdAgentImpl implements NodeI {
 	@Neo4JPropertyElement(key="agent_id",type=Neo4JType.TOINTEGER)
 	private Integer id;
 	
-	@CsvBindByName(column = "city")
-	@Neo4JPropertyElement(key="city",type=Neo4JType.TOSTRING)
-	private String city;
-	
 	@CsvBindByName(column = "l_age")
 	@Neo4JPropertyElement(key="l_age",type=Neo4JType.TOINTEGER)
 	private Integer lAge;
@@ -38,16 +34,8 @@ public class StdAgentImpl implements NodeI {
 	@Neo4JPropertyElement(key="h_income",type=Neo4JType.TOFLOAT)
 	private Double hIncome;
 	
-	@CsvBindByName(column = "count")
-	@Neo4JPropertyElement(key="count",type=Neo4JType.TOFLOAT)
-	private Integer count;
-	
 	public Integer getId() {
 		return this.id;
-	}
-	
-	public String getCity() {
-		return this.city;
 	}
 	
 	public Integer getLAge() {
@@ -68,9 +56,5 @@ public class StdAgentImpl implements NodeI {
 	
 	public Double getHIncome() {
 		return this.hIncome;
-	}
-	
-	public Integer getCount() {
-		return this.count;
 	}
 }
