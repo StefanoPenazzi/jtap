@@ -40,8 +40,7 @@ public final class RailNode implements NodeGeoI {
 	private String parentStation;
 	
 	
-	
-	public String getId() {
+	public String stopId() {
 		return this.stopId;
 	}
 	public String getStopName() {
@@ -67,6 +66,10 @@ public final class RailNode implements NodeGeoI {
 	}
 	public String getParentStation() {
 		return this.parentStation;
+	}
+	@Override
+	public Long getId() {
+		return null;
 	}
 	
 }

@@ -15,7 +15,7 @@ public class RoadNode implements NodeGeoI {
 	@CsvBindByName(column = "node_osm_id")
 	@CsvBindByPosition(position = 0)
 	@Neo4JPropertyElement(key="node_osm_id",type=Neo4JType.TOINTEGER)
-	private String stopId;
+	private Long id;
 	@CsvBindByName(column = "lat")
 	@CsvBindByPosition(position = 1)
 	@Neo4JPropertyElement(key="lat",type=Neo4JType.TOFLOAT)
@@ -31,6 +31,10 @@ public class RoadNode implements NodeGeoI {
 	@Override
 	public Double getLon() {
 		return this.lon;
+	}
+	@Override
+	public Long getId() {
+		return this.id;
 	}
 
 }
