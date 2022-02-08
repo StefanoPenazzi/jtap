@@ -58,7 +58,7 @@ class datasetTest {
 	}
 	
 	@Test
-	void populationTest() throws Exception {
+	void agentsMapTest() throws Exception {
 		
 		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
 		Controller controller = new Controller(config);
@@ -67,6 +67,20 @@ class datasetTest {
 		
 		AgentsMap am = controller.getInjector().getInstance(AgentsMap.class);
 		am.getAgentsFromNeo4J(StdAgentImpl.class);
+		System.out.println();
+		
+	}
+	
+	@Test
+	void locationsMapTest() throws Exception {
+		
+		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
+		Controller controller = new Controller(config);
+		controller.run();
+		controller.emptyTempDirectory();
+		
+		LocationsMap am = controller.getInjector().getInstance(LocationsMap.class);
+		am.getLocationsFromNeo4J(CityNode.class);
 		System.out.println();
 		
 	}

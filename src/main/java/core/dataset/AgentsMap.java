@@ -1,16 +1,19 @@
 package core.dataset;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.inject.Inject;
 
 import config.Config;
 import core.graph.NodeI;
+import core.graph.population.AgentI;
 
-public class AgentsMap <T extends NodeI> implements DatasetMapI {
+public class AgentsMap <T extends AgentI> implements DatasetMapI {
 	
-	List<T> agents  = new ArrayList<>();
+	Map<Integer,T> agentsMap  = new HashMap<>();
 	private Config config;
 	
 	@Inject
@@ -19,6 +22,9 @@ public class AgentsMap <T extends NodeI> implements DatasetMapI {
 	}
 	
 	public void getAgentsFromNeo4J(Class<T> agentClass) throws Exception {
-		agents = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),agentClass);
+		List<T> agents = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),agentClass);
+		for(T agent: agents) {
+			agentsMap.put(agent.getId(), agent);
+		}
 	}
 }
