@@ -2,9 +2,9 @@ package core.graph.population;
 
 import java.util.HashMap;
 
-public interface AgentI {
+import core.graph.NodeI;
+
+public interface AgentI extends NodeI {
 	
 	public Integer getId();
-	public HashMap<String,Object> getProperties();
-
 }

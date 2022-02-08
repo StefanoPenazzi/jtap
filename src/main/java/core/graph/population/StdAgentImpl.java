@@ -8,7 +8,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
 @Neo4JNodeElement(labels={"AgentNode"})
-public class StdAgentImpl implements NodeI {
+public class StdAgentImpl implements AgentI {
 	
 	@CsvBindByName(column = "agent_id")
 	@Neo4JPropertyElement(key="agent_id",type=Neo4JType.TOINTEGER)
