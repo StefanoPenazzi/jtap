@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,12 +18,14 @@ import com.google.inject.Inject;
 import config.Config;
 import core.graph.NodeGeoI;
 import core.graph.NodeI;
+import core.graph.geo.CityNode;
 import data.external.neo4j.Neo4jConnection;
 
 public class LocationsMap <T extends NodeGeoI> implements DatasetMapI {
 	
-	Map<Long,Location> locationsMap  = new HashMap<>();
+	Map<Long,Location> locationsMap  = new ConcurrentHashMap<>();
 	private Config config;
+	public static final String LOCATIONS_MAP_KEY = "LocationsMap";
 	
 	@Inject
 	public LocationsMap(Config config) {
@@ -39,9 +42,7 @@ public class LocationsMap <T extends NodeGeoI> implements DatasetMapI {
 			  T loc = core.graph.Utils.map2GraphElement(rec.values().get(0).asMap(),locationClass);
 			  locationsMap.put(loc.getId(),new Location(loc,agents));
     	}
-	    System.out.println("");
 	}
-	
 	
 	class Location{
 		NodeGeoI node;
@@ -56,6 +57,17 @@ public class LocationsMap <T extends NodeGeoI> implements DatasetMapI {
 		public Map<Long,Long> getAgentsMap(){
 			return this.agents;
 		}
+	}
+
+
+	@Override
+	public String getKey() {
+		return LOCATIONS_MAP_KEY;
+	}
+
+	@Override
+	public void initialization() {
+		
 	}
 
 }

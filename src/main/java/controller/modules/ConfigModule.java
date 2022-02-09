@@ -1,4 +1,4 @@
-package controller;
+package controller.modules;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;

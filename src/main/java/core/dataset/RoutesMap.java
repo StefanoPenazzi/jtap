@@ -5,9 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,12 +24,12 @@ import core.graph.routing.RoutingManager;
 
 public class RoutesMap implements DatasetMapI {
 	
-	private Map<String,Map<String,Map<String,Double>>> map  = new HashMap<>();
+	private Map<String,Map<String,Map<String,Double>>> map  = new ConcurrentHashMap<>();
 	private List<RoutingGraph> projections = new ArrayList<>();
 	private RoutingManager rm;
 	private Config config;
+	public static final String ROUTES_MAP_KEY = "RoutesMap";
 	
-	@Inject 
 	public RoutesMap(Config config,RoutingManager rm){
 		this.config = config;
 		this.rm = rm;
@@ -38,14 +38,14 @@ public class RoutesMap implements DatasetMapI {
 	
 	public void addProjection(RoutingGraph projection) throws Exception {
 		this.rm.addNewRoutingGraph(projection);
-		map.put(projection.getId(), new HashMap<>());
+		map.put(projection.getId(), new ConcurrentHashMap<>());
 	    this.projections.add(projection);
 	}
 	
 	public void addProjections(List<RoutingGraph> projections_) throws Exception {
 		for (RoutingGraph rg: projections_) {
 			this.rm.addNewRoutingGraph(rg);
-			map.put(rg.getId(), new HashMap<>());
+			map.put(rg.getId(), new ConcurrentHashMap<>());
 		}
 		this.projections.addAll(projections_);
 	}
@@ -67,7 +67,7 @@ public class RoutesMap implements DatasetMapI {
     		if(m.containsKey(req.getSourcePropertyValue())) {
     			Map<String, Double> map3 = Stream.of(res, m.get(req.getSourcePropertyValue()))
     					  .flatMap(map -> map.entrySet().stream())
-    					  .collect(Collectors.toMap(
+    					  .collect(Collectors.toConcurrentMap(
     					    Map.Entry::getKey,
     					    Map.Entry::getValue));
     		}
@@ -211,6 +211,16 @@ public class RoutesMap implements DatasetMapI {
     	}
     	
     }
+	@Override
+	public String getKey() {
+		return ROUTES_MAP_KEY;
+	}
+
+
+	@Override
+	public void initialization() {
+		
+	}
 	
     
     

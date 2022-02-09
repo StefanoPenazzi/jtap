@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.inject.Inject;
 
 import config.Config;
 import core.graph.NodeI;
 import core.graph.population.AgentI;
+import core.graph.population.StdAgentImpl;
 
 public class AgentsMap <T extends AgentI> implements DatasetMapI {
 	
-	Map<Integer,T> agentsMap  = new HashMap<>();
+	protected Map<Integer,T> agentsMap  = new ConcurrentHashMap<>();
 	private Config config;
+	public static final String AGENT_MAP_KEY = "AgentsMap";
 	
-	@Inject
+	
 	public AgentsMap(Config config) {
 		this.config = config; 
 	}
@@ -26,5 +29,15 @@ public class AgentsMap <T extends AgentI> implements DatasetMapI {
 		for(T agent: agents) {
 			agentsMap.put(agent.getId(), agent);
 		}
+	}
+
+	@Override
+	public String getKey() {
+		return AGENT_MAP_KEY;
+	}
+
+	@Override
+	public void initialization() {
+		
 	}
 }

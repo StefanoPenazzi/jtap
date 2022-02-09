@@ -5,20 +5,24 @@ import java.util.List;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.util.Modules;
 
+import core.dataset.DatasetI;
+import core.dataset.DatasetMapI;
+
 public abstract class AbstractModule implements Module {
 
 		private Binder binder;
 		
-		/*
-		 * private MapBinder<String,TimeSeriesCleanerI> mapbinderTimeSeriesCleaner;
-		 * private MapBinder<String,TimeSeriesRequestI> mapbinderTimeSeriesRequest;
-		 */
+		
+		private MapBinder<String,DatasetMapI> datasetMap;
+		
+		
 		
 		//@Inject
 		//com.google.inject.Injector injector;
@@ -31,11 +35,8 @@ public abstract class AbstractModule implements Module {
 		public void configure(Binder binder) {
 			// TODO Auto-generated method stub
 			this.binder = binder.skipSources(AbstractModule.class);
-				
-			/*
-			 * mapbinderTimeSeriesRequest = MapBinder.newMapBinder(this.binder, new
-			 * TypeLiteral<String>(){},new TypeLiteral<TimeSeriesRequestI>(){} );
-			 */
+			
+			datasetMap = MapBinder.newMapBinder(binder(), String.class, DatasetMapI.class);
 			
 			this.install();
 		}
@@ -47,18 +48,20 @@ public abstract class AbstractModule implements Module {
 			binder.install(module);
 		}
 		
-		
-		/*
-		 * protected final LinkedBindingBuilder<DatasetFactoryI> bindDatasetFactory() {
-		 * return bind(DatasetFactoryI.class); }
-		 */
-		
 		protected <T> AnnotatedBindingBuilder<T> bind(Class<T> aClass) {
 			return binder.bind(aClass);
 		}
 		
 		protected final Binder binder() {
 			return binder;
+		}
+		
+		protected <T extends DatasetMapI> void addDatasetMap(String key, Class<T> classDM) {
+			datasetMap.addBinding(key).to(classDM);
+		}
+		
+		protected <T extends Provider<DatasetI>> void bindDataset(Class<T> datasetProviderClass) {
+			 binder().bind(DatasetI.class).toProvider(datasetProviderClass);
 		}
 		
 		public static AbstractModule override(final Iterable<? extends AbstractModule> modules, final AbstractModule abstractModule) {

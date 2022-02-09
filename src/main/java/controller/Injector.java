@@ -9,6 +9,7 @@ import com.google.inject.Guice;
 import com.google.inject.Module;
 
 import config.Config;
+import controller.modules.ConfigModule;
 
 public class Injector {
 	

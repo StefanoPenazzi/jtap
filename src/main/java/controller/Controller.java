@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import config.Config;
+import controller.modules.DefaultModule;
 
 
 public class Controller implements ControllerI {

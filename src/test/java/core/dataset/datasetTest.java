@@ -84,4 +84,17 @@ class datasetTest {
 		System.out.println();
 		
 	}
+	
+	@Test
+	void datasetControlerTest() throws Exception {
+		
+		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
+		Controller controller = new Controller(config);
+		controller.run();
+		controller.emptyTempDirectory();
+		
+		DatasetI am = controller.getInjector().getInstance(DatasetI.class);
+		System.out.println();
+		
+	}
 }
