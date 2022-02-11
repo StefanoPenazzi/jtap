@@ -14,6 +14,7 @@ public class PopulationConfig implements Serializable {
 	private String residenceFile;
 	private String familyFile;
 	private String friendFile;
+	private String activityFile;
 	
 	public PopulationConfig() {
 		
@@ -43,6 +44,11 @@ public class PopulationConfig implements Serializable {
 		return this.friendFile;
 	}
     
+    @XmlElement(name = "activityFile",required = true)
+	public String getActivityFile() {
+		return this.activityFile;
+	}
+    
     public void setAgentFile(String agentFile) {
     	this.agentFile = agentFile;
     }
@@ -57,6 +63,10 @@ public class PopulationConfig implements Serializable {
     
     public void setFriendFile(String friendFile) {
     	this.friendFile = friendFile;
+    }
+    
+    public void setActivityFile(String activityFile) {
+    	this.activityFile = activityFile;
     }
 	
 	

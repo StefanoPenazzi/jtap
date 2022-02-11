@@ -4,6 +4,7 @@ import java.io.File;
 import org.junit.jupiter.api.Test;
 import config.Config;
 import controller.Controller;
+import core.graph.Activity.ActivityNode;
 
 class UtilsTest {
 
@@ -13,7 +14,11 @@ class UtilsTest {
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
-		Utils.insertStdPopulationFromCsv("france2",controller.getInjector().getInstance(Config.class),StdAgentImpl.class);
+		
+		//activities first
+		core.graph.Activity.Utils.insertActivitiesFromCsv(config.getNeo4JConfig().getDatabase(),config,ActivityNode.class);
+		
+		Utils.insertStdPopulationFromCsv(config.getNeo4JConfig().getDatabase(),controller.getInjector().getInstance(Config.class),StdAgentImpl.class);
 	}
 	
 	@Test
@@ -23,5 +28,6 @@ class UtilsTest {
 		controller.run();
 		controller.emptyTempDirectory();
 		Utils.deletePopulation("france2");
+		core.graph.Activity.Utils.deleteActivities("france2");
 	}
 }

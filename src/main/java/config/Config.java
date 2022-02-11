@@ -21,6 +21,7 @@ public final class Config {
 	private PopulationConfig populationConfig;
 	private Neo4JConfig neo4JConfig;
 	private RoutingConfig routingConfig;
+	private ActivitiesConfig activitiesConfig;
 	
 	@XmlElement(name = "railConfig")
 	public RailConfig getRailConfig() {
@@ -52,6 +53,11 @@ public final class Config {
 		return this.routingConfig;
 	}
 	
+	@XmlElement(name = "activitiesConfig")
+	public ActivitiesConfig getActivitiesConfig() {
+		return this.activitiesConfig;
+	}
+	
 	public void setRailConfig(RailConfig railConfig) {
 		this.railConfig = railConfig;
 	}
@@ -70,18 +76,23 @@ public final class Config {
 	public void setRoutingConfig(RoutingConfig routingConfig) {
 		this.routingConfig = routingConfig;
 	}
+	public void setActivitiesConfig(ActivitiesConfig activitiesConfig) {
+		this.activitiesConfig = activitiesConfig;
+	}
 	
 	@Inject
 	public Config() {}
 	
 	public Config(RailConfig railConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,
-			PopulationConfig populationConfig,Neo4JConfig neo4JConfig,RoutingConfig routingConfig) {
+			PopulationConfig populationConfig,Neo4JConfig neo4JConfig,RoutingConfig routingConfig,
+			ActivitiesConfig activitiesConfig) {
 		this.railConfig = railConfig;
 		this.generalConfig = generalConfig;
 		this.geoLocConfig = geoLocConfig;
 		this.populationConfig = populationConfig;
 		this.neo4JConfig = neo4JConfig;
 		this.routingConfig = routingConfig;
+		this.activitiesConfig = activitiesConfig;
 	}
 	
 	public static Config of(File file) {
