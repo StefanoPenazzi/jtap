@@ -26,6 +26,10 @@ public class AgentActivityLink implements LinkI {
 	@Neo4JPropertyElement(key="duration_discomfort",type=Neo4JType.TOFLOAT)
 	private Double durationDiscomfort;
 	
+	@CsvBindByName(column = "time_duration")
+	@Neo4JPropertyElement(key="time_duration",type=Neo4JType.TOFLOAT)
+	private Double timeDuration;
+	
 	public Integer getAgentId() {
 		return this.agentId;
 	}
@@ -37,5 +41,8 @@ public class AgentActivityLink implements LinkI {
 	}
 	public Double getDurationDiscomfort() {
 		return this.durationDiscomfort;
+	}
+	public Double getTimeDuration() {
+		return this.timeDuration;
 	}
 }
