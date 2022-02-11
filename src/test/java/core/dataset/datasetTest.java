@@ -80,7 +80,7 @@ class datasetTest {
 		controller.emptyTempDirectory();
 		
 		LocationsMap am = controller.getInjector().getInstance(LocationsMap.class);
-		am.getLocationsFromNeo4J(CityNode.class);
+		//am.getLocationsFromNeo4J();
 		System.out.println();
 		
 	}

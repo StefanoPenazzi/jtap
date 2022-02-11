@@ -34,6 +34,14 @@ public class StdAgentImpl implements AgentI {
 	@Neo4JPropertyElement(key="h_income",type=Neo4JType.TOFLOAT)
 	private Double hIncome;
 	
+	@CsvBindByName(column = "monetary_budget")
+	@Neo4JPropertyElement(key="monetary_budget",type=Neo4JType.TOFLOAT)
+	private Double monetaryBudget;
+	
+	@CsvBindByName(column = "time_related_budget")
+	@Neo4JPropertyElement(key="time_related_budget",type=Neo4JType.TOFLOAT)
+	private Double timeRelatedBudget;
+	
 	public Integer getId() {
 		return this.id;
 	}
@@ -56,5 +64,11 @@ public class StdAgentImpl implements AgentI {
 	
 	public Double getHIncome() {
 		return this.hIncome;
+	}
+	public Double getMonetaryBudget() {
+		return this.monetaryBudget;
+	}
+	public Double getTimeRelatedBudget() {
+		return this.timeRelatedBudget;
 	}
 }

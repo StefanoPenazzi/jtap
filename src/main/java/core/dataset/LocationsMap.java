@@ -27,35 +27,35 @@ public class LocationsMap <T extends NodeGeoI> implements DatasetMapI {
 	private Config config;
 	public static final String LOCATIONS_MAP_KEY = "LocationsMap";
 	
-	@Inject
+	
 	public LocationsMap(Config config) {
 		this.config = config; 
 	}
 	
-	public void getLocationsFromNeo4J(Class<T> locationClass) throws Exception {
-    	String query = "match (n:CityNode)<-[r:AgentGeoLink]-(m:AgentNode) with Collect(m.agent_id) AS agent, Collect(r.size) AS size, n return n,agent,size";
-    	List<Record> records = data.external.neo4j.Utils.runQuery(config.getNeo4JConfig().getDatabase(),query,AccessMode.READ);
-    	for(Record rec:records) {
-			  List<Long> ag = ((ListValue)rec.values().get(1)).asList().stream().map(e -> (Long)e).collect(Collectors.toList());
-			  List<Long> ags = ((ListValue)rec.values().get(2)).asList().stream().map(e -> (Long)e).collect(Collectors.toList());
-			  Map<Long,Long> agents = IntStream.range(0,ag.size()).boxed().collect(Collectors.toMap(i -> ag.get(i), i -> ags.get(i)));
-			  T loc = core.graph.Utils.map2GraphElement(rec.values().get(0).asMap(),locationClass);
-			  locationsMap.put(loc.getId(),new Location(loc,agents));
-    	}
-	}
-	
 	class Location{
-		NodeGeoI node;
-		Map<Long,Long> agents;
-		public Location(NodeGeoI node, Map<Long,Long> agents) {
+		NodeGeoI node = null;
+		Map<Long,Long> agents = new HashMap<>();
+		Map<String,Number> statistics = new HashMap<>();
+		public Location(NodeGeoI node, Map<Long,Long> agents, Map<String,Number> statistics) {
 			this.node = node;
 			this.agents = agents;
+			this.statistics = statistics;
 		}
+		public Location() {}
 		public NodeGeoI getNode() {
 			return this.node;
 		}
 		public Map<Long,Long> getAgentsMap(){
 			return this.agents;
+		}
+		public Map<String,Number> getStatistics(){
+			return this.statistics;
+		}
+		public void addStatistics(String key, Number value) {
+			this.statistics.put(key, value);
+		}
+		public void addAgent(Long key, Long value) {
+			this.agents.put(key, value);
 		}
 	}
 
