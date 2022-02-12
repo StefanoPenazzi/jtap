@@ -2,6 +2,7 @@ package core.graph.population;
 
 import org.neo4j.driver.AccessMode;
 import config.Config;
+import controller.Controller;
 import core.graph.Activity.ActivityNode;
 import core.graph.geo.CityNode;
 import data.external.neo4j.Neo4jConnection;
@@ -9,8 +10,10 @@ import data.external.neo4j.Neo4jConnection;
 
 public class Utils {
 	
-	public static void insertStdPopulationFromCsv(String database,Config config,Class<StdAgentImpl> sai) throws Exception {
+	public static void insertStdPopulationFromCsv(Class<StdAgentImpl> sai) throws Exception {
 		//insert nodes 
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
 		core.graph.Utils.insertNodesIntoNeo4J(database,config.getPopulationConfig().getAgentFile(),config.getGeneralConfig().getTempDirectory(),sai);
 		data.external.neo4j.Utils.createIndex(database,"AgentNodeIndex","AgentNode","agent_id");
 		
@@ -30,12 +33,22 @@ public class Utils {
 		}
 	}
 	
-	public static void deletePopulation(String database) throws Exception {
-		try( Neo4jConnection conn = new Neo4jConnection()){  
+	public static void deletePopulation(Config config) throws Exception {
+		try( Neo4jConnection conn = new Neo4jConnection()){ 
+			String database = config.getNeo4JConfig().getDatabase();
 			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:AgentNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
         	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:AgentNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
 			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:AgentNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
 			conn.query(database,"DROP INDEX AgentNodeIndex IF EXISTS",AccessMode.WRITE );
+		}
+	} 
+	
+	public static void deletePopulation() throws Exception {
+		try(Neo4jConnection conn = Controller.getNeo4JConnection()){ 
+			conn.query("Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:AgentNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query("Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:AgentNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query("Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:AgentNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query("DROP INDEX AgentNodeIndex IF EXISTS",AccessMode.WRITE );
 		}
 	} 
 }

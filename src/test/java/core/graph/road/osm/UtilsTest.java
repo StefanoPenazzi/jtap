@@ -8,7 +8,7 @@ class UtilsTest {
 
 	@Test
 	void setOSMRoadNetworkIntoNeo4jTest() throws Exception {
-		core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j("france2");
+		core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j();
 	}
 
 }

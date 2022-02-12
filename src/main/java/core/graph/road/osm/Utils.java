@@ -2,6 +2,8 @@ package core.graph.road.osm;
 
 import org.neo4j.driver.AccessMode;
 
+import config.Config;
+import controller.Controller;
 import data.external.neo4j.Neo4jConnection;
 
 public class Utils {
@@ -12,7 +14,9 @@ public class Utils {
 //		Process p = pb.start();
 	}
 	
-	public static void setOSMRoadNetworkIntoNeo4j(String database) throws Exception {
+	public static void setOSMRoadNetworkIntoNeo4j() throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			String s = "MATCH (n:OSMNode)\n"
 					+ "  WHERE size((n)<-[:NODE]-(:OSMWayNode)-[:NEXT]-(:OSMWayNode)) > 2\n"

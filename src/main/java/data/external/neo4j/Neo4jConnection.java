@@ -4,6 +4,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.*;
+
+import com.google.inject.Inject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -19,9 +22,29 @@ public class Neo4jConnection implements AutoCloseable {
 	private final String username;
 	private final String password;
 	private Session session_ = null;
+	private config.Config config;
+	
+	@Inject
+	public Neo4jConnection(config.Config config)
+    {
+		this.config = config;
+		Properties properties = new Properties();
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("database.properties");
+		try {
+			properties.load(inputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.uri = properties.getProperty("neo4j_uri");
+	    this.username = properties.getProperty("neo4j_username");
+	    this.password = properties.getProperty("neo4j_password");
+        driver = GraphDatabase.driver( uri, AuthTokens.basic( username, password ) );
+        logger.log(Level.INFO," Neo4j Driver On ") ;
+    }
 	
 	public Neo4jConnection()
     {
+		this.config = null;
 		Properties properties = new Properties();
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("database.properties");
 		try {
@@ -65,6 +88,23 @@ public class Neo4jConnection implements AutoCloseable {
 		return res;
 	}
 	
+	
+    public List<Record> query(String query ) {
+		
+    	String database = this.config.getNeo4JConfig().getDatabase();
+		List<Record> res = null;
+		SessionConfig sessionConfig = SessionConfig.builder()
+				  .withDatabase( database )
+				  .withDefaultAccessMode( AccessMode.READ )
+				  .build();
+		try ( Session session = this.driver.session( sessionConfig ) )
+		{
+		  res = session.run(query).list();
+		}
+		
+		return res;
+	}
+	
 	/**
 	* Returns the result of the cypher query.
 	*
@@ -77,6 +117,22 @@ public class Neo4jConnection implements AutoCloseable {
 	
 	public List<Record> query(String database, String query, AccessMode accessMode ) {
 		
+		List<Record> res = null;
+		SessionConfig sessionConfig = SessionConfig.builder()
+				  .withDatabase( database )
+				  .withDefaultAccessMode(accessMode)
+				  .build();
+		try ( Session session = this.driver.session( sessionConfig ) )
+		{
+		  res = session.run(query).list();
+		}
+		
+		return res;
+	}
+	
+    public List<Record> query(String query, AccessMode accessMode ) {
+		
+    	String database = this.config.getNeo4JConfig().getDatabase();
 		List<Record> res = null;
 		SessionConfig sessionConfig = SessionConfig.builder()
 				  .withDatabase( database )

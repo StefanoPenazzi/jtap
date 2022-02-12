@@ -14,6 +14,7 @@ import com.google.inject.util.Modules;
 
 import core.dataset.DatasetI;
 import core.dataset.DatasetMapI;
+import data.external.neo4j.Neo4jConnection;
 
 public abstract class AbstractModule implements Module {
 
@@ -37,6 +38,7 @@ public abstract class AbstractModule implements Module {
 			this.binder = binder.skipSources(AbstractModule.class);
 			
 			datasetMap = MapBinder.newMapBinder(binder(), String.class, DatasetMapI.class);
+			binder.bind(Neo4jConnection.class);
 			
 			this.install();
 		}

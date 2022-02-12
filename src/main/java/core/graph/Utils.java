@@ -13,6 +13,8 @@ import org.neo4j.driver.AccessMode;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 
+import config.Config;
+import controller.Controller;
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.cross.CrossLink;
@@ -207,10 +209,12 @@ public class Utils {
 	 * @param direction            1: dep->arr 2:arr->dep 3: dep <-> arr
 	 * @throws Exception
 	 */
-	public static <T extends NodeGeoI> void setShortestDistCrossLink(String database,
-			String tempDirectory,Class<T> nodeDeparture,String propNodeDeparture,
+	public static <T extends NodeGeoI> void setShortestDistCrossLink(Class<T> nodeDeparture,String propNodeDeparture,
 			Map<Class<? extends NodeGeoI>,String> nodeArrivalMap,int direction) throws Exception {
 		
+		Config config = Controller.getConfig();
+		String tempDirectory = config.getGeneralConfig().getTempDirectory();
+		String database = config.getNeo4JConfig().getDatabase();
 		Iterator it = nodeArrivalMap.entrySet().iterator();
 	    while (it.hasNext()) {
 	    	Map.Entry<Class<? extends NodeGeoI>,String> pair = (Map.Entry)it.next();

@@ -27,16 +27,16 @@ class UtilsTest {
 		String db = "france2";
 		
 		//insert cities
-		core.graph.geo.Utils.deleteCities(db);
+		core.graph.geo.Utils.deleteCities();
 		
 		//insert cities
-		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(db,controller.getInjector().getInstance(Config.class),CityNode.class);
+		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(CityNode.class);
 
 		//connect cities
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
 		cityConnMap.put(RoadNode.class,"node_osm_id");
 		cityConnMap.put(RailNode.class, "id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),CityNode.class,"city",cityConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city",cityConnMap,3);
 		
 		
 	}

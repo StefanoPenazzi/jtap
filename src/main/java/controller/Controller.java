@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import config.Config;
 import controller.modules.DefaultModule;
+import data.external.neo4j.Neo4jConnection;
 
 
 public class Controller implements ControllerI {
@@ -34,6 +35,14 @@ public class Controller implements ControllerI {
 	
 	public static com.google.inject.Injector getInjector(){
 		return injector;
+	}
+	
+	public static Neo4jConnection getNeo4JConnection() {
+		return getInjector().getInstance(Neo4jConnection.class);
+	}
+	
+	public static Config getConfig() {
+		return getInjector().getInstance(Config.class);
 	}
 	
 	public static void emptyTempDirectory() {

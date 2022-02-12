@@ -28,18 +28,18 @@ class UtilsTest {
 		
 		//insert GTFS
 		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
-		core.graph.rail.Utils.deleteRailGTFS(db);
-		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18",db,controller.getInjector().getInstance(Config.class));
+		core.graph.rail.Utils.deleteRailGTFS();
+		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18");
 		
 
 		//connections between subgraphs
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
 		railConnMap.put(RoadNode.class,"node_osm_id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),RailNode.class,"id",railConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"id",railConnMap,3);
 		
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
 		cityConnMap.put(RailNode.class, "id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),CityNode.class,"city",cityConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city",cityConnMap,3);
 		
 	}
 

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.javatuples.Pair;
 import org.neo4j.driver.AccessMode;
 import config.Config;
+import controller.Controller;
 import core.graph.NodeGeoI;
 import core.graph.rail.gtfs.GTFS;
 import core.graph.rail.gtfs.RailNode;
@@ -29,7 +30,9 @@ public final class Utils {
 	 * @param nodes : array containing the nodes types that have to be connected with the GTFS network
 	 * @throws Exception
 	 */
-	public static void insertRailGTFSintoNeo4J(GTFS gtfs,String day,String database,Config config) throws Exception {
+	public static void insertRailGTFSintoNeo4J(GTFS gtfs,String day) throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
 		String tempDirectory = config.getGeneralConfig().getTempDirectory();
 		data.external.neo4j.Utils.insertNodes(database,tempDirectory,gtfs.getStops());
 		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs,day)
@@ -41,12 +44,16 @@ public final class Utils {
 		}
 	}
 	
-	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String day,String database,Config config,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
-		insertRailGTFSintoNeo4J(gtfs,day,database,config);
-		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),RailNode.class,"id", nodeArrivalMap,1);
+	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String day,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
+		insertRailGTFSintoNeo4J(gtfs,day);
+		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"id", nodeArrivalMap,1);
 	}
 	
-	public static void deleteRailGTFS(String database) throws Exception {
+	public static void deleteRailGTFS() throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
          try( Neo4jConnection conn = new Neo4jConnection()){  
         	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
         	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.neo4j.driver.AccessMode;
 
 import config.Config;
+import controller.Controller;
 import core.graph.NodeGeoI;
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.rail.gtfs.GTFS;
@@ -15,16 +16,19 @@ import data.utils.io.CSV;
 
 public class Utils {
 	
-	public static <T extends CityNode> void insertCitiesIntoNeo4JFromCsv(String database,Config config,Class<T> cityClass) throws Exception {
+	public static <T extends CityNode> void insertCitiesIntoNeo4JFromCsv(Class<T> cityClass) throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
 		core.graph.Utils.insertNodesIntoNeo4J(database,config.getGeoLocConfig().getCitiesFile(),config.getGeneralConfig().getTempDirectory(),cityClass);
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,"CREATE INDEX CityNodeIndex FOR (n:CityNode) ON (n.city)",AccessMode.WRITE);
 		}
 	}
 	
-	public static <T extends CityNode> void insertAndConnectCitiesIntoNeo4JFromCsv(String database,Config config,Class<T> cityClass,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
-		insertCitiesIntoNeo4JFromCsv(database,config,cityClass);
-		core.graph.Utils.setShortestDistCrossLink(database, config.getGeneralConfig().getTempDirectory(),cityClass,"id", nodeArrivalMap,3);
+	public static <T extends CityNode> void insertAndConnectCitiesIntoNeo4JFromCsv(Config config,Class<T> cityClass,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
+		String database = config.getNeo4JConfig().getDatabase();
+		insertCitiesIntoNeo4JFromCsv(cityClass);
+		core.graph.Utils.setShortestDistCrossLink(cityClass,"id", nodeArrivalMap,3);
 	}
 	
 	/**
@@ -40,7 +44,9 @@ public class Utils {
 	 * <font color="red"> This method can take some time in case the FacilityNodes are many </font>
 	 * 
 	 */
-	public static void addCityFacStatNode(String database) throws Exception {
+	public static void addCityFacStatNode() throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,"MATCH (cit:CityNode) WITH DISTINCT cit.city AS cities UNWIND cities AS cn CREATE (g:CityFacStatNode {city:cn}) With g,cn Match(cit:CityNode) where cit.city=cn create(cit)-[j:STAT]->(g);",AccessMode.WRITE);
 			conn.query(database,"match (n:CityNode)-[r:CrossLink]->(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
@@ -52,7 +58,9 @@ public class Utils {
 		}
 	}
 	
-	public static void deleteCities(String database) throws Exception {
+	public static void deleteCities() throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:CityNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
         	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:CityNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );

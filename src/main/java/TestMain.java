@@ -46,35 +46,35 @@ public class TestMain implements Callable<Integer> {
 		String db = "france2";
 		
 		//Road------------------------------------------------------------------
-		core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j(db);
+		core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j();
 		
 		//insert GTFS-----------------------------------------------------------
 		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
-		core.graph.rail.Utils.deleteRailGTFS(db);
-		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18",db,controller.getInjector().getInstance(Config.class));
+		core.graph.rail.Utils.deleteRailGTFS();
+		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18");
 		
 		
 		//insert cities---------------------------------------------------------
-		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(db,controller.getInjector().getInstance(Config.class),CityNode.class);
+		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(CityNode.class);
 		//create FacilityNodes from osm
-		core.graph.facility.osm.Utils.facilitiesIntoNeo4j(db);
+		core.graph.facility.osm.Utils.facilitiesIntoNeo4j(config);
 		//connect FacilityNodes with Cities
 		Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
 		facilityConnMap.put(CityNode.class,"city");
-		core.graph.Utils.setShortestDistCrossLink(db,config.getGeneralConfig().getTempDirectory(),FacilityNode.class,"node_osm_id",facilityConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(FacilityNode.class,"node_osm_id",facilityConnMap,3);
 		//create the CityFacStatNodes
-		core.graph.geo.Utils.addCityFacStatNode(db);
+		core.graph.geo.Utils.addCityFacStatNode();
 		
 		//Connections between RoadNetwork and RailNetwork-----------------------
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
 		railConnMap.put(RoadNode.class,"node_osm_id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),RailNode.class,"id",railConnMap,2);
+		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"id",railConnMap,2);
 		
 		//Connections between Cities and RoadNetwork/RailNetwork----------------
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
 		cityConnMap.put(RoadNode.class,"node_osm_id");
 		cityConnMap.put(RailNode.class, "id");
-		core.graph.Utils.setShortestDistCrossLink(db, config.getGeneralConfig().getTempDirectory(),CityNode.class,"city",cityConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city",cityConnMap,3);
 		
 		return 1;
 	}
