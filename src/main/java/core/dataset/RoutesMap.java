@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,6 +56,12 @@ public class RoutesMap implements DatasetMapI {
 		
 	}
 	
+    /**
+     * @param srr
+     * @throws Exception
+     * 
+     * In case a SourceRoutesRequest has the List<String> targets = null all the targets are considered
+     */
     public void addSourceRoutesFromNeo4j(List<SourceRoutesRequest> srr ) throws Exception {
     	for(SourceRoutesRequest req: srr) {
     		Map<String,Double> res = rm.getSSSP_AsMap(req.getRg(),
@@ -63,6 +70,10 @@ public class RoutesMap implements DatasetMapI {
     				req.getSourcePropertyValue(),
     				req.targetPropertyKey,
     				req.getWeightProperty());
+    		//filter the targets
+    		if(req.getTargets() != null) {
+    			res.keySet().retainAll(req.getTargets());
+    		}
     		Map<String,Map<String,Double>> m = map.get(req.getRg());
     		if(m.containsKey(req.getSourcePropertyValue())) {
     			Map<String, Double> map3 = Stream.of(res, m.get(req.getSourcePropertyValue()))
@@ -133,6 +144,17 @@ public class RoutesMap implements DatasetMapI {
 		String targetPropertyKey;
 		String targetPropertyValue;
 		String weightProperty;
+		
+    	/**
+    	 * @param rg
+    	 * @param source
+    	 * @param target
+    	 * @param startPropertyKey
+    	 * @param startPropertyValue
+    	 * @param endPropertyKey
+    	 * @param endPropertyValue
+    	 * @param weightProperty
+    	 */
     	public SourceTargetRouteRequest(String rg, T source, K target, String startPropertyKey, String startPropertyValue,
    			 String endPropertyKey, String endPropertyValue, String weightProperty) {
     		
@@ -172,15 +194,32 @@ public class RoutesMap implements DatasetMapI {
     	}
     	
     }
-    class SourceRoutesRequest<T extends NodeGeoI>{
-    	private String rg;
-    	private T source;
-    	private String sourcePropertyKey;
-    	private String sourcePropertyValue;
-    	private String targetPropertyKey;
-    	private String weightProperty;
+    
+    
+    /**
+     * @author stefanopenazzi
+     *
+     * @param <T>
+     */
+    public class SourceRoutesRequest<T extends NodeGeoI>{
+    	private final String rg;
+    	private final T source;
+    	private final String sourcePropertyKey;
+    	private final String sourcePropertyValue;
+    	private final String targetPropertyKey;
+    	private final String weightProperty;
+    	private final List<String> targets;
+    	/**
+    	 * @param rg
+    	 * @param source
+    	 * @param startPropertyKey
+    	 * @param startPropertyValue
+    	 * @param endPropertyKey
+    	 * @param weightProperty
+    	 * @param targets            if this is null all the targets are considered
+    	 */
     	public SourceRoutesRequest(String rg, T source, String startPropertyKey, String startPropertyValue,
-   			 String endPropertyKey, String weightProperty) {
+   			 String endPropertyKey, String weightProperty,List<String> targets) {
     		
     		this.rg = rg;
     		this.source = source;
@@ -188,6 +227,7 @@ public class RoutesMap implements DatasetMapI {
     		this.sourcePropertyValue = startPropertyValue;
     		this.targetPropertyKey = endPropertyKey;
     		this.weightProperty = weightProperty;
+    		this.targets = targets;
     		
     	}
     	
@@ -208,6 +248,9 @@ public class RoutesMap implements DatasetMapI {
     	}
     	public String getWeightProperty() {
     		return this.weightProperty;
+    	}
+    	public List<String> getTargets(){
+    		return this.targets;
     	}
     	
     }

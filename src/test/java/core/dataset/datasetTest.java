@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,7 @@ import core.graph.population.StdAgentImpl;
 import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
 import core.graph.routing.RoutingGraph;
+import projects.CTAP.dataset.RoutesMapCTAP;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,6 +41,7 @@ class datasetTest {
 		nodes.add(RoadNode.class);
 		links.add(CrossLink.class);
 		links.add(RoadLink.class);
+		
 		RoutingGraph rg = new RoutingGraph("train-intersections-graph-2",nodes,links,"avg_travel_time");
 		
 		List<RoutingGraph> rgs = new ArrayList<RoutingGraph>();
@@ -49,10 +52,43 @@ class datasetTest {
 		CityNode cityNode = new CityNode();
 		List<SourceRoutesRequest> srr = new ArrayList<>();
 		//srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",city,"city","Courcouronnes","city","avg_travel_time"));
-		srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",cityNode,"city","Paris","city","avg_travel_time"));
+		srr.add(rm.new SourceRoutesRequest("train-intersections-graph-2",cityNode,"city","Paris","city","avg_travel_time",null));
 		//rm.addSourceRoutesFromNeo4j(srr);
 		rm.addNewRoutesFromJson();
 		//rm.saveJson();
+		System.out.println();
+		rm.close();
+	}
+	
+	@Test
+	void RoutesClustersTest() throws Exception {
+		
+		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
+		Controller controller = new Controller(config);
+		controller.run();
+		controller.emptyTempDirectory();
+		String db = "france2";
+		
+		List<Class<? extends NodeGeoI>> nodes = new ArrayList<>();
+		List<Class<? extends LinkI>> links = new ArrayList<>();
+		nodes.add(CityNode.class);
+		nodes.add(RoadNode.class);
+		links.add(CrossLink.class);
+		links.add(RoadLink.class);
+		RoutingGraph rg = new RoutingGraph("train-intersections-graph-2",nodes,links,"avg_travel_time");
+		
+		List<RoutingGraph> rgs = new ArrayList<RoutingGraph>();
+		rgs.add(rg);
+		
+		Dataset dsi = (Dataset) controller.getInjector().getInstance(DatasetI.class);
+		RoutesMapCTAP rm = (RoutesMapCTAP) dsi.getMap(RoutesMap.ROUTES_MAP_KEY);
+		rm.addProjections(rgs);
+	
+		List<SourceRoutesRequest> res = projects.CTAP.geolocClusters.Utils.getSRR_cluster1(rm, "train-intersections-graph-2", 75000);
+		
+		res = res.stream().limit(10).collect(Collectors.toList());
+		
+		rm.addSourceRoutesFromNeo4j(res);
 		System.out.println();
 		rm.close();
 	}
