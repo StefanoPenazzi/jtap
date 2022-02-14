@@ -12,12 +12,14 @@ public class GeneralConfig implements Serializable {
 	
 	private String tempDirectory;
 	private String outputDirectory;
+	private Integer threads;
 	
 	public GeneralConfig() {}
 	
-    public GeneralConfig(String tempDirectory, String outputDirectory) {
+    public GeneralConfig(String tempDirectory, String outputDirectory,Integer threads) {
     	this.tempDirectory = tempDirectory;
     	this.outputDirectory = outputDirectory;
+    	this.threads = threads;
 	}
 	
     @XmlElement(name = "tempDirectory",required = true)
@@ -30,12 +32,21 @@ public class GeneralConfig implements Serializable {
    		return this.outputDirectory;
    	}
     
+    @XmlElement(name = "threads",required = true)
+   	public Integer getThreads() {
+   		return this.threads;
+   	}
+    
     public void setTempDirectory(String tempDirectory) {
     	this.tempDirectory = tempDirectory;
     }
     
     public void setOutputDirectory(String outputDirectory) {
     	this.outputDirectory = outputDirectory;
+    }
+    
+    public void setThreads(Integer threads) {
+    	this.threads = threads;
     }
 	
 	@Override

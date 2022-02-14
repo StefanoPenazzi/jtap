@@ -96,6 +96,14 @@ public final class RoutingManager {
 		return map;
 	}
 	
+	//TODO
+	public <T extends NodeGeoI>  List<Map<String,Double>> getSSSP_AsMapParallel(String rg, List<T> source, List<String> sourcePropertyKey, List<String> sourcePropertyValue,
+			 List<String> targetPropertyKey, List<String> weightProperty) throws Exception {
+	    
+		
+		return null;
+	}
+	
 	public void addNewRoutingGraph(RoutingGraph rg) throws Exception {
 		routingGraphMap.put(rg.getId(), rg);
 		if(!rg.cached()) {

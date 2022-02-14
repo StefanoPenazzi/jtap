@@ -1,10 +1,13 @@
 package core.graph.facility.osm;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import config.Config;
+import controller.Controller;
 import core.graph.NodeGeoI;
 import core.graph.geo.CityNode;
 
@@ -12,13 +15,13 @@ class UtilityTest {
 
 	@Test
 	void neo4jOSMFacilityTest() throws Exception {
-		//core.graph.facility.osm.Utils.facilitiesIntoNeo4j("france2");
+		Config config = Config.of(new File("/home/stefanopenazzi/projects/jtap/config_.xml")); 
+		Controller controller = new Controller(config);
+		controller.run();
+		controller.emptyTempDirectory();
 		
-		//Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
-		//facilityConnMap.put(City.class,"city");
-		//core.graph.Utils.setShortestDistCrossLink("france2", "/home/stefanopenazzi/projects/jtap/temp/",FacilityNode.class,"node_osm_id",facilityConnMap,3);
+		core.graph.geo.Utils.addCityFacStatNode();
 		
-		//core.graph.geo.Utils.addCityFacStatNode("france2");
 	}
 
 }

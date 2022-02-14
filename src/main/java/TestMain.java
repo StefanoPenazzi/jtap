@@ -43,7 +43,6 @@ public class TestMain implements Callable<Integer> {
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
-		String db = "france2";
 		
 		//Road------------------------------------------------------------------
 		core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j();
