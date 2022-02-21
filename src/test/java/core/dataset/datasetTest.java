@@ -15,7 +15,7 @@ import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
 import core.graph.geo.CityNode;
-import core.graph.population.StdAgentImpl;
+import core.graph.population.StdAgentNodeImpl;
 import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
 import core.graph.routing.RoutingGraph;
@@ -102,7 +102,7 @@ class datasetTest {
 		controller.emptyTempDirectory();
 		
 		AgentsMap am = controller.getInjector().getInstance(AgentsMap.class);
-		am.getAgentsFromNeo4J(StdAgentImpl.class);
+		am.getAgentsFromNeo4J(StdAgentNodeImpl.class);
 		System.out.println();
 		
 	}

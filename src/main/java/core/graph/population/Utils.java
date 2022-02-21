@@ -10,7 +10,7 @@ import data.external.neo4j.Neo4jConnection;
 
 public class Utils {
 	
-	public static void insertStdPopulationFromCsv(Class<StdAgentImpl> sai) throws Exception {
+	public static void insertStdPopulationFromCsv(Class<StdAgentNodeImpl> sai) throws Exception {
 		//insert nodes 
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
@@ -20,16 +20,16 @@ public class Utils {
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			//city
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getResidenceFile(),
-					AgentGeoLink.class,StdAgentImpl.class,"agent_id","agent_id",CityNode.class,"city","city"),AccessMode.WRITE );
+					AgentGeoLink.class,StdAgentNodeImpl.class,"agent_id","agent_id",CityNode.class,"city","city"),AccessMode.WRITE );
 			//families
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getFamilyFile(),
-					AgentFamilyLink.class,StdAgentImpl.class,"agent_id","agent_from_id",StdAgentImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );
+					AgentFamilyLink.class,StdAgentNodeImpl.class,"agent_id","agent_from_id",StdAgentNodeImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );
 			//friends
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getFriendFile(),
-					AgentFamilyLink.class,StdAgentImpl.class,"agent_id","agent_from_id",StdAgentImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );
+					AgentFamilyLink.class,StdAgentNodeImpl.class,"agent_id","agent_from_id",StdAgentNodeImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );
 			//activities
 			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getActivityFile(),
-					AgentActivityLink.class,StdAgentImpl.class,"agent_id","agent_id",ActivityNode.class,"activity_id","activity_id"),AccessMode.WRITE );
+					AgentActivityLink.class,StdAgentNodeImpl.class,"agent_id","agent_id",ActivityNode.class,"activity_id","activity_id"),AccessMode.WRITE );
 		}
 	}
 	

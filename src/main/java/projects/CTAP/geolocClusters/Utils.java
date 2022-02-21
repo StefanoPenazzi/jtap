@@ -10,7 +10,7 @@ import controller.Controller;
 import core.dataset.RoutesMap;
 import core.dataset.RoutesMap.SourceRoutesRequest;
 import core.graph.geo.CityNode;
-import core.graph.population.StdAgentImpl;
+import core.graph.population.StdAgentNodeImpl;
 
 public class Utils {
 	

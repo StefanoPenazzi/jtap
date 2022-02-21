@@ -10,10 +10,10 @@ import com.google.inject.Inject;
 
 import config.Config;
 import core.graph.NodeI;
-import core.graph.population.AgentI;
-import core.graph.population.StdAgentImpl;
+import core.graph.population.AgentNodeI;
+import core.graph.population.StdAgentNodeImpl;
 
-public class AgentsMap <T extends AgentI> implements DatasetMapI {
+public class AgentsMap <T extends AgentNodeI> implements DatasetMapI {
 	
 	protected Map<Integer,T> agentsMap  = new ConcurrentHashMap<>();
 	private Config config;

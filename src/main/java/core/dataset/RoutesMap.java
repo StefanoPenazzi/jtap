@@ -97,8 +97,6 @@ public class RoutesMap implements DatasetMapI {
     	try {
     	    String json = IOUtils.toString(inputStream);
     	    this.map = mapper.readValue(json, Map.class);
-    	    System.out.println();
-    	    
     	} finally {
     	    inputStream.close();
     	}

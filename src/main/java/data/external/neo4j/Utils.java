@@ -17,6 +17,7 @@ import org.neo4j.driver.Record;
 import com.opencsv.bean.CsvBindByName;
 
 import config.Config;
+import controller.Controller;
 import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.NodeI;
@@ -36,13 +37,29 @@ public class Utils {
 	private static String CSVLINE = "csvLine";
 	
 	/**
+	 * @param query
+	 * @param am
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<Record> runQuery(String query, AccessMode am ) throws Exception {
+		List<Record> res = null;
+		String database = Controller.getConfig().getNeo4JConfig().getDatabase();
+		try( Neo4jConnection conn = Controller.getInjector().getInstance(Neo4jConnection.class)){  
+			res = conn.query(database,query,am);
+		}
+		return res;
+	}
+	
+
+	/**
 	 * @param database
 	 * @param query
 	 * @param am
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<Record> runQuery(String database, String query, AccessMode am ) throws Exception {
+	public static List<Record> runQuery(String database,String query, AccessMode am ) throws Exception {
 		List<Record> res = null;
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			res = conn.query(database,query,am);
@@ -241,6 +258,23 @@ public class Utils {
     }
     
     
+    public static <T extends LinkI> void insertLinks(List<T> links,Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty, String sfCsvProperty,
+			Class<? extends NodeI> stNodeElement, String stProperty, String stCsvProperty) throws Exception {
+    	String database = Controller.getConfig().getNeo4JConfig().getDatabase();
+    	String tempDirectory = Controller.getConfig().getGeneralConfig().getTempDirectory();
+    	insertLinks(database,tempDirectory,links,linkElement,sfNodeElement,sfProperty,sfCsvProperty,stNodeElement,stProperty,stCsvProperty);
+    }
+    
+    public static <T extends LinkI> void insertLinks(List<T> links,Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty,
+			Class<? extends NodeI> stNodeElement, String stProperty) throws Exception {
+    	String database = Controller.getConfig().getNeo4JConfig().getDatabase();
+    	String tempDirectory = Controller.getConfig().getGeneralConfig().getTempDirectory();
+    	String sfCsvProperty = sfProperty;
+    	String stCsvProperty = stProperty;
+    	insertLinks(database,tempDirectory,links,linkElement,sfNodeElement,sfProperty,sfCsvProperty,stNodeElement,stProperty,stCsvProperty);
+    }
+    
+    
     public static <T extends NodeI> List<T> importNodes(Neo4jConnection conn,String database,Class<T> nodeClass) throws Exception{
     	List<T> result = new ArrayList<>(); 
     	Constructor<T> nodeConstructor = nodeClass.getConstructor();
@@ -262,6 +296,20 @@ public class Utils {
     	try( Neo4jConnection conn = new Neo4jConnection()){  
     		records = runQuery(conn,database,query,AccessMode.READ);
     	}
+	    for(Record rec: records) {
+	    	result.add(core.graph.Utils.map2GraphElement(rec.values().get(0).asMap(),nodeClass));
+	    }
+	    return result;
+    }
+    
+    public static <T extends NodeI> List<T> importNodes(Class<T> nodeClass) throws Exception{
+    	
+    	List<T> result = new ArrayList<>(); 
+    	Constructor<T> nodeConstructor = nodeClass.getConstructor();
+    	T node =  nodeConstructor.newInstance(); 
+    	String query = "match (n:"+node.getLabels()[0]+") return n";
+    	List<Record> records = null;
+    	records = runQuery(query,AccessMode.READ);
 	    for(Record rec: records) {
 	    	result.add(core.graph.Utils.map2GraphElement(rec.values().get(0).asMap(),nodeClass));
 	    }

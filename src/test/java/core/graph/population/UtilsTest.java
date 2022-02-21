@@ -16,7 +16,7 @@ class UtilsTest {
 		controller.emptyTempDirectory();
 		//activities first
 		core.graph.Activity.Utils.insertActivitiesFromCsv(ActivityNode.class);
-		Utils.insertStdPopulationFromCsv(StdAgentImpl.class);
+		Utils.insertStdPopulationFromCsv(StdAgentNodeImpl.class);
 	}
 	
 	@Test

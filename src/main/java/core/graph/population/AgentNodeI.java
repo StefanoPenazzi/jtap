@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import core.graph.NodeI;
 
-public interface AgentI extends NodeI {
+public interface AgentNodeI extends NodeI {
 	
 	public Integer getId();
 }

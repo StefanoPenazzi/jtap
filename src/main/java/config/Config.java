@@ -22,6 +22,7 @@ public final class Config {
 	private Neo4JConfig neo4JConfig;
 	private RoutingConfig routingConfig;
 	private ActivitiesConfig activitiesConfig;
+	private CtapModelConfig ctapModelConfig;
 	
 	@XmlElement(name = "railConfig")
 	public RailConfig getRailConfig() {
@@ -58,6 +59,11 @@ public final class Config {
 		return this.activitiesConfig;
 	}
 	
+	@XmlElement(name = "ctapModelConfig")
+	public CtapModelConfig getCtapModelConfig() {
+		return this.ctapModelConfig;
+	}
+	
 	public void setRailConfig(RailConfig railConfig) {
 		this.railConfig = railConfig;
 	}
@@ -79,13 +85,16 @@ public final class Config {
 	public void setActivitiesConfig(ActivitiesConfig activitiesConfig) {
 		this.activitiesConfig = activitiesConfig;
 	}
+	public void setCtapModelConfig(CtapModelConfig ctapModelConfig) {
+		this.ctapModelConfig = ctapModelConfig;
+	}
 	
 	@Inject
 	public Config() {}
 	
 	public Config(RailConfig railConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,
 			PopulationConfig populationConfig,Neo4JConfig neo4JConfig,RoutingConfig routingConfig,
-			ActivitiesConfig activitiesConfig) {
+			ActivitiesConfig activitiesConfig,CtapModelConfig ctapModelConfig) {
 		this.railConfig = railConfig;
 		this.generalConfig = generalConfig;
 		this.geoLocConfig = geoLocConfig;
@@ -93,6 +102,7 @@ public final class Config {
 		this.neo4JConfig = neo4JConfig;
 		this.routingConfig = routingConfig;
 		this.activitiesConfig = activitiesConfig;
+		this.ctapModelConfig = ctapModelConfig;
 	}
 	
 	public static Config of(File file) {
