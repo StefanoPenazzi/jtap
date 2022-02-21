@@ -26,8 +26,6 @@ public class AttractivenessCTAP extends AttractivenessAbstract {
 	
 	private List<String> paramsVector_ = new ArrayList<>(Arrays.asList("restaurant", "theater", "parking_space","parking"));
 	private final List<String> paramsVector;
-//	private List<String> variablesVector_ = new ArrayList<>(Arrays.asList("restaurant", "theater", "time"));
-//	private final List<String> variablesVector;
 	
 	private Config config;
 	private Map<Integer,Map<String,Double[]>> parametersMap = new HashMap<>();
@@ -38,10 +36,12 @@ public class AttractivenessCTAP extends AttractivenessAbstract {
 		super(0d,8760d);
 		this.config = config;
 		paramsVector = List.of(paramsVector_.toArray(new String[]{}));
-		//variablesVector = List.of(variablesVector_.toArray(new String[]{}));
 		initialize();
 	}
 	
+	/**
+	 * @throws IOException
+	 */
 	private void initialize() throws IOException {
 		//import model params as JSON
 		ObjectMapper mapper = new ObjectMapper();
@@ -62,15 +62,22 @@ public class AttractivenessCTAP extends AttractivenessAbstract {
     			Double[] pa = new Double[paramsVector.size()];
     			int i = 0;
     			for(String value: paramsVector){
-    				pa[i] = (Double) activity.getParameters().get(value);
-    				i++;
+    				try {
+	    				pa[i] = Double.valueOf(activity.getParameters().get(value));
+	    				i++;
+    				}
+    				catch(NullPointerException e) {
+    					System.out.println("model parameter '" +value+ "' not found for agent "+ agId.toString() +" and activity "+ activity.getActivity());
+    					throw new RuntimeException(e);
+    				}
     			}
     			parametersMap.get(agId).put(activity.getActivity(),pa);
     		});
     	});
 	}
 	
-	private Double getAttractiveness(Double[] params, Double[] variables) {
+	@Override
+	public Double getAttractiveness(Double[] params, Double[] variables) {
 		return seasonalitySummerSinglePeakSineFunction(params[0]*variables[0],variables[2]);
 	}
 	

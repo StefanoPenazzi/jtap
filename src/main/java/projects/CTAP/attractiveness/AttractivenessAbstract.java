@@ -48,5 +48,6 @@ public abstract class AttractivenessAbstract implements AttractivenessI {
 	protected double seasonalitySawtoothFunction(Double amplitude, Integer ordinaryFrequency, Double phase ) {
 		return 0;
 	}
-
+	
+	
 }
