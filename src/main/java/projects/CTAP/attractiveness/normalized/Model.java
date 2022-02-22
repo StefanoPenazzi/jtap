@@ -1,4 +1,4 @@
-package projects.CTAP.attractiveness;
+package projects.CTAP.attractiveness.normalized;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,9 +20,10 @@ import core.graph.Activity.ActivityNode;
 import core.graph.geo.CityNode;
 import core.graph.population.AgentNodeI;
 import core.graph.population.StdAgentNodeImpl;
+import projects.CTAP.attractiveness.AttractivenessAbstract;
 import projects.CTAP.graphElements.CTAPCityStatNode;
 
-public class AttractivenessCTAP extends AttractivenessAbstract {
+public class Model extends AttractivenessAbstract {
 	
 	private List<String> paramsVector_ = new ArrayList<>(Arrays.asList("restaurant", "theater", "parking_space","parking"));
 	private final List<String> paramsVector;
@@ -31,9 +32,10 @@ public class AttractivenessCTAP extends AttractivenessAbstract {
 	private Map<Integer,Map<String,Double[]>> parametersMap = new HashMap<>();
 	
 	@Inject
-	public AttractivenessCTAP (Config config) throws IOException {
+	public Model (Config config) throws IOException {
 		//TODO
-		super(0d,8760d);
+		super((double)config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getInitialTime(),
+				(double)config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getFinalTime());
 		this.config = config;
 		paramsVector = List.of(paramsVector_.toArray(new String[]{}));
 		initialize();
@@ -45,12 +47,12 @@ public class AttractivenessCTAP extends AttractivenessAbstract {
 	private void initialize() throws IOException {
 		//import model params as JSON
 		ObjectMapper mapper = new ObjectMapper();
-    	FileInputStream inputStream = new FileInputStream(config.getCtapModelConfig().getAttractivenessFile());
-    	List<AttractivenessAgentCTAP> parameters;
+    	FileInputStream inputStream = new FileInputStream(config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getAttractivenessFile());
+    	List<ModelParametersAgent> parameters;
     	try {
     	    String json = IOUtils.toString(inputStream);
     	    parameters = new ObjectMapper()
-    	      .readerFor(new TypeReference<List<AttractivenessAgentCTAP>>(){})
+    	      .readerFor(new TypeReference<List<ModelParametersAgent>>(){})
     	      .readValue(json); 
     	} finally {
     	    inputStream.close();

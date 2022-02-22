@@ -1,11 +1,11 @@
-package projects.CTAP.attractiveness;
+package projects.CTAP.attractiveness.normalized;
 
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class AttractivenessActivityCTAP {
+public class ModelParametersActivity {
 	
 	private String activity;
 	private Map<String,Double> parameters;

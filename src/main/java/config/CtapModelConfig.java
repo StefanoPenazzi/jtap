@@ -6,14 +6,24 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "ctapModelConfig")
 public class CtapModelConfig {
 
-	private String attractivenessfiile;
+	private Integer populationThreshold;
+	private AttractivenessModelConfig attractivenessModelConfig;
 	
-	@XmlElement(name = "attractivenessFile",required = true)
-	public String getAttractivenessFile() {
-		return this.attractivenessfiile;
+	@XmlElement(name = "populationThreshold",required = true)
+	public Integer getPopulationThreshold() {
+		return this.populationThreshold;
 	}
 	
-    public void setAttractivenessFile(String attractivenessfiile) {
-    	this.attractivenessfiile = attractivenessfiile;
+    public void setPopulationThreshold(Integer populationThreshold) {
+    	this.populationThreshold = populationThreshold;
+    }
+    
+    @XmlElement(name = "attractivenessModelConfig",required = true)
+	public AttractivenessModelConfig getAttractivenessModelConfig() {
+		return this.attractivenessModelConfig;
+	}
+	
+    public void setAttractivenessModelConfig(AttractivenessModelConfig attractivenessModelConfig) {
+    	this.attractivenessModelConfig = attractivenessModelConfig;
     }
 }

@@ -1,4 +1,4 @@
-package projects.CTAP.attractiveness;
+package projects.CTAP.attractiveness.normalized;
 
 import com.opencsv.bean.CsvBindByName;
 
@@ -8,7 +8,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
 @Neo4JLinkElement(label="AttractivenessCTAPLink")
-public class AttractivenessCTAPLink implements LinkI {
+public class AttractivenessNormalizedLink implements LinkI {
 	
 	@CsvBindByName(column = "agent_id")
 	@Neo4JPropertyElement(key="agent_id",type=Neo4JType.TOINTEGER)
@@ -30,11 +30,11 @@ public class AttractivenessCTAPLink implements LinkI {
 	@Neo4JPropertyElement(key="attractiveness",type=Neo4JType.TOFLOAT)
 	private Double attractiveness;
 	
-	public AttractivenessCTAPLink() {
+	public AttractivenessNormalizedLink() {
 		
 	}
 	
-	public AttractivenessCTAPLink(Integer agentId,String cityId,Integer activityId,Double time,Double attractiveness) {
+	public AttractivenessNormalizedLink(Integer agentId,String cityId,Integer activityId,Double time,Double attractiveness) {
 		this.agentId = agentId;
 		this.activityId = activityId;
 		this.cityId = cityId; 

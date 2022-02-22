@@ -1,4 +1,4 @@
-package projects.CTAP.attractiveness;
+package projects.CTAP.attractiveness.normalized;
 
 import java.util.List;
 import java.util.Map;
@@ -12,18 +12,18 @@ import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 
 
-public class AttractivenessAgentCTAP {
+public class ModelParametersAgent {
 	
 	private Integer agentId;
-	private List<AttractivenessActivityCTAP> activities;
+	private List<ModelParametersActivity> activities;
 	
-	public List<AttractivenessActivityCTAP> getActivities() {
+	public List<ModelParametersActivity> getActivities() {
 		return activities;
 	}
 
 	@SuppressWarnings("unchecked")
 	@JsonProperty("activities")
-	public void setActivities(List<AttractivenessActivityCTAP> activities) {
+	public void setActivities(List<ModelParametersActivity> activities) {
 		this.activities = activities;
 	}
 	

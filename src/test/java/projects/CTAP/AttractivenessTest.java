@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import config.Config;
 import controller.Controller;
 import core.graph.rail.gtfs.GTFS;
-import projects.CTAP.attractiveness.AttractivenessCTAP;
+import projects.CTAP.attractiveness.normalized.Model;
 
 class AttractivenessTest {
 
@@ -19,8 +19,8 @@ class AttractivenessTest {
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
-		projects.CTAP.attractiveness.Utils.attractivenessNormalized(250000,0,8760,336,Controller.getInjector().getInstance(AttractivenessCTAP.class));
-		System.out.println();
+		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j();
+		//System.out.println();
 	}
 	
 	@Test
@@ -29,7 +29,7 @@ class AttractivenessTest {
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
-		projects.CTAP.attractiveness.Utils.deleteAttractivenessLinks();
+		projects.CTAP.attractiveness.normalized.Utils.deleteAttractivenessLinks();
 		System.out.println();
 	}
 
