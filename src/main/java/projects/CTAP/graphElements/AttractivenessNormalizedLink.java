@@ -1,4 +1,4 @@
-package projects.CTAP.attractiveness.normalized;
+package projects.CTAP.graphElements;
 
 import com.opencsv.bean.CsvBindByName;
 
@@ -7,7 +7,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JLinkElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JLinkElement(label="AttractivenessCTAPLink")
+@Neo4JLinkElement(label="AttractivenessNormalizedLink")
 public class AttractivenessNormalizedLink implements LinkI {
 	
 	@CsvBindByName(column = "agent_id")

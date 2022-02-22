@@ -19,6 +19,7 @@ import core.graph.Activity.ActivityNode;
 import core.graph.geo.CityNode;
 import core.graph.population.StdAgentNodeImpl;
 import data.external.neo4j.Neo4jConnection;
+import projects.CTAP.graphElements.AttractivenessNormalizedLink;
 
 
 public class Utils {
@@ -115,7 +116,7 @@ public class Utils {
 	 */
 	public static void deleteAttractivenessLinks() throws Exception {
 		try( Neo4jConnection conn = Controller.getInjector().getInstance(Neo4jConnection.class)){  
-			conn.query("Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r:AttractivenessCTAPLink]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query("Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r:AttractivenessNormalizedLink]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
 		}
 	}
 
