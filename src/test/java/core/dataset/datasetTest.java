@@ -16,6 +16,8 @@ import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
 import core.graph.geo.CityNode;
 import core.graph.population.StdAgentNodeImpl;
+import core.graph.rail.RailLink;
+import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
 import core.graph.routing.RoutingGraph;
@@ -73,23 +75,21 @@ class datasetTest {
 		List<Class<? extends LinkI>> links = new ArrayList<>();
 		nodes.add(CityNode.class);
 		nodes.add(RoadNode.class);
+		nodes.add(RailNode.class);
 		links.add(CrossLink.class);
 		links.add(RoadLink.class);
-		RoutingGraph rg = new RoutingGraph("train-intersections-graph-2",nodes,links,"avg_travel_time");
-		
+		links.add(RailLink.class);
+		RoutingGraph rg = new RoutingGraph("train-intersections-graph-3",nodes,links,"avg_travel_time");
+	
 		List<RoutingGraph> rgs = new ArrayList<RoutingGraph>();
 		rgs.add(rg);
-		
 		Dataset dsi = (Dataset) controller.getInjector().getInstance(DatasetI.class);
 		RoutesMapCTAP rm = (RoutesMapCTAP) dsi.getMap(RoutesMap.ROUTES_MAP_KEY);
 		rm.addProjections(rgs);
-	
-		List<SourceRoutesRequest> res = projects.CTAP.geolocClusters.Utils.getSRR_cluster1(rm, "train-intersections-graph-2", 75000);
-		
-		res = res.stream().limit(10).collect(Collectors.toList());
-		
+		List<SourceRoutesRequest> res = projects.CTAP.geolocClusters.Utils.getSRR_cluster1(rm, "train-intersections-graph-3", 250000);
+		res = res.stream().skip(60).limit(1).collect(Collectors.toList());
 		rm.addSourceRoutesFromNeo4j(res);
-		System.out.println();
+		rm.saveJson();
 		rm.close();
 	}
 	

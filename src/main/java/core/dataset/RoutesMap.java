@@ -5,10 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,7 +65,7 @@ public class RoutesMap implements DatasetMapI {
      * In case a SourceRoutesRequest has the List<String> targets = null all the targets are considered
      */
     public void addSourceRoutesFromNeo4j(List<SourceRoutesRequest> srr ) throws Exception {
-    	for(SourceRoutesRequest req: srr) {
+    	for(@SuppressWarnings("rawtypes") SourceRoutesRequest req: srr) {
     		Map<String,Double> res = rm.getSSSP_AsMap(req.getRg(),
     				req.getSource(),
     				req.getSourcePropertyKey(),
@@ -72,7 +74,8 @@ public class RoutesMap implements DatasetMapI {
     				req.getWeightProperty());
     		//filter the targets
     		if(req.getTargets() != null) {
-    			res.keySet().retainAll(req.getTargets());
+    			List<String> ls = (List<String>)req.getTargets();
+    			res.keySet().retainAll(ls);
     		}
     		Map<String,Map<String,Double>> m = map.get(req.getRg());
     		if(m.containsKey(req.getSourcePropertyValue())) {
@@ -253,6 +256,8 @@ public class RoutesMap implements DatasetMapI {
     	}
     	
     }
+    
+    
 	@Override
 	public String getKey() {
 		return ROUTES_MAP_KEY;

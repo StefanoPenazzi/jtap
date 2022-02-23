@@ -90,7 +90,7 @@ public final class RoutingManager {
 		Map<String,Double > map = new HashMap<>();
 		for(Record rec: records) {
 			if(rec.values().get(0) != null) {
-				map.put(rec.values().get(0).toString(),rec.values().get(1).asDouble());
+				map.put(rec.values().get(0).asString(),rec.values().get(1).asDouble());
 			}
 		}
 		return map;
