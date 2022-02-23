@@ -126,7 +126,7 @@ public class RoutesMap implements DatasetMapI {
     
     public void saveJson() {
     	ObjectMapper mapper = new ObjectMapper();
-    	try (Writer writer = new FileWriter(config.getGeneralConfig().getOutputDirectory()+"RoutesMap.txt")) {
+    	try (Writer writer = new FileWriter(config.getGeneralConfig().getOutputDirectory()+"RoutesMap.json")) {
     	     writer.append(mapper.writeValueAsString(map));
     	} catch (IOException ex) {
     	  ex.printStackTrace(System.err);
