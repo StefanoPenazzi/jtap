@@ -87,7 +87,7 @@ class datasetTest {
 		RoutesMapCTAP rm = (RoutesMapCTAP) dsi.getMap(RoutesMap.ROUTES_MAP_KEY);
 		rm.addProjections(rgs);
 		List<SourceRoutesRequest> res = projects.CTAP.geolocClusters.Utils.getSRR_cluster1(rm, "train-intersections-graph-3", 250000);
-		res = res.stream().skip(60).limit(1).collect(Collectors.toList());
+		res = res.stream().skip(60).limit(3).collect(Collectors.toList());
 		rm.addSourceRoutesFromNeo4j(res);
 		rm.saveJson();
 		rm.close();

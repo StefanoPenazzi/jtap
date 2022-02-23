@@ -130,7 +130,7 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		List<SourceRoutesRequest> res = projects.CTAP.geolocClusters.Utils.getSRR_cluster1(rm,
 				"rail-road-graph",
 				Controller.getConfig().getCtapModelConfig().getPopulationThreshold());
-		res = res.stream().limit(10).collect(Collectors.toList());
+		res = res.stream().skip(60).limit(3).collect(Collectors.toList());
 		rm.addSourceRoutesFromNeo4j(res);
 		rm.saveJson();
 		rm.close();
