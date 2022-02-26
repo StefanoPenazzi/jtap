@@ -136,6 +136,25 @@ public class RoutesMap implements DatasetMapI {
     public void close() throws Exception {
     	this.rm.close();
     }
+    
+    public double[][][] toArray(List<List<String>> parameterDescription){
+    	
+    	int d1 = parameterDescription.get(0).size();
+    	int d2 = parameterDescription.get(1).size();
+    	int d3 = parameterDescription.get(2).size();
+    	
+    	double[][][] res = new double[d1][d2][d3];
+    	for(int i =0;i < d1;i++) {
+    		for(int j = 0;j < d2;j++) {
+    			for(int k = 0;k < d3;k++) {
+    				res[i][j][k] = map.get(parameterDescription.get(0).get(i))
+    						.get(parameterDescription.get(1).get(j))
+    						.get(parameterDescription.get(2).get(k));
+    			}
+    		}
+    	}
+    	return res;
+    }
 	
     class SourceTargetRouteRequest<T extends NodeGeoI,K extends NodeGeoI>{
     	String rg;
