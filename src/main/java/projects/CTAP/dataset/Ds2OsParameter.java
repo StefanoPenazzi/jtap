@@ -6,14 +6,14 @@ import java.util.Map;
 
 import core.dataset.ParameterI;
 
-public final class Ds2OsParameter implements ParameterI{
+public final class Ds2OsParameter implements ParameterI<String>{
 
 	private final double[][][] parameter;
-	private final List<List<Object>> parameterDescription;
+	private final List<List<String>> parameterDescription;
 	private final String ID = "Ds2OsParameter";
 	
 	public Ds2OsParameter(double[][][] parameter,
-			List<List<Object>> parameterDescription) {
+			List<List<String>> parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
@@ -35,7 +35,7 @@ public final class Ds2OsParameter implements ParameterI{
 	}
 
 	@Override
-	public List<List<Object>> getParameterDescription() {
+	public List<List<String>> getParameterDescription() {
 		return this.parameterDescription;
 	}
 
