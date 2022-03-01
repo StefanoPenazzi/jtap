@@ -104,35 +104,6 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		//insert attractiveness-------------------------------------------------
 		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j();
 		
-		//OD MATRIX-------------------------------------------------------------
-		saveODMatrix();
-		
-		
 		return 1;
 	}
-	
-	public static void saveODMatrix() throws Exception {
-//		List<Class<? extends NodeGeoI>> nodes = new ArrayList<>();
-//		List<Class<? extends LinkI>> links = new ArrayList<>();
-//		nodes.add(CityNode.class);
-//		nodes.add(RoadNode.class);
-//		nodes.add(RailNode.class);
-//		links.add(CrossLink.class);
-//		links.add(RoadLink.class);
-//		links.add(RailLink.class);
-//		RoutingGraph rg = new RoutingGraph("rail-road-graph",nodes,links,"avg_travel_time");
-//		List<RoutingGraph> rgs = new ArrayList<RoutingGraph>();
-//		rgs.add(rg);
-//		Dataset dsi = (Dataset) Controller.getInjector().getInstance(DatasetI.class);
-//		RoutesMapCTAP rm = (RoutesMapCTAP) dsi.getMap(RoutesMap.ROUTES_MAP_KEY);
-//		rm.addProjections(rgs);
-//		List<SourceRoutesRequest> res = projects.CTAP.geolocClusters.Utils.getSRR_cluster1(rm,
-//				"rail-road-graph",
-//				Controller.getConfig().getCtapModelConfig().getPopulationThreshold());
-//		res = res.stream().skip(60).limit(3).collect(Collectors.toList());
-//		rm.addSourceRoutesFromNeo4j(res);
-//		rm.saveJson();
-//		rm.close();
-	}
-	
 }
