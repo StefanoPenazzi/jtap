@@ -25,23 +25,28 @@ import core.graph.routing.RoutingGraph;
 import core.graph.routing.RoutingManager;
 
 
-public class Os2DsParameterFactory extends RoutesMap implements ParameterFactoryI {
+public class Os2DsTravelCostDbParameterFactory extends RoutesMap implements ParameterFactoryI {
  
 	private final Config config;
 	private final RoutingManager rm;
 	private final String RAIL_ROAD_GRAPH = "rail-road-graph";
 	private final String RAIL_GRAPH = "rail-graph";
 	private final String ROAD_GRAPH = "road-graph";
-	private Os2DsParameter os2dsParameter;
+	private final List<Long> citiesOs_ids;
+	private final List<Long> citiesDs_ids;
+	private Os2DsTravelCostParameter os2dsParameter;
 	
-	@Inject
-	public Os2DsParameterFactory(Config config,RoutingManager rm) {
+	
+	public Os2DsTravelCostDbParameterFactory(Config config,RoutingManager rm,List<Long> citiesOs_ids,List<Long> citiesDs_ids) {
 		super(config,rm);
 		this.config = config;
 		this.rm = rm;
+		this.citiesOs_ids = citiesOs_ids;
+		this.citiesDs_ids = citiesDs_ids;
 	}
 	
-	public void parameterFromNeo4j() throws Exception {
+	@Override
+	public ParameterI run() {
 		
 		/*
 		 * projections ---------------------------------------------------------
@@ -55,7 +60,12 @@ public class Os2DsParameterFactory extends RoutesMap implements ParameterFactory
 		linksRailRoadGraph.add(CrossLink.class);
 		linksRailRoadGraph.add(RoadLink.class);
 		linksRailRoadGraph.add(RailLink.class);
-		this.addProjection(new RoutingGraph(RAIL_ROAD_GRAPH,nodesRailRoadGraph,linksRailRoadGraph,"avg_travel_time"));
+		try {
+			this.addProjection(new RoutingGraph(RAIL_ROAD_GRAPH,nodesRailRoadGraph,linksRailRoadGraph,"avg_travel_time"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		//rail-graph
 		List<Class<? extends NodeGeoI>> nodesRail = new ArrayList<>();
@@ -64,7 +74,12 @@ public class Os2DsParameterFactory extends RoutesMap implements ParameterFactory
 		nodesRail.add(RailNode.class);
 		linksRail.add(CrossLink.class);
 		linksRail.add(RailLink.class);
-		this.addProjection(new RoutingGraph(RAIL_GRAPH,nodesRail,linksRail,"avg_travel_time"));
+		try {
+			this.addProjection(new RoutingGraph(RAIL_GRAPH,nodesRail,linksRail,"avg_travel_time"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	
 		//road-graph
 		List<Class<? extends NodeGeoI>> nodesRoadGraph = new ArrayList<>();
@@ -73,7 +88,12 @@ public class Os2DsParameterFactory extends RoutesMap implements ParameterFactory
 		nodesRoadGraph.add(RoadNode.class);
 		linksRoadGraph.add(CrossLink.class);
 		linksRoadGraph.add(RoadLink.class);
-		this.addProjection(new RoutingGraph(ROAD_GRAPH,nodesRoadGraph,linksRoadGraph,"avg_travel_time"));
+		try {
+			this.addProjection(new RoutingGraph(ROAD_GRAPH,nodesRoadGraph,linksRoadGraph,"avg_travel_time"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		/*
 		 * SourceRoutesRequest -------------------------------------------------
@@ -83,7 +103,15 @@ public class Os2DsParameterFactory extends RoutesMap implements ParameterFactory
 		List<SourceRoutesRequest> os2dsRail = new ArrayList<>();
 		List<SourceRoutesRequest> os2dsRoad = new ArrayList<>();
 		
-		List<CityNode> locations = data.external.neo4j.Utils.importNodes(this.config.getNeo4JConfig().getDatabase(),CityNode.class);
+		
+		//TODO using long ids
+		List<CityNode> locations = null;
+		try {
+			locations = data.external.neo4j.Utils.importNodes(this.config.getNeo4JConfig().getDatabase(),CityNode.class);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		List<String> citiesDs = locations.stream()
 				.filter(e -> e.getPopulation() >= popThreshold)
@@ -104,10 +132,14 @@ public class Os2DsParameterFactory extends RoutesMap implements ParameterFactory
 		/*
 		 * Collecting routes ---------------------------------------------------
 		 */
-		this.addSourceRoutesFromNeo4j(os2dsRailRoad);
-		this.addSourceRoutesFromNeo4j(os2dsRail);
-		this.addSourceRoutesFromNeo4j(os2dsRoad);
-		
+		try {
+			this.addSourceRoutesFromNeo4j(os2dsRailRoad);
+			this.addSourceRoutesFromNeo4j(os2dsRail);
+			this.addSourceRoutesFromNeo4j(os2dsRoad);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		/*
 		 * Parameter array -----------------------------------------------------
@@ -121,17 +153,15 @@ public class Os2DsParameterFactory extends RoutesMap implements ParameterFactory
 		parameterDescription.add(citiesOs);
 		parameterDescription.add(citiesDs);
 		double[][][] parameter = this.toArray(parameterDescription);
-		os2dsParameter = new Os2DsParameter(parameter,parameterDescription);
+		os2dsParameter = new Os2DsTravelCostParameter(parameter,parameterDescription);
 		
-		this.close();
-	}
-	
-    public void parameterFromJson() {
+		try {
+			this.close();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-	}
-	
-	@Override
-	public ParameterI run() {
 		return this.os2dsParameter;
 	}
 

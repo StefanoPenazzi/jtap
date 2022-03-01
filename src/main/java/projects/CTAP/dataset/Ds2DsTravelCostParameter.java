@@ -6,13 +6,13 @@ import java.util.Map;
 
 import core.dataset.ParameterI;
 
-public final class Ds2DsParameter implements ParameterI<String> {
+public final class Ds2DsTravelCostParameter implements ParameterI<String> {
 
 	private final double[][][] parameter;
 	private final  List<List<String>>  parameterDescription;
-	private final String ID = "Ds2DsParameter";
+	private final String ID = "Ds2DsTravelCostParameter";
 	
-	public Ds2DsParameter(double[][][] parameter,
+	public Ds2DsTravelCostParameter(double[][][] parameter,
 			List<List<String>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;

@@ -73,14 +73,14 @@ public class Utils {
     	}
     	
     	//normalization 
-    	Map<Integer, Map<Integer, Optional<AttractivenessNormalizedLink>>> normal = attractivenessList.stream()
+    	Map<Long, Map<Long, Optional<AttractivenessNormalizedLink>>> normal = attractivenessList.stream()
     			.collect(Collectors.groupingBy(AttractivenessNormalizedLink::getAgentId,
     			Collectors.groupingBy(AttractivenessNormalizedLink::getActivityId, Collectors.maxBy(Comparator.comparing(AttractivenessNormalizedLink::getAttractiveness)))));
     	
-    	Map<Integer, Map<Integer, Double>> normal_ = new HashMap<>();
-    	for( Map.Entry<Integer, Map<Integer, Optional<AttractivenessNormalizedLink>>> entry : normal.entrySet() ) {
-    		normal_.put(entry.getKey(),new HashMap<Integer, Double>());
-    		for(Map.Entry<Integer, Optional<AttractivenessNormalizedLink>> entry_1 : entry.getValue().entrySet()) {
+    	Map<Long, Map<Long, Double>> normal_ = new HashMap<>();
+    	for( Map.Entry<Long, Map<Long, Optional<AttractivenessNormalizedLink>>> entry : normal.entrySet() ) {
+    		normal_.put(entry.getKey(),new HashMap<Long, Double>());
+    		for(Map.Entry<Long, Optional<AttractivenessNormalizedLink>> entry_1 : entry.getValue().entrySet()) {
     			normal_.get(entry.getKey()).put(entry_1.getKey(),entry_1.getValue().orElseThrow(() -> new RuntimeException("Missing max AttractivenessCTAPLink")).getAttractiveness());
     		}
     	}

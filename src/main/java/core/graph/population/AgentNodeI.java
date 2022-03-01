@@ -6,5 +6,5 @@ import core.graph.NodeI;
 
 public interface AgentNodeI extends NodeI {
 	
-	public Integer getId();
+	public Long getId();
 }

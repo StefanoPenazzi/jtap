@@ -1,23 +1,21 @@
 package projects.CTAP.dataset;
 
 import java.util.List;
-import java.util.Map;
 
 import core.dataset.ParameterI;
 
-public final class Os2DsParameter implements ParameterI<String> {
-
-	private final double[][][] parameter;
-	private final List<List<String>>  parameterDescription;
-	private final String ID = "Os2DsParameter";
+public class LocationPerceptionParameter implements ParameterI<Integer> {
 	
+	private final double[][] parameter;
+	private final  List<List<Integer>>  parameterDescription;
+	private final String ID = "LocationPerceptionParameter";
 	
-	public Os2DsParameter(double[][][] parameter,
-			List<List<String>>  parameterDescription) {
+	public LocationPerceptionParameter(double[][] parameter,
+			List<List<Integer>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
-	
+
 	@Override
 	public Object getArrayParameter() {
 		return this.parameter;
@@ -25,7 +23,6 @@ public final class Os2DsParameter implements ParameterI<String> {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -35,7 +32,8 @@ public final class Os2DsParameter implements ParameterI<String> {
 	}
 
 	@Override
-	public List<List<String>> getParameterDescription() {
+	public List<List<Integer>> getParameterDescription() {
 		return this.parameterDescription;
 	}
+
 }

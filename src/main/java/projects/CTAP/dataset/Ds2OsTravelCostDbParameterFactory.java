@@ -11,7 +11,6 @@ import controller.Controller;
 import core.dataset.ParameterFactoryI;
 import core.dataset.ParameterI;
 import core.dataset.RoutesMap;
-import core.dataset.RoutesMap.SourceRoutesRequest;
 import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
@@ -23,23 +22,28 @@ import core.graph.road.osm.RoadNode;
 import core.graph.routing.RoutingGraph;
 import core.graph.routing.RoutingManager;
 
-public class Ds2DsParameterFactory extends RoutesMap implements ParameterFactoryI {
+public class Ds2OsTravelCostDbParameterFactory extends RoutesMap implements ParameterFactoryI {
 	
 	private final Config config;
 	private final RoutingManager rm;
 	private final String RAIL_ROAD_GRAPH = "rail-road-graph";
 	private final String RAIL_GRAPH = "rail-graph";
 	private final String ROAD_GRAPH = "road-graph";
-	private Ds2DsParameter ds2dsParameter;
+	private final List<Long> citiesOs_ids;
+	private final List<Long> citiesDs_ids;
+	private Ds2OsTravelCostParameter ds2osParameter;
 	
 	@Inject
-	public Ds2DsParameterFactory(Config config,RoutingManager rm) {
+	public Ds2OsTravelCostDbParameterFactory(Config config,RoutingManager rm,List<Long> citiesOs_ids,List<Long> citiesDs_ids) {
 		super(config,rm);
 		this.config = config;
 		this.rm = rm;
+		this.citiesOs_ids = citiesOs_ids;
+		this.citiesDs_ids = citiesDs_ids;
 	}
 	
-	public void parameterFromNeo4j() throws Exception {
+	@Override
+	public ParameterI run() {
 		
 		/*
 		 * projections ---------------------------------------------------------
@@ -53,7 +57,12 @@ public class Ds2DsParameterFactory extends RoutesMap implements ParameterFactory
 		linksRailRoadGraph.add(CrossLink.class);
 		linksRailRoadGraph.add(RoadLink.class);
 		linksRailRoadGraph.add(RailLink.class);
-		this.addProjection(new RoutingGraph(RAIL_ROAD_GRAPH,nodesRailRoadGraph,linksRailRoadGraph,"avg_travel_time"));
+		try {
+			this.addProjection(new RoutingGraph(RAIL_ROAD_GRAPH,nodesRailRoadGraph,linksRailRoadGraph,"avg_travel_time"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		//rail-graph
 		List<Class<? extends NodeGeoI>> nodesRail = new ArrayList<>();
@@ -62,7 +71,12 @@ public class Ds2DsParameterFactory extends RoutesMap implements ParameterFactory
 		nodesRail.add(RailNode.class);
 		linksRail.add(CrossLink.class);
 		linksRail.add(RailLink.class);
-		this.addProjection(new RoutingGraph(RAIL_GRAPH,nodesRail,linksRail,"avg_travel_time"));
+		try {
+			this.addProjection(new RoutingGraph(RAIL_GRAPH,nodesRail,linksRail,"avg_travel_time"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	
 		//road-graph
 		List<Class<? extends NodeGeoI>> nodesRoadGraph = new ArrayList<>();
@@ -71,7 +85,12 @@ public class Ds2DsParameterFactory extends RoutesMap implements ParameterFactory
 		nodesRoadGraph.add(RoadNode.class);
 		linksRoadGraph.add(CrossLink.class);
 		linksRoadGraph.add(RoadLink.class);
-		this.addProjection(new RoutingGraph(ROAD_GRAPH,nodesRoadGraph,linksRoadGraph,"avg_travel_time"));
+		try {
+			this.addProjection(new RoutingGraph(ROAD_GRAPH,nodesRoadGraph,linksRoadGraph,"avg_travel_time"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		/*
 		 * SourceRoutesRequest -------------------------------------------------
@@ -81,26 +100,41 @@ public class Ds2DsParameterFactory extends RoutesMap implements ParameterFactory
 		List<SourceRoutesRequest> os2dsRail = new ArrayList<>();
 		List<SourceRoutesRequest> os2dsRoad = new ArrayList<>();
 		
-		List<CityNode> locations = data.external.neo4j.Utils.importNodes(this.config.getNeo4JConfig().getDatabase(),CityNode.class);
+		List<CityNode> locations = null;
+		try {
+			locations = data.external.neo4j.Utils.importNodes(this.config.getNeo4JConfig().getDatabase(),CityNode.class);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		List<String> citiesDs = locations.stream()
-				.filter(e -> e.getPopulation() >= popThreshold)
+				.filter(e -> e.getPopulation() >= popThreshold).limit(2)    //TODO limit(2) only for test
+				.map(CityNode::getCity).collect(Collectors.toList());
+		
+		List<String> citiesOs = locations.stream()
+				.filter(e -> e.getPopulation() < popThreshold) 
 				.map(CityNode::getCity).collect(Collectors.toList());
 		
 		CityNode cityNode = new CityNode();
 		citiesDs.forEach(city ->{
-			os2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesDs));
-			os2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesDs));
-			os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesDs));
+			os2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesOs));
+			os2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesOs));
+			os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesOs));
 		});
 		
 		
 		/*
 		 * Collecting routes ---------------------------------------------------
 		 */
-		this.addSourceRoutesFromNeo4j(os2dsRailRoad);
-		this.addSourceRoutesFromNeo4j(os2dsRail);
-		this.addSourceRoutesFromNeo4j(os2dsRoad);
+		try {
+			this.addSourceRoutesFromNeo4j(os2dsRailRoad);
+			this.addSourceRoutesFromNeo4j(os2dsRail);
+			this.addSourceRoutesFromNeo4j(os2dsRoad);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		
 		/*
@@ -113,20 +147,18 @@ public class Ds2DsParameterFactory extends RoutesMap implements ParameterFactory
 		projections.add(ROAD_GRAPH);
 		parameterDescription.add(projections);
 		parameterDescription.add(citiesDs);
-		parameterDescription.add(citiesDs);
+		parameterDescription.add(citiesOs);
 		double[][][] parameter = this.toArray(parameterDescription);
-		ds2dsParameter = new Ds2DsParameter(parameter,parameterDescription);
+		ds2osParameter = new Ds2OsTravelCostParameter(parameter,parameterDescription);
 		
-		this.close();
-	}
-	
-    public void parameterFromJson() {
+		try {
+			this.close();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-	}
-	
-	@Override
-	public ParameterI run() {
-		return this.ds2dsParameter;
+		return this.ds2osParameter;
 	}
 
 

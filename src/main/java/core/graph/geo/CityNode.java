@@ -11,8 +11,8 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 @Neo4JNodeElement(labels={"CityNode"})
 public class CityNode implements NodeGeoI{
 	
-	@CsvBindByName(column = "id")
-	@Neo4JPropertyElement(key="id",type=Neo4JType.TOINTEGER)
+	@CsvBindByName(column = "city_id")
+	@Neo4JPropertyElement(key="city_id",type=Neo4JType.TOINTEGER)
 	private Long id;
 	
 	@CsvBindByName(column = "city")

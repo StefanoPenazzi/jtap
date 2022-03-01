@@ -317,6 +317,21 @@ public class Utils {
     }
     
     
+    public static <T extends LinkI> List<T> importLinks(Class<T> linkClass) throws Exception{
+    	
+    	List<T> result = new ArrayList<>(); 
+    	Constructor<T> linkConstructor = linkClass.getConstructor();
+    	T link =  linkConstructor.newInstance(); 
+    	String query = "match (n)-[r:"+link.getLabel()+"]->(m) return r";
+    	List<Record> records = null;
+    	records = runQuery(query,AccessMode.READ);
+	    for(Record rec: records) {
+	    	result.add(core.graph.Utils.map2GraphElement(rec.values().get(0).asMap(),linkClass));
+	    }
+	    return result;
+    }
+    
+    
     /**
 	 * @param conn
 	 * @param database

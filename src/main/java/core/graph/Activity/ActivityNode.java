@@ -12,13 +12,13 @@ public class ActivityNode implements NodeI {
 	
 	@CsvBindByName(column = "activity_id")
 	@Neo4JPropertyElement(key="activity_id",type=Neo4JType.TOINTEGER)
-	private Integer activtiyId;
+	private Long activtiyId;
 	
 	@CsvBindByName(column = "activity_name")
 	@Neo4JPropertyElement(key="activity_name",type=Neo4JType.TOSTRING)
 	private String activtiyName;
 	
-	public Integer getActivityId() {
+	public Long getActivityId() {
 		return this.activtiyId;
 	}
 	

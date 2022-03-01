@@ -12,11 +12,11 @@ public class AttractivenessNormalizedLink implements LinkI {
 	
 	@CsvBindByName(column = "agent_id")
 	@Neo4JPropertyElement(key="agent_id",type=Neo4JType.TOINTEGER)
-	private Integer agentId;
+	private Long agentId;
 	
 	@CsvBindByName(column = "activity_id")
 	@Neo4JPropertyElement(key="activity_id",type=Neo4JType.TOINTEGER)
-	private Integer activityId;
+	private Long activityId;
 	
 	@CsvBindByName(column = "city")
 	@Neo4JPropertyElement(key="city",type=Neo4JType.TOINTEGER)
@@ -34,7 +34,7 @@ public class AttractivenessNormalizedLink implements LinkI {
 		
 	}
 	
-	public AttractivenessNormalizedLink(Integer agentId,String cityId,Integer activityId,Double time,Double attractiveness) {
+	public AttractivenessNormalizedLink(Long agentId,String cityId,Long activityId,Double time,Double attractiveness) {
 		this.agentId = agentId;
 		this.activityId = activityId;
 		this.cityId = cityId; 
@@ -50,11 +50,11 @@ public class AttractivenessNormalizedLink implements LinkI {
 		this.cityId = cityId;
 	}
 	
-	public Integer getAgentId() {
+	public Long getAgentId() {
 		return agentId;
 	}
 	
-	public void setAgentId(Integer agentId) {
+	public void setAgentId(Long agentId) {
 		this.agentId = agentId;
 	}
 	
@@ -74,11 +74,11 @@ public class AttractivenessNormalizedLink implements LinkI {
 		this.attractiveness = attractiveness;
 	}
 	
-	public Integer getActivityId() {
+	public Long getActivityId() {
 		return activityId;
 	}
 	
-	public void setActivityId(Integer activityId) {
+	public void setActivityId(Long activityId) {
 		this.activityId = activityId;
 	}
 

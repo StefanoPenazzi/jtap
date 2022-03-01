@@ -1,23 +1,21 @@
 package projects.CTAP.dataset;
 
-import java.lang.reflect.Array;
 import java.util.List;
-import java.util.Map;
 
 import core.dataset.ParameterI;
 
-public final class Ds2OsParameter implements ParameterI<String>{
-
-	private final double[][][] parameter;
-	private final List<List<String>> parameterDescription;
-	private final String ID = "Ds2OsParameter";
+public class TimeDurationParameter implements ParameterI<Long> {
 	
-	public Ds2OsParameter(double[][][] parameter,
-			List<List<String>> parameterDescription) {
+	private final double[][] parameter;
+	private final  List<List<Long>>  parameterDescription;
+	private final String ID = "TimeDurationParameter";
+	
+	public TimeDurationParameter(double[][] parameter,
+			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
-	
+
 	@Override
 	public Object getArrayParameter() {
 		return this.parameter;
@@ -35,7 +33,7 @@ public final class Ds2OsParameter implements ParameterI<String>{
 	}
 
 	@Override
-	public List<List<String>> getParameterDescription() {
+	public List<List<Long>> getParameterDescription() {
 		return this.parameterDescription;
 	}
 

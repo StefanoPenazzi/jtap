@@ -36,7 +36,7 @@ public class AgentActivityLink implements LinkI {
 	public Integer getActivityId() {
 		return this.activityId;
 	}
-	public Double getPTT() {
+	public Double getPercOfTimeTarget() {
 		return this.ptt;
 	}
 	public Double getDurationDiscomfort() {
