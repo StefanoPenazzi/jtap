@@ -4,14 +4,14 @@ import java.util.List;
 
 import core.dataset.ParameterI;
 
-public class AttractivenessParameter implements ParameterI<Integer> {
+public class AttractivenessParameter implements ParameterI<Long> {
 
 	private final double[][][][] parameter;
-	private final  List<List<Integer>>  parameterDescription;
-	private final String ID = "PullFactorParameter";
+	private final  List<List<Long>>  parameterDescription;
+	private final String ID = "AttractivenessParameter";
 	
 	public AttractivenessParameter(double[][][][] parameter,
-			List<List<Integer>>  parameterDescription) {
+			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
@@ -32,7 +32,7 @@ public class AttractivenessParameter implements ParameterI<Integer> {
 	}
 
 	@Override
-	public List<List<Integer>> getParameterDescription() {
+	public List<List<Long>> getParameterDescription() {
 		return this.parameterDescription;
 	}
 

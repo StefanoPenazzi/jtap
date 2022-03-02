@@ -1,35 +1,21 @@
 package projects.CTAP.pipelines;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import config.Config;
 import controller.Controller;
-import core.dataset.Dataset;
-import core.dataset.DatasetI;
-import core.dataset.RoutesMap;
-import core.dataset.RoutesMap.SourceRoutesRequest;
-import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.Activity.ActivityNode;
-import core.graph.cross.CrossLink;
 import core.graph.facility.osm.FacilityNode;
 import core.graph.geo.CityNode;
 import core.graph.population.StdAgentNodeImpl;
-import core.graph.rail.RailLink;
 import core.graph.rail.gtfs.GTFS;
 import core.graph.rail.gtfs.RailNode;
-import core.graph.road.osm.RoadLink;
 import core.graph.road.osm.RoadNode;
-import core.graph.routing.RoutingGraph;
 import picocli.CommandLine;
 
 public class ScenarioBuildingPipeline implements Callable<Integer> {

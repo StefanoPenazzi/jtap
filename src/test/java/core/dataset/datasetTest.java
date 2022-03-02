@@ -37,20 +37,20 @@ class datasetTest {
 		Integer popThreshold = Controller.getConfig().getCtapModelConfig().getPopulationThreshold();
 		List<Long> citiesDs_ids = cities.stream().filter(e -> e.getPopulation() >= popThreshold).limit(2).map(CityNode::getId).collect(Collectors.toList());
 		List<Long> citiesOs_ids = cities.stream().filter(e -> e.getPopulation() < popThreshold).limit(2).map(CityNode::getId).collect(Collectors.toList());
-		List<Long> time = new ArrayList<>() {{add(0L); add(1L);}};
+		List<Long> time = new ArrayList<>() {{add(8400L); add(7392L);}};
 		
 		//factories
 		List<? extends ParameterFactoryI> agentActivtyParams = AgentActivityParameterFactory.getAgentActivityParameterFactories(agents_ids,activities_ids);
 		List<? extends ParameterFactoryI> agentParams = AgentParametersFactory.getAgentParameterFactories(agents_ids);
-		//AttractivenessParameterFactory attractivenessParams = new AttractivenessParameterFactory(agents_ids,activities_ids,citiesDs_ids,time);
-		Os2DsTravelCostDbParameterFactory os = new Os2DsTravelCostDbParameterFactory(config,rm,citiesOs_ids,citiesDs_ids);
+		AttractivenessParameterFactory attractivenessParams = new AttractivenessParameterFactory(agents_ids,activities_ids,citiesDs_ids,time);
+		//Os2DsTravelCostDbParameterFactory os = new Os2DsTravelCostDbParameterFactory(config,rm,citiesOs_ids,citiesDs_ids);
 		
 		List<ParameterFactoryI> res = Stream.of(agentActivtyParams, agentParams)
                  .flatMap(x -> x.stream())
                  .collect(Collectors.toList());
 		
-		//res.add(attractivenessParams);
-		res.add(os);
+		res.add(attractivenessParams);
+		//res.add(os);
 		
 		//parameters
 		List<ParameterI> prs = new ArrayList<>();
