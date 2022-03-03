@@ -20,25 +20,22 @@ public class Utils {
 		Config config = Controller.getConfig();
 		List<CityNode> locations = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),CityNode.class);
 		
-		List<String> citiesThresholdUp = locations.stream()
+		List<Long> citiesThresholdUp = locations.stream()
 				.filter(e -> e.getPopulation() >= popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
+				.map(CityNode::getId).collect(Collectors.toList());
 		
-		List<String> citiesThresholdDown = locations.stream()
+		List<Long> citiesThresholdDown = locations.stream()
 				.filter(e -> e.getPopulation() < popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
-		
-		List<String> cities = Stream.concat(citiesThresholdUp.stream(), citiesThresholdDown.stream())
-                .collect(Collectors.toList());
+				.map(CityNode::getId).collect(Collectors.toList());
 		
 		CityNode cityNode = new CityNode();
 		
 		citiesThresholdUp.forEach(city ->{
-			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,"city",city,"city","avg_travel_time",null));
+			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,city,"avg_travel_time",null));
 		});
 		
 		citiesThresholdDown.forEach(city ->{
-			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,"city",city,"city","avg_travel_time",citiesThresholdUp));
+			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,city,"avg_travel_time",citiesThresholdUp));
 		});
 		
 		return srr;
@@ -51,17 +48,17 @@ public class Utils {
 		Config config = Controller.getConfig();
 		List<CityNode> locations = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),CityNode.class);
 		
-		List<String> citiesThresholdUp = locations.stream()
+		List<Long> citiesThresholdUp = locations.stream()
 				.filter(e -> e.getPopulation() >= popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
+				.map(CityNode::getId).collect(Collectors.toList());
 		
-		List<String> citiesThresholdDown = locations.stream()
+		List<Long> citiesThresholdDown = locations.stream()
 				.filter(e -> e.getPopulation() < popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
+				.map(CityNode::getId).collect(Collectors.toList());
 		
 		CityNode cityNode = new CityNode();
 		citiesThresholdUp.forEach(city ->{
-			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,"city",city,"city","avg_travel_time",citiesThresholdDown));
+			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,city,"avg_travel_time",citiesThresholdDown));
 		});
 		return srr;
 	}
@@ -72,17 +69,17 @@ public class Utils {
 		Config config = Controller.getConfig();
 		List<CityNode> locations = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),CityNode.class);
 		
-		List<String> citiesThresholdUp = locations.stream()
+		List<Long> citiesThresholdUp = locations.stream()
 				.filter(e -> e.getPopulation() >= popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
+				.map(CityNode::getId).collect(Collectors.toList());
 		
-		List<String> citiesThresholdDown = locations.stream()
+		List<Long> citiesThresholdDown = locations.stream()
 				.filter(e -> e.getPopulation() < popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
+				.map(CityNode::getId).collect(Collectors.toList());
 		
 		CityNode cityNode = new CityNode();
 		citiesThresholdDown.forEach(city ->{
-			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,"city",city,"city","avg_travel_time",citiesThresholdUp));
+			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,city,"avg_travel_time",citiesThresholdUp));
 		});
 		
 		return srr;
@@ -94,13 +91,13 @@ public class Utils {
 		Config config = Controller.getConfig();
 		List<CityNode> locations = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),CityNode.class);
 		
-		List<String> citiesThresholdUp = locations.stream()
+		List<Long> citiesThresholdUp = locations.stream()
 				.filter(e -> e.getPopulation() >= popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
+				.map(CityNode::getId).collect(Collectors.toList());
 		
 		CityNode cityNode = new CityNode();
 		citiesThresholdUp.forEach(city ->{
-			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,"city",city,"city","avg_travel_time",citiesThresholdUp));
+			srr.add(rm.new SourceRoutesRequest(projectionId,cityNode,city,"avg_travel_time",citiesThresholdUp));
 		});
 		
 		return srr;

@@ -6,11 +6,11 @@ import core.dataset.ParameterI;
 
 public class AttractivenessParameter implements ParameterI<Long> {
 
-	private final double[][][][] parameter;
+	private final float[][][][] parameter;
 	private final  List<List<Long>>  parameterDescription;
 	private final String ID = "AttractivenessParameter";
 	
-	public AttractivenessParameter(double[][][][] parameter,
+	public AttractivenessParameter(float[][][][] parameter,
 			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;

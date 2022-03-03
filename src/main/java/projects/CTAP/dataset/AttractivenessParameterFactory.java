@@ -35,7 +35,7 @@ public class AttractivenessParameterFactory implements ParameterFactoryI {
 
 		AttractivenessParameter res = null;
 
-		double[][][][] parameter = new double[this.parameterDescription.get(0).size()][this.parameterDescription.get(1)
+		float[][][][] parameter = new float[this.parameterDescription.get(0).size()][this.parameterDescription.get(1)
 				.size()][this.parameterDescription.get(2).size()][this.parameterDescription.get(3).size()];
 
 		StringBuilder cities = new StringBuilder();
@@ -60,13 +60,13 @@ public class AttractivenessParameterFactory implements ParameterFactoryI {
 			e.printStackTrace();
 		}
 		
-		Map<String,Double> map = new HashMap<>();
+		Map<String,Float> map = new HashMap<>();
 		for(Record rec:queryRes) {
 			String key = String.valueOf(rec.values().get(0).asInt())+
 					String.valueOf(rec.values().get(1).asInt())+
 					String.valueOf(rec.values().get(2).asInt())+
 					String.valueOf(rec.values().get(3).asInt());
-			map.put(key,rec.values().get(4).asDouble());
+			map.put( key,(float)rec.values().get(4).asDouble());
 		}
 		
 		
@@ -79,9 +79,7 @@ public class AttractivenessParameterFactory implements ParameterFactoryI {
 								parameterDescription.get(1).get(j).toString()+
 								parameterDescription.get(2).get(k).toString()+
 								parameterDescription.get(3).get(t).toString();
-						
-						Double dd = map.get(key);
-						parameter[i][j][k][t] = dd == null? 0d: dd;
+						parameter[i][j][k][t] = map.get(key);
 					}
 				}
 			}

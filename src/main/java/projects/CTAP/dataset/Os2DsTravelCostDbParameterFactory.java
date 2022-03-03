@@ -34,7 +34,6 @@ public class Os2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 	private final String ROAD_GRAPH = "road-graph";
 	private final List<Long> citiesOs_ids;
 	private final List<Long> citiesDs_ids;
-	private Os2DsTravelCostParameter os2dsParameter;
 	
 	
 	public Os2DsTravelCostDbParameterFactory(Config config,RoutingManager rm,List<Long> citiesOs_ids,List<Long> citiesDs_ids) {
@@ -48,6 +47,7 @@ public class Os2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 	@Override
 	public ParameterI run() {
 		
+		Os2DsTravelCostParameter os2dsParameter = null;
 		/*
 		 * projections ---------------------------------------------------------
 		 */
@@ -98,34 +98,16 @@ public class Os2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 		/*
 		 * SourceRoutesRequest -------------------------------------------------
 		 */
-		Integer popThreshold = Controller.getConfig().getCtapModelConfig().getPopulationThreshold();
+		
 		List<SourceRoutesRequest> os2dsRailRoad = new ArrayList<>();
 		List<SourceRoutesRequest> os2dsRail = new ArrayList<>();
 		List<SourceRoutesRequest> os2dsRoad = new ArrayList<>();
 		
-		
-		//TODO using long ids
-		List<CityNode> locations = null;
-		try {
-			locations = data.external.neo4j.Utils.importNodes(this.config.getNeo4JConfig().getDatabase(),CityNode.class);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		List<String> citiesDs = locations.stream()
-				.filter(e -> e.getPopulation() >= popThreshold)
-				.map(CityNode::getCity).collect(Collectors.toList());
-		
-		List<String> citiesOs = locations.stream()
-				.filter(e -> e.getPopulation() < popThreshold).limit(2)    //TODO limit(2) only for test 
-				.map(CityNode::getCity).collect(Collectors.toList());
-		
 		CityNode cityNode = new CityNode();
-		citiesOs.forEach(city ->{
-			os2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesDs));
-			os2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesDs));
-			os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,"city",city,"city","avg_travel_time",citiesDs));
+		citiesOs_ids.forEach(city ->{
+			os2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,city,"avg_travel_time",citiesDs_ids));
+			os2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,city,"avg_travel_time",citiesDs_ids));
+			os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,city,"avg_travel_time",citiesDs_ids));
 		});
 		
 		
@@ -144,14 +126,14 @@ public class Os2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 		/*
 		 * Parameter array -----------------------------------------------------
 		 */
-		List<List<String>> parameterDescription = new ArrayList<>();
-		List<String> projections = new ArrayList<>();
-		projections.add(RAIL_ROAD_GRAPH);
-		projections.add(RAIL_GRAPH);
-		projections.add(ROAD_GRAPH);
+		List<List<Long>> parameterDescription = new ArrayList<>();
+		List<Long> projections = new ArrayList<>();
+		projections.add(0L);
+		projections.add(1L);
+		projections.add(2L);
 		parameterDescription.add(projections);
-		parameterDescription.add(citiesOs);
-		parameterDescription.add(citiesDs);
+		parameterDescription.add(citiesOs_ids);
+		parameterDescription.add(citiesDs_ids);
 		double[][][] parameter = this.toArray(parameterDescription);
 		os2dsParameter = new Os2DsTravelCostParameter(parameter,parameterDescription);
 		
@@ -162,7 +144,7 @@ public class Os2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 			e1.printStackTrace();
 		}
 		
-		return this.os2dsParameter;
+		return os2dsParameter;
 	}
 
 }

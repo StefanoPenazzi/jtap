@@ -5,15 +5,15 @@ import java.util.Map;
 
 import core.dataset.ParameterI;
 
-public final class Os2DsTravelCostParameter implements ParameterI<String> {
+public final class Os2DsTravelCostParameter implements ParameterI<Long> {
 
 	private final double[][][] parameter;
-	private final List<List<String>>  parameterDescription;
+	private final List<List<Long>>  parameterDescription;
 	private final String ID = "Os2DsTravelCostParameter";
 	
 	
 	public Os2DsTravelCostParameter(double[][][] parameter,
-			List<List<String>>  parameterDescription) {
+			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
@@ -34,7 +34,7 @@ public final class Os2DsTravelCostParameter implements ParameterI<String> {
 	}
 
 	@Override
-	public List<List<String>> getParameterDescription() {
+	public List<List<Long>> getParameterDescription() {
 		return this.parameterDescription;
 	}
 }

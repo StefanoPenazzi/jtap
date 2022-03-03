@@ -60,22 +60,22 @@ public final class RoutingManager {
 	}
 	
 	//single source shortest path
-	public <T extends NodeGeoI>  List<Record> getSSSP(String rg, T source, String sourcePropertyKey, String sourcePropertyValue,
-			 String targetPropertyKey, String weightProperty) throws Exception {
+	public <T extends NodeGeoI>  List<Record> getSSSP(String rg, T source, String sourceIdKey, Long sourceId,
+			 String targetIdKey, String weightProperty) throws Exception {
 		
 		RoutingGraph rgg = routingGraphMap.get(rg);
 		if(rgg == null) {
 			//eccezione
 		}
 		
-		String query = "MATCH (source:"+ ((NodeGeoI)source).getLabels()[0] +" {"+sourcePropertyKey+": '"+sourcePropertyValue+"'})\n"
+		String query = "MATCH (source:"+ ((NodeGeoI)source).getLabels()[0] +" {"+sourceIdKey+": "+sourceId.toString()+"})\n"
 				+ "CALL gds.alpha.shortestPath.deltaStepping.stream('"+rg+"',{\n"
 				+ "   startNode: source,\n"
 				+ "   relationshipWeightProperty: '"+weightProperty+"',\n"
 				+ "   delta: 3.0\n"
 				+ "})\n"
 				+ "YIELD nodeId, distance\n"
-				+ "RETURN gds.util.asNode(nodeId)."+targetPropertyKey+" AS target, distance AS cost\n"
+				+ "RETURN gds.util.asNode(nodeId)."+targetIdKey+" AS target, distance AS cost\n"
 				+ "ORDER BY target;";
 	    
 	    List<Record> res= data.external.neo4j.Utils.runQuery(conn,database,query,AccessMode.READ);
@@ -83,14 +83,14 @@ public final class RoutingManager {
 	}
 	
 	//single source shortest path
-	public <T extends NodeGeoI>  Map<String,Double> getSSSP_AsMap(String rg, T source, String sourcePropertyKey, String sourcePropertyValue,
-			 String targetPropertyKey, String weightProperty) throws Exception {
+	public <T extends NodeGeoI>  Map<Long,Double> getSSSP_AsMap(String rg, T source, String sourceIdKey, Long sourceId,
+			 String targetIdKey, String weightProperty) throws Exception {
 	    
-		List<Record> records = getSSSP(rg,source,sourcePropertyKey,sourcePropertyValue,targetPropertyKey,weightProperty);
-		Map<String,Double > map = new HashMap<>();
+		List<Record> records = getSSSP(rg,source,sourceIdKey,sourceId,targetIdKey,weightProperty);
+		Map<Long,Double > map = new HashMap<>();
 		for(Record rec: records) {
-			if(rec.values().get(0) != null) {
-				map.put(rec.values().get(0).asString(),rec.values().get(1).asDouble());
+			if(!rec.values().get(0).isNull()) {
+				map.put(rec.values().get(0).asLong(),rec.values().get(1).asDouble());
 			}
 		}
 		return map;
@@ -105,9 +105,14 @@ public final class RoutingManager {
 	}
 	
 	public void addNewRoutingGraph(RoutingGraph rg) throws Exception {
-		routingGraphMap.put(rg.getId(), rg);
-		if(!rg.cached()) {
-			rg.graphCaching(conn,database);
+		if(!routingGraphMap.containsKey(rg.getId())) {
+			routingGraphMap.put(rg.getId(), rg);
+			if(!rg.cached()) {
+				rg.graphCaching(conn,database);
+			}
+		}
+		else {
+			System.out.println();
 		}
 	}
 	
