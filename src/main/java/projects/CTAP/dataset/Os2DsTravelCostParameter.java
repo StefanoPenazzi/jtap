@@ -7,9 +7,10 @@ import core.dataset.ParameterI;
 
 public final class Os2DsTravelCostParameter implements ParameterI<Long> {
 
-	private final double[][][] parameter;
-	private final List<List<Long>>  parameterDescription;
-	private final String ID = "Os2DsTravelCostParameter";
+	private double[][][] parameter;
+	private List<List<Long>>  parameterDescription;
+	private String id = "Os2DsTravelCostParameter";
+	private String description = "";
 	
 	
 	public Os2DsTravelCostParameter(double[][][] parameter,
@@ -18,8 +19,10 @@ public final class Os2DsTravelCostParameter implements ParameterI<Long> {
 		this.parameterDescription = parameterDescription;
 	}
 	
+	public Os2DsTravelCostParameter() {}
+	
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		return this.parameter;
 	}
 
@@ -30,7 +33,7 @@ public final class Os2DsTravelCostParameter implements ParameterI<Long> {
 
 	@Override
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 
 	@Override

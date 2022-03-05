@@ -7,7 +7,7 @@ import core.dataset.ParameterI;
 public class TauCalibrationParameter implements ParameterI<Integer> {
 
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		// TODO Auto-generated method stub
 		return null;
 	}

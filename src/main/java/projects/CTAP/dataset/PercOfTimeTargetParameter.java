@@ -6,18 +6,21 @@ import core.dataset.ParameterI;
 
 public class PercOfTimeTargetParameter implements ParameterI<Long> {
 	
-	private final double[][] parameter;
-	private final  List<List<Long>>  parameterDescription;
-	private final String ID = "PercOfTimeTargetParameter";
+	private double[][] parameter;
+	private List<List<Long>>  parameterDescription;
+	private String id = "PercOfTimeTargetParameter";
+	private String description = "";
 	
 	public PercOfTimeTargetParameter(double[][] parameter,
 			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
+	
+	public PercOfTimeTargetParameter() {}
 
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		return this.parameter;
 	}
 
@@ -28,7 +31,7 @@ public class PercOfTimeTargetParameter implements ParameterI<Long> {
 
 	@Override
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 
 	@Override

@@ -6,9 +6,10 @@ import core.dataset.ParameterI;
 
 public class DurationDiscomfortParameter implements ParameterI<Long> {
 
-	private final double[][] parameter;
-	private final  List<List<Long>>  parameterDescription;
-	private final String ID = "DurationDiscomfortParameter";
+	private double[][] parameter;
+	private List<List<Long>>  parameterDescription;
+	private String id = "DurationDiscomfortParameter";
+	private String description = "";
 	
 	public DurationDiscomfortParameter(double[][] parameter,
 			List<List<Long>>  parameterDescription) {
@@ -16,8 +17,10 @@ public class DurationDiscomfortParameter implements ParameterI<Long> {
 		this.parameterDescription = parameterDescription;
 	}
 	
+	public DurationDiscomfortParameter() {}
+	
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		return this.parameter;
 	}
 
@@ -29,7 +32,7 @@ public class DurationDiscomfortParameter implements ParameterI<Long> {
 
 	@Override
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 
 	@Override

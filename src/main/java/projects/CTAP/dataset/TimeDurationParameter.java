@@ -4,20 +4,23 @@ import java.util.List;
 
 import core.dataset.ParameterI;
 
-public class TimeDurationParameter implements ParameterI<Long> {
+public final class TimeDurationParameter implements ParameterI<Long> {
 	
-	private final double[][] parameter;
-	private final  List<List<Long>>  parameterDescription;
-	private final String ID = "TimeDurationParameter";
+	private double[][] parameter;
+	private List<List<Long>>  parameterDescription;
+	private String id = "TimeDurationParameter";
+	private String description = "";
 	
 	public TimeDurationParameter(double[][] parameter,
 			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
+	
+	public TimeDurationParameter() {}
 
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		return this.parameter;
 	}
 
@@ -29,7 +32,7 @@ public class TimeDurationParameter implements ParameterI<Long> {
 
 	@Override
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 
 	@Override

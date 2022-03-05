@@ -6,9 +6,10 @@ import core.dataset.ParameterI;
 
 public class MonetaryBudgetParameter implements ParameterI<Long> {
 
-	private final double[] parameter;
-	private final  List<List<Long>>  parameterDescription;
-	private final String ID = "MonetaryBudgetParameter";
+	private double[] parameter;
+	private List<List<Long>>  parameterDescription;
+	private String id = "MonetaryBudgetParameter";
+	private String description = "";
 	
 	public MonetaryBudgetParameter(double[] parameter,
 			List<List<Long>>  parameterDescription) {
@@ -16,8 +17,10 @@ public class MonetaryBudgetParameter implements ParameterI<Long> {
 		this.parameterDescription = parameterDescription;
 	}
 	
+	public MonetaryBudgetParameter() {}
+	
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		return this.parameter;
 	}
 
@@ -28,7 +31,7 @@ public class MonetaryBudgetParameter implements ParameterI<Long> {
 
 	@Override
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 
 	@Override

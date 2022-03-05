@@ -6,9 +6,10 @@ import core.dataset.ParameterI;
 
 public class TimeRelatedBudgetParameter implements ParameterI<Long> {
 
-	private final double[] parameter;
-	private final  List<List<Long>>  parameterDescription;
-	private final String ID = "TimeRelatedBudgetParameter";
+	private double[] parameter;
+	private List<List<Long>>  parameterDescription;
+	private String id = "TimeRelatedBudgetParameter";
+	private String description = "";
 	
 	public TimeRelatedBudgetParameter(double[] parameter,
 			List<List<Long>>  parameterDescription) {
@@ -16,8 +17,10 @@ public class TimeRelatedBudgetParameter implements ParameterI<Long> {
 		this.parameterDescription = parameterDescription;
 	}
 	
+	public TimeRelatedBudgetParameter() {}
+	
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		return this.parameter;
 	}
 
@@ -28,7 +31,7 @@ public class TimeRelatedBudgetParameter implements ParameterI<Long> {
 
 	@Override
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 
 	@Override

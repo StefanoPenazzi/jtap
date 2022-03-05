@@ -2,13 +2,16 @@ package projects.CTAP.dataset;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import core.dataset.ParameterI;
 
 public class AttractivenessParameter implements ParameterI<Long> {
 
-	private final float[][][][] parameter;
-	private final  List<List<Long>>  parameterDescription;
-	private final String ID = "AttractivenessParameter";
+	private float[][][][] parameter;
+	private List<List<Long>>  parameterDescription;
+	private String id = "AttractivenessParameter";
+	private String description = "";
 	
 	public AttractivenessParameter(float[][][][] parameter,
 			List<List<Long>>  parameterDescription) {
@@ -16,19 +19,21 @@ public class AttractivenessParameter implements ParameterI<Long> {
 		this.parameterDescription = parameterDescription;
 	}
 	
+	public AttractivenessParameter() {}
+	
 	@Override
-	public Object getArrayParameter() {
+	public Object getParameter() {
 		return this.parameter;
 	}
 
 	@Override
 	public String getDescription() {
-		return null;
+		return this.description;
 	}
 
 	@Override
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 
 	@Override

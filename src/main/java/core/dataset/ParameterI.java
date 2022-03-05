@@ -13,7 +13,7 @@ import controller.Controller;
 
 public interface ParameterI<T> extends Serializable {
 	
-	public Object getArrayParameter();
+	public Object getParameter();
 	public String getDescription();
 	public String getId();
 	public List<List<T>> getParameterDescription();

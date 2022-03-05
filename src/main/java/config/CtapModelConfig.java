@@ -8,6 +8,8 @@ public class CtapModelConfig {
 
 	private Integer populationThreshold;
 	private AttractivenessModelConfig attractivenessModelConfig;
+	private DatasetConfig datasetConfig;
+	
 	
 	@XmlElement(name = "populationThreshold",required = true)
 	public Integer getPopulationThreshold() {
@@ -26,4 +28,12 @@ public class CtapModelConfig {
     public void setAttractivenessModelConfig(AttractivenessModelConfig attractivenessModelConfig) {
     	this.attractivenessModelConfig = attractivenessModelConfig;
     }
+    
+    @XmlElement(name = "datasetConfig",required = true)
+    public DatasetConfig getDatasetConfig() {
+		return datasetConfig;
+	}
+    public void setDatasetConfig(DatasetConfig datasetConfig) {
+		this.datasetConfig = datasetConfig;
+	}
 }
