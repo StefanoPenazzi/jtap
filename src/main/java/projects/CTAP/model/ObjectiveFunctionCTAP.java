@@ -1,4 +1,4 @@
-package core.models.ctap;
+package projects.CTAP.model;
 
 import core.models.ObjectiveFunctionI;
 
