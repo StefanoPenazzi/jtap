@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import config.Config;
 import controller.Controller;
+import core.dataset.ModelElementI;
 import core.dataset.ParameterFactoryI;
 import core.dataset.ParameterI;
 import core.graph.Activity.ActivityNode;
@@ -20,12 +21,17 @@ import core.graph.geo.CityNode;
 import core.graph.population.StdAgentNodeImpl;
 import core.graph.routing.RoutingManager;
 import picocli.CommandLine;
+import projects.CTAP.dataset.ActivitiesIndex;
 import projects.CTAP.dataset.AgentActivityParameterFactory;
 import projects.CTAP.dataset.AgentParametersFactory;
+import projects.CTAP.dataset.AgentsIndex;
 import projects.CTAP.dataset.AttractivenessParameterFactory;
+import projects.CTAP.dataset.CitiesDsIndex;
+import projects.CTAP.dataset.CitiesOsIndex;
 import projects.CTAP.dataset.Ds2DsTravelCostDbParameterFactory;
 import projects.CTAP.dataset.Ds2OsTravelCostDbParameterFactory;
 import projects.CTAP.dataset.Os2DsTravelCostDbParameterFactory;
+import projects.CTAP.dataset.TimeIndex;
 
 public class DatasetBuildingPipeline implements Callable<Integer> {
 	
@@ -71,6 +77,13 @@ public class DatasetBuildingPipeline implements Callable<Integer> {
 		List<Long> time = LongStream.iterate(initialTime,i->i+intervalTime).limit(Math.round(finalTime/intervalTime)).boxed().collect(Collectors.toList());
 		
 		//factories
+		//indexes
+		AgentsIndex agentIndex = new AgentsIndex(agents_ids);
+		ActivitiesIndex activitiesIndex = new ActivitiesIndex(activities_ids);
+		CitiesDsIndex citiesDsIndex = new CitiesDsIndex(citiesDs_ids);
+		CitiesOsIndex citiesOsIndex = new CitiesOsIndex(citiesOs_ids);
+		TimeIndex timeIndex = new TimeIndex(time);
+		//params
 		List<? extends ParameterFactoryI> agentActivtyParams = AgentActivityParameterFactory.getAgentActivityParameterFactories(agents_ids,activities_ids);
 		List<? extends ParameterFactoryI> agentParams = AgentParametersFactory.getAgentParameterFactories(agents_ids);
 		AttractivenessParameterFactory attractivenessParams = new AttractivenessParameterFactory(agents_ids,activities_ids,citiesDs_ids,time);
@@ -88,13 +101,18 @@ public class DatasetBuildingPipeline implements Callable<Integer> {
 		res.add(dsds);
 		
 		//parameters
-		List<ParameterI> prs = new ArrayList<>();
+		List<ModelElementI> prs = new ArrayList<>();
 		
 		for(ParameterFactoryI pi:res) {
 			prs.add(pi.run());
 		}
+		prs.add(agentIndex);
+		prs.add(activitiesIndex);
+		prs.add(citiesDsIndex);
+		prs.add(citiesOsIndex);
+		prs.add(timeIndex);
 		
-		for(ParameterI pr:prs) {
+		for(ModelElementI pr:prs) {
 			pr.save();
 		}
 		

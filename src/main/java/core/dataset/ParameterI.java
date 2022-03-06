@@ -11,19 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import controller.Controller;
 
-public interface ParameterI<T> extends Serializable {
+public interface ParameterI<T> extends ModelElementI {
 	
 	public Object getParameter();
 	public String getDescription();
-	public String getId();
 	public List<List<T>> getParameterDescription();
-	default void save() {
-		ObjectMapper mapper = new ObjectMapper();
-    	try (Writer writer = new FileWriter(Controller.getConfig().getGeneralConfig().getOutputDirectory()+getId()+".json")) {
-    	     writer.append(mapper.writeValueAsString(this));
-    	} catch (IOException ex) {
-    	  ex.printStackTrace(System.err);
-    	}
-	}
+	
 
 }

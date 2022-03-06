@@ -10,15 +10,16 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import core.dataset.DatasetI;
+import core.dataset.ModelElementI;
 import core.dataset.ParameterI;
 
 public final class Dataset implements DatasetI {
 	
-	private Map<String,ParameterI> paramsMap = new HashMap<>();
+	private Map<String,ModelElementI> modelElementsMap = new HashMap<>();
 	
-	public Dataset(List<? extends ParameterI> params) {
-		this.paramsMap = params.stream()
-				.collect(Collectors.toMap(ParameterI::getId, Function.identity()));
+	public Dataset(List<? extends ModelElementI> params) {
+		this.modelElementsMap = params.stream()
+				.collect(Collectors.toMap(ModelElementI::getId, Function.identity()));
 	}
 	
 }
