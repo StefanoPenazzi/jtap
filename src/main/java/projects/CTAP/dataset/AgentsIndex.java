@@ -14,6 +14,8 @@ public class AgentsIndex implements IndexI<Long> {
 		this.index = index;
 	}
 	
+	public AgentsIndex() {}
+	
 	@Override
 	public String getId() {
 		return this.id;

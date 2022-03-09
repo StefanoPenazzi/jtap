@@ -9,7 +9,7 @@ public class PercOfTimeTargetParameter implements ParameterI<Long> {
 	private double[][] parameter;
 	private List<List<Long>>  parameterDescription;
 	private String id = "PercOfTimeTargetParameter";
-	private String description = "";
+	private String description = "Agent-Activity";
 	
 	public PercOfTimeTargetParameter(double[][] parameter,
 			List<List<Long>>  parameterDescription) {
@@ -20,7 +20,7 @@ public class PercOfTimeTargetParameter implements ParameterI<Long> {
 	public PercOfTimeTargetParameter() {}
 
 	@Override
-	public Object getParameter() {
+	public double[][] getParameter() {
 		return this.parameter;
 	}
 

@@ -10,7 +10,7 @@ public final class Os2DsTravelCostParameter implements ParameterI<Long> {
 	private double[][][] parameter;
 	private List<List<Long>>  parameterDescription;
 	private String id = "Os2DsTravelCostParameter";
-	private String description = "";
+	private String description = "Projection-CityOs-CityDs";
 	
 	
 	public Os2DsTravelCostParameter(double[][][] parameter,
@@ -22,7 +22,7 @@ public final class Os2DsTravelCostParameter implements ParameterI<Long> {
 	public Os2DsTravelCostParameter() {}
 	
 	@Override
-	public Object getParameter() {
+	public double[][][] getParameter() {
 		return this.parameter;
 	}
 

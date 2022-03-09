@@ -14,6 +14,8 @@ public class CitiesOsIndex implements IndexI<Long> {
 		this.index = index;
 	}
 	
+	public CitiesOsIndex() {}
+	
 	@Override
 	public String getId() {
 		return this.id;

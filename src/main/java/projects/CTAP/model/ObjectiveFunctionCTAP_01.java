@@ -4,29 +4,30 @@ package projects.CTAP.model;
 public class ObjectiveFunctionCTAP_01 extends ObjectiveFunctionCTAP {
 
 	private final double[] activityLocationCostRate;
-	private final double costOfTimeRate;
+	private final double valueOfTime;
 	
 	
 	public ObjectiveFunctionCTAP_01(int nActivities,
 			int[] activitiesSequence,
 			int[] locations,
-			double[] percentageOfTimeTargetActivity,
-			double[] durationTargetActivity,
+			double[] percentageOfTimeTarget,
+			double[] timeDuration,
 			double[] locationPerception,
 			double[] sigmaActivityCalibration,
 			double[] tauActivityCalibration,
-			double[] gammaActivityCalibration,
+			double[] durationDiscomfort,
 			double[] travelCost,
 			double[] travelTime,
 			double monetaryBudget,
 			double timeRelatedBudget,
-			double[] activityLocationCostRate,
-			double costOfTimeRate) {
-		super(nActivities, activitiesSequence, locations, percentageOfTimeTargetActivity, durationTargetActivity,
-				locationPerception, sigmaActivityCalibration, tauActivityCalibration, gammaActivityCalibration, travelCost,
-				travelTime, monetaryBudget, timeRelatedBudget);
+			double[] activityLocationCostRate, 
+			double valueOfTime,
+			float[][] attractiveness) {
+		super(nActivities, activitiesSequence, locations, percentageOfTimeTarget, timeDuration,
+				locationPerception, sigmaActivityCalibration, tauActivityCalibration, durationDiscomfort, travelCost,
+				travelTime,attractiveness,valueOfTime,monetaryBudget, timeRelatedBudget);
 		this.activityLocationCostRate = activityLocationCostRate;
-		this.costOfTimeRate = costOfTimeRate;
+		this.valueOfTime = valueOfTime;
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class ObjectiveFunctionCTAP_01 extends ObjectiveFunctionCTAP {
 
 	@Override
 	public double costOfTime(double ts, double te) {
-		return costOfTimeRate*(te-ts);
+		return valueOfTime*(te-ts);
 	}
 
 	//TODO

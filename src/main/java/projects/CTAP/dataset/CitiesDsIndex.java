@@ -14,6 +14,8 @@ public class CitiesDsIndex implements IndexI<Long> {
 		this.index = index;
 	}
 	
+	public CitiesDsIndex() {}
+	
 	@Override
 	public String getId() {
 		return this.id;

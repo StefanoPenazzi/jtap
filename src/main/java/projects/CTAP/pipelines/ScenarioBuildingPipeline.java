@@ -17,6 +17,7 @@ import core.graph.rail.gtfs.GTFS;
 import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadNode;
 import picocli.CommandLine;
+import projects.CTAP.graphElements.ActivityCityLink;
 
 public class ScenarioBuildingPipeline implements Callable<Integer> {
 	
@@ -83,6 +84,7 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		
 		//insert activities-----------------------------------------------------
 		core.graph.Activity.Utils.insertActivitiesFromCsv(ActivityNode.class);
+		core.graph.Activity.Utils.insertActivitiesLocFromCsv(ActivityCityLink.class);
 		
 		//insert population-----------------------------------------------------
 		core.graph.population.Utils.insertStdPopulationFromCsv(StdAgentNodeImpl.class);

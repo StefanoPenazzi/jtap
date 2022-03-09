@@ -14,6 +14,8 @@ public class ActivitiesIndex implements IndexI<Long> {
 		this.index = index;
 	}
 	
+	public ActivitiesIndex() {}
+	
 	@Override
 	public String getId() {
 		return this.id;

@@ -14,6 +14,8 @@ public class TimeIndex implements IndexI<Long> {
 		this.index = index;
 	}
 	
+	public TimeIndex() {}
+	
 	@Override
 	public String getId() {
 		return this.id;

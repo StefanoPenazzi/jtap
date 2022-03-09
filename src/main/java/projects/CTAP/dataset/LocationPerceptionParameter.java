@@ -6,12 +6,12 @@ import core.dataset.ParameterI;
 
 public class LocationPerceptionParameter implements ParameterI<Integer> {
 	
-	private double[][] parameter;
+	private double[] parameter;
 	private List<List<Integer>>  parameterDescription;
 	private String id = "LocationPerceptionParameter";
-	private String description = "";
+	private String description = "LocationId";
 	
-	public LocationPerceptionParameter(double[][] parameter,
+	public LocationPerceptionParameter(double[] parameter,
 			List<List<Integer>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
@@ -20,7 +20,7 @@ public class LocationPerceptionParameter implements ParameterI<Integer> {
 	public LocationPerceptionParameter() {}
 
 	@Override
-	public Object getParameter() {
+	public double[] getParameter() {
 		return this.parameter;
 	}
 

@@ -9,7 +9,7 @@ public final class TimeDurationParameter implements ParameterI<Long> {
 	private double[][] parameter;
 	private List<List<Long>>  parameterDescription;
 	private String id = "TimeDurationParameter";
-	private String description = "";
+	private String description = "Agent-Activity";
 	
 	public TimeDurationParameter(double[][] parameter,
 			List<List<Long>>  parameterDescription) {
@@ -20,14 +20,13 @@ public final class TimeDurationParameter implements ParameterI<Long> {
 	public TimeDurationParameter() {}
 
 	@Override
-	public Object getParameter() {
+	public double[][] getParameter() {
 		return this.parameter;
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.description;
 	}
 
 	@Override

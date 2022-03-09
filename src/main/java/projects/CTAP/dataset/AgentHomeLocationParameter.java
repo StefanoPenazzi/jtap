@@ -4,29 +4,29 @@ import java.util.List;
 
 import core.dataset.ParameterI;
 
-public class TimeRelatedBudgetParameter implements ParameterI<Long> {
+public class AgentHomeLocationParameter implements ParameterI<Long> {
 
-	private double[] parameter;
+	private int[][] parameter;
 	private List<List<Long>>  parameterDescription;
-	private String id = "TimeRelatedBudgetParameter";
-	private String description = "";
+	private String id = "AgentHomeLocationParameterr";
+	private String description = "Agent_id - Location_id";
 	
-	public TimeRelatedBudgetParameter(double[] parameter,
+	public AgentHomeLocationParameter(int[][] parameter,
 			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
 	
-	public TimeRelatedBudgetParameter() {}
+	public AgentHomeLocationParameter() {}
 	
 	@Override
-	public double[] getParameter() {
+	public int[][] getParameter() {
 		return this.parameter;
 	}
 
 	@Override
 	public String getDescription() {
-		return null;
+		return this.description;
 	}
 
 	@Override

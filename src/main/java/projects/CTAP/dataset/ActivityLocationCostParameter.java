@@ -4,15 +4,15 @@ import java.util.List;
 
 import core.dataset.ParameterI;
 
-public class ActivityLocationCostParameter implements ParameterI<Integer> {
+public class ActivityLocationCostParameter implements ParameterI<Long> {
 	
-	private double[][] parameter;
-	private List<List<Integer>>  parameterDescription;
+	private float[][] parameter;
+	private List<List<Long>>  parameterDescription;
 	private  String id = "ActivityLocationCostParameter";
-	private String description = "";
+	private String description = "ActivityId - LocationId";
 	
-	public ActivityLocationCostParameter(double[][] parameter,
-			List<List<Integer>>  parameterDescription) {
+	public ActivityLocationCostParameter(float[][] parameter,
+			List<List<Long>>  parameterDescription) {
 		this.parameter = parameter;
 		this.parameterDescription = parameterDescription;
 	}
@@ -20,7 +20,7 @@ public class ActivityLocationCostParameter implements ParameterI<Integer> {
 	public ActivityLocationCostParameter() {}
 
 	@Override
-	public Object getParameter() {
+	public float[][] getParameter() {
 		return this.parameter;
 	}
 
@@ -35,7 +35,7 @@ public class ActivityLocationCostParameter implements ParameterI<Integer> {
 	}
 
 	@Override
-	public List<List<Integer>> getParameterDescription() {
+	public List<List<Long>> getParameterDescription() {
 		return this.parameterDescription;
 	}
 

@@ -20,6 +20,7 @@ public final class AgentParametersFactory {
 		
 		res.add(new TimeRelatedBudgetParameterFactory(agents,parameterDescription));
 		res.add(new MonetaryBudgetParameterFactory(agents,parameterDescription));
+		res.add(new ValueOfTimeParameterFactory(agents,parameterDescription));
 		
 		return res;
 		

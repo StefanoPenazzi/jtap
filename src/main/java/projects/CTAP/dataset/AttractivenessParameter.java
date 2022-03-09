@@ -11,7 +11,7 @@ public class AttractivenessParameter implements ParameterI<Long> {
 	private float[][][][] parameter;
 	private List<List<Long>>  parameterDescription;
 	private String id = "AttractivenessParameter";
-	private String description = "";
+	private String description = "Agent_id - Activity_id - CitieDs_id - Time";
 	
 	public AttractivenessParameter(float[][][][] parameter,
 			List<List<Long>>  parameterDescription) {
@@ -22,7 +22,7 @@ public class AttractivenessParameter implements ParameterI<Long> {
 	public AttractivenessParameter() {}
 	
 	@Override
-	public Object getParameter() {
+	public float[][][][] getParameter() {
 		return this.parameter;
 	}
 

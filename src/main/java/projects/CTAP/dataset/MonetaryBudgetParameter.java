@@ -20,7 +20,7 @@ public class MonetaryBudgetParameter implements ParameterI<Long> {
 	public MonetaryBudgetParameter() {}
 	
 	@Override
-	public Object getParameter() {
+	public double[] getParameter() {
 		return this.parameter;
 	}
 

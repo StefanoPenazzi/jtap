@@ -41,8 +41,6 @@ public class DatasetImportPipeline implements Callable<Integer> {
 		controller.emptyTempDirectory();
 		DatasetJsonFactory dsf = new DatasetJsonFactory();
 		Dataset ds = dsf.run();
-		System.out.print(false);
-        
 		return 1;
 	}
 
