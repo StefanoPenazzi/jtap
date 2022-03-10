@@ -65,7 +65,7 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		
 		//connect FacilityNodes with Cities-------------------------------------
 		Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
-		facilityConnMap.put(CityNode.class,"city");
+		facilityConnMap.put(CityNode.class,"city_id");
 		core.graph.Utils.setShortestDistCrossLink(FacilityNode.class,"node_osm_id",facilityConnMap,3);
 		
 		//create the CityFacStatNodes-------------------------------------------
@@ -80,7 +80,7 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
 		cityConnMap.put(RoadNode.class,"node_osm_id");
 		cityConnMap.put(RailNode.class, "id");
-		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city",cityConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city_id",cityConnMap,3);
 		
 		//insert activities-----------------------------------------------------
 		core.graph.Activity.Utils.insertActivitiesFromCsv(ActivityNode.class);

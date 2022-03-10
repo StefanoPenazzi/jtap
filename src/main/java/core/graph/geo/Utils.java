@@ -21,7 +21,7 @@ public class Utils {
 		String database = config.getNeo4JConfig().getDatabase();
 		core.graph.Utils.insertNodesIntoNeo4J(database,config.getGeoLocConfig().getCitiesFile(),config.getGeneralConfig().getTempDirectory(),cityClass);
 		try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query(database,"CREATE INDEX CityNodeIndex FOR (n:CityNode) ON (n.city)",AccessMode.WRITE);
+			conn.query(database,"CREATE INDEX CityNodeIndex FOR (n:CityNode) ON (n.city_id)",AccessMode.WRITE);
 		}
 	}
 	
@@ -48,12 +48,12 @@ public class Utils {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
 		try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query(database,"MATCH (cit:CityNode) WITH DISTINCT cit.city AS cities UNWIND cities AS cn CREATE (g:CityFacStatNode {city:cn}) With g,cn Match(cit:CityNode) where cit.city=cn create(cit)-[j:STAT]->(g);",AccessMode.WRITE);
+			conn.query(database,"MATCH (cit:CityNode) WITH DISTINCT cit.city_id AS cities UNWIND cities AS cn CREATE (g:CityFacStatNode {city_id:cn}) With g,cn Match(cit:CityNode) where cit.city_id=cn create(cit)-[j:STAT]->(g);",AccessMode.WRITE);
 			conn.query(database,"match (n:CityNode)<-[r:CrossLink]-(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
-					+ "WITH DISTINCT f.tourism AS tourism,n.city AS cn,f AS ot UNWIND tourism AS tt WITH count(ot.tourism = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
+					+ "WITH DISTINCT f.tourism AS tourism,n.city_id AS cn,f AS ot UNWIND tourism AS tt WITH count(ot.tourism = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city_id=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
 					+ "RETURN count(*);",AccessMode.WRITE);
 			conn.query(database,"match (n:CityNode)<-[r:CrossLink]-(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
-					+ "WITH DISTINCT f.amenity AS amenities,n.city AS cn,f AS ot UNWIND amenities AS tt WITH count(ot.amenity = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
+					+ "WITH DISTINCT f.amenity AS amenities,n.city_id AS cn,f AS ot UNWIND amenities AS tt WITH count(ot.amenity = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city_id=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
 					+ "RETURN count(*); ",AccessMode.WRITE);
 		}
 	}

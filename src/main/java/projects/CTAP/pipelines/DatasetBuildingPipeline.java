@@ -22,7 +22,9 @@ import core.graph.population.StdAgentNodeImpl;
 import core.graph.routing.RoutingManager;
 import picocli.CommandLine;
 import projects.CTAP.dataset.ActivitiesIndex;
+import projects.CTAP.dataset.ActivityLocationCostParameterFactory;
 import projects.CTAP.dataset.AgentActivityParameterFactory;
+import projects.CTAP.dataset.AgentHomeLocationParameterFactory;
 import projects.CTAP.dataset.AgentParametersFactory;
 import projects.CTAP.dataset.AgentsIndex;
 import projects.CTAP.dataset.AttractivenessParameterFactory;
@@ -57,7 +59,7 @@ public class DatasetBuildingPipeline implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
 		
-		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
+		Config config = Config.of (configFile.toFile()); 
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
@@ -90,6 +92,10 @@ public class DatasetBuildingPipeline implements Callable<Integer> {
 		Os2DsTravelCostDbParameterFactory osds = new Os2DsTravelCostDbParameterFactory(config,rm,citiesOs_ids,citiesDs_ids);
 		Ds2OsTravelCostDbParameterFactory dsos = new Ds2OsTravelCostDbParameterFactory(config,rm,citiesOs_ids,citiesDs_ids);
 		Ds2DsTravelCostDbParameterFactory dsds = new Ds2DsTravelCostDbParameterFactory(config,rm,citiesDs_ids);
+		List<Long> testCities = new ArrayList<>() {{add(93L);add(3L);}};                                           //just for test
+		AgentHomeLocationParameterFactory agLoc = new AgentHomeLocationParameterFactory(agents_ids,testCities);
+		List<Long> testActLoc = new ArrayList<>() {{add(0L);add(1L);add(2L);add(3L);add(4L);add(5L);}};            //just for test
+		ActivityLocationCostParameterFactory actLoc = new ActivityLocationCostParameterFactory(testActLoc,activities_ids);
 		
 		List<ParameterFactoryI> res = Stream.of(agentActivtyParams, agentParams)
                  .flatMap(x -> x.stream())
@@ -99,6 +105,8 @@ public class DatasetBuildingPipeline implements Callable<Integer> {
 		res.add(osds);
 		res.add(dsos);
 		res.add(dsds);
+		res.add(agLoc);
+		res.add(actLoc);
 		
 		//parameters
 		List<ModelElementI> prs = new ArrayList<>();

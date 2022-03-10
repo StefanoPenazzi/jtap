@@ -8,7 +8,7 @@ public class AgentHomeLocationParameter implements ParameterI<Long> {
 
 	private int[][] parameter;
 	private List<List<Long>>  parameterDescription;
-	private String id = "AgentHomeLocationParameterr";
+	private String id = "AgentHomeLocationParameter";
 	private String description = "Agent_id - Location_id";
 	
 	public AgentHomeLocationParameter(int[][] parameter,

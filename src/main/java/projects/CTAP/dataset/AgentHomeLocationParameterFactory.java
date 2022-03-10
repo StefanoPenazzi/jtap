@@ -4,22 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.neo4j.driver.AccessMode;
 import org.neo4j.driver.Record;
 
 import core.dataset.ParameterFactoryI;
 import core.dataset.ParameterI;
+import core.graph.population.AgentActivityLink;
 
-public class ActivityLocationCostParameterFactory implements ParameterFactoryI{
-
-	private final List<List<Long>> ids;
+public class AgentHomeLocationParameterFactory implements ParameterFactoryI {
 	
-	public ActivityLocationCostParameterFactory (List<Long> cities_ids,List<Long> agents_ids) {
+	
+	private final List<List<Long>> ids;
+
+	public AgentHomeLocationParameterFactory(List<Long> agents_ids,List<Long> cities_ids) {
 		this.ids = new ArrayList<>() {
 			{
-				add(cities_ids);
 				add(agents_ids);
+				add(cities_ids);
 			}
 		};
 	}
@@ -27,30 +30,33 @@ public class ActivityLocationCostParameterFactory implements ParameterFactoryI{
 	@Override
 	public ParameterI run() {
 		
-		float[][] parameter = new float[ids.get(0).size()][ids.get(1).size()];
+		int[][] parameter = new int[ids.get(0).size()][ids.get(1).size()];
+		
+		
+		StringBuilder agents = new StringBuilder();
+		agents.append(" [");
+		for (Long i : this.ids.get(0)) {
+			agents.append("");
+			agents.append(Long.toString(i));
+			agents.append(",");
+		}
+		agents.setLength(agents.length() - 1);
+		agents.append("] ");
 		
 		StringBuilder cities = new StringBuilder();
 		cities.append(" [");
-		for (Long i : this.ids.get(0)) {
+		for (Long i : this.ids.get(1)) {
+			cities.append("");
 			cities.append(Long.toString(i));
 			cities.append(",");
 		}
 		cities.setLength(cities.length() - 1);
 		cities.append("] ");
-		
-		StringBuilder activities = new StringBuilder();
-		activities.append(" [");
-		for (Long i : this.ids.get(1)) {
-			activities.append(Long.toString(i));
-			activities.append(",");
-		}
-		activities.setLength(activities.length() - 1);
-		activities.append("] ");
 
 		
-		String query = "MATCH (n:ActivityNode)-[r:ActivityLocLink]->(m:CityNode)" +
-		                 " WHERE m.city_id IN " + cities.toString() + " AND n.activity_id IN " + activities.toString()
-		                 +" RETURN m.city_id,n.activity_id,r.activity_cost";
+		String query = "MATCH (n:AgentNode)-[r:AgentGeoLink]->(m:CityNode)" +
+		                 " WHERE n.agent_id IN " + agents.toString() + " AND m.city_id IN " + cities.toString()
+		                 +" RETURN n.agent_id,m.city_id,r.size";
 		
 		List<Record> queryRes = null;
 		try {
@@ -59,11 +65,11 @@ public class ActivityLocationCostParameterFactory implements ParameterFactoryI{
 			e.printStackTrace();
 		}
 		
-		Map<String,Float> map = new HashMap<>();
+		Map<String,Integer> map = new HashMap<>();
 		for(Record rec:queryRes) {
 			String key = String.valueOf(rec.values().get(0).asInt())+
 					String.valueOf(rec.values().get(1).asInt());
-			map.put( key,rec.values().get(2).asFloat());
+			map.put( key,rec.values().get(2).asInt());
 		}
 		
 		for(int i=0;i<this.ids.get(0).size();i++) {
@@ -74,6 +80,7 @@ public class ActivityLocationCostParameterFactory implements ParameterFactoryI{
 			}
 		}
 		
-		return new ActivityLocationCostParameter(parameter,ids);
+		return new AgentHomeLocationParameter(parameter,ids);
 	}
+
 }
