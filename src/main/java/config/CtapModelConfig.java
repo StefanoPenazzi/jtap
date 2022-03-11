@@ -6,20 +6,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "ctapModelConfig")
 public class CtapModelConfig {
 
-	private Integer populationThreshold;
 	private AttractivenessModelConfig attractivenessModelConfig;
 	private DatasetConfig datasetConfig;
 	private CtapPopulationConfig ctapPopulationConfig; 
-	
-	
-	@XmlElement(name = "populationThreshold",required = true)
-	public Integer getPopulationThreshold() {
-		return this.populationThreshold;
-	}
-	
-    public void setPopulationThreshold(Integer populationThreshold) {
-    	this.populationThreshold = populationThreshold;
-    }
     
     @XmlElement(name = "attractivenessModelConfig",required = true)
 	public AttractivenessModelConfig getAttractivenessModelConfig() {

@@ -38,7 +38,7 @@ public class Utils {
 		AttractivenessNormalizedConfig anc = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig();
 		Model an = Controller.getInjector().getInstance(Model.class);
 		
-		Integer popThreshold = config.getCtapModelConfig().getPopulationThreshold();
+		Integer popThreshold = config.getCtapModelConfig().getDatasetConfig().getNewDatasetParams().getDestinationsPopThreshold();
 		Integer initialTime = (int)anc.getInitialTime();
 		Integer finalTime = (int)anc.getFinalTime();
 		Integer timeInterval = (int)anc.getIntervalTime();

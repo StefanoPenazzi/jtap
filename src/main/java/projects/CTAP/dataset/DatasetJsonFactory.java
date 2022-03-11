@@ -20,7 +20,7 @@ public final class DatasetJsonFactory {
 		ObjectMapper mapper = new ObjectMapper();
 		List<ModelElementI> modelElements = new ArrayList<>();
 		Dataset dataset = null;
-		    String dir = config.getCtapModelConfig().getDatasetConfig().getParamsDirectory();
+		    String dir = config.getCtapModelConfig().getDatasetConfig().getImportDirectory();
 			try {
 				//indexes
 				AgentsIndex agentsIndex = mapper.readValue(new File(dir+"AgentsIndex.json"), AgentsIndex.class);

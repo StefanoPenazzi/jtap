@@ -6,14 +6,22 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "datasetConfig")
 public class DatasetConfig {
 	
-	private String paramsDirectory;
+	private String importDirectory;
+	private NewDatasetParams newDatasetParams;
 	
-	@XmlElement(name = "paramsDirectory",required = false)
-	public String getParamsDirectory() {
-		return paramsDirectory;
+	@XmlElement(name = "importDirectory",required = false)
+	public String getImportDirectory() {
+		return importDirectory;
 	}
-	public void setParamsDirectory(String paramsDirectory) {
-		this.paramsDirectory = paramsDirectory;
+	public void setImportDirectory(String importDirectory) {
+		this.importDirectory = importDirectory;
+	}
+	@XmlElement(name = "newDatasetParams ",required = false)
+	public NewDatasetParams getNewDatasetParams() {
+		return newDatasetParams;
+	}
+	public void setNewDatasetParams(NewDatasetParams newDatasetParams) {
+		this.newDatasetParams = newDatasetParams;
 	}
 
 }
