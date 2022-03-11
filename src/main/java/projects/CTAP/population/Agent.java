@@ -1,10 +1,11 @@
-package projects.CTAP.model;
+package projects.CTAP.population;
 
 import java.util.List;
 
 import core.models.ModelI;
+import core.population.AgentI;
 
-public class Agent {
+public class Agent implements AgentI {
 	
 	private final List<ModelI> agentModels;
 	private final Long agentId;

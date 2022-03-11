@@ -1,11 +1,16 @@
-package projects.CTAP.model;
+package projects.CTAP.population;
 
 import java.util.ArrayList;
 import java.util.List;
-import core.models.ModelI;
-import projects.CTAP.dataset.Dataset;
+import java.util.Random;
 
-public class AgentFactory {
+import core.models.ModelI;
+import core.population.AgentFactoryI;
+import projects.CTAP.dataset.Dataset;
+import projects.CTAP.model.ModelCTAP;
+import projects.CTAP.model.ObjectiveFunctionCTAP_01;
+
+public class AgentFactory implements AgentFactoryI {
 	
 	private final int nPlanActivities;
 	private final Dataset dataset;
@@ -17,7 +22,7 @@ public class AgentFactory {
 	
 	
 	public AgentFactory (Long agentId,Long homeLocationId,int nPlanActivities ,Dataset dataset) {
-		this.nPlanActivities = 0;
+		this.nPlanActivities = nPlanActivities;
 		this.dataset = dataset;
 		this.agentId = agentId;
 		this.homeLocationId = homeLocationId;
@@ -28,7 +33,8 @@ public class AgentFactory {
 	
 	public Agent run(){
 		
-		List<int[][]> activityLocationSeq = getCombinations();
+		boolean homeDs = dataset.getCitiesDsIndex().getIndex().contains(this.homeLocationId); 
+		List<int[][]> activityLocationSeq = getRandomCombinations();
 		List<ModelI> models = new ArrayList<>();
 		
 		//cost
@@ -55,24 +61,40 @@ public class AgentFactory {
 			//factory
             for(int i = 0;i< this.nPlanActivities ;i++) {
             	
-            	percOfTimeTargetParameter[i] = this.dataset.getPercOfTimeTargetParameter().getParameter()[agentIndex][al[0][i]];
-				timeDuration[i] = this.dataset.getTimeDurationParameter().getParameter()[agentIndex][al[0][i]];
+            	int actIndex = al[0][i];
+            	int locIndex = al[1][i];
+            	
+            	percOfTimeTargetParameter[i] = this.dataset.getPercOfTimeTargetParameter().getParameter()[agentIndex][actIndex ];
+				timeDuration[i] = this.dataset.getTimeDurationParameter().getParameter()[agentIndex][actIndex];
             	
             	//locationPerception[i] = this.dataset.getLocationPerceptionParameter().getParameter()[al[1][i]];
-    			sigmaActivityCalibration[i] = 0;
-    			tauActivityCalibration[i] = 0;
+    			sigmaActivityCalibration[i] = 1;
+    			tauActivityCalibration[i] = 1;
     			//assuming first activity is always the default one
     			if(i%2==0 && i < this.nPlanActivities-1) {
-    				travelCost[i] = this.dataset.getOs2DsTravelCostParameter().getParameter()[0][al[1][i]][al[1][i+1]];   //TODO check if this is not DsDs, and which project to use
-        			travelTime[i] = 0;
+    				int nextLocIndex = al[1][i+1];
+    				if(homeDs) {
+    					travelCost[i] = this.dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+            			travelTime[i] = 0;
+    				}
+    				else {
+    					travelCost[i] = this.dataset.getOs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+            			travelTime[i] = 0;
+    				}
     			}
     			else if(i%2!=0 && i < this.nPlanActivities-1) {
-    				travelCost[i] = this.dataset.getDs2DsTravelCostParameter().getParameter()[0][al[1][i]][al[1][i+1]];   //TODO check if this is not DsDs, and which project to use
-        			travelTime[i] = 0;
+    				int nextLocIndex = al[1][i+1];
+    				if(homeDs) {
+	    				travelCost[i] = this.dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+	        			travelTime[i] = 0;
+    				}
+    				else {
+    					travelCost[i] = this.dataset.getDs2OsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+	        			travelTime[i] = 0;
+    				}
+    				activityLocationCostRate[i] = this.dataset.getActivityLocationCostParameter().getParameter()[locIndex][actIndex];
+        			attractiveness[i] = this.dataset.getAttractivenessParameter().getParameter()[agentIndex][locIndex][actIndex];
     			}
-    			
-    			activityLocationCostRate[i] = this.dataset.getActivityLocationCostParameter().getParameter()[al[0][i]][al[1][i]];
-    			attractiveness[i] = this.dataset.getAttractivenessParameter().getParameter()[agentIndex][al[0][i]][al[1][i]];
 			}
 			
 			ObjectiveFunctionCTAP_01 objF = new ObjectiveFunctionCTAP_01(nPlanActivities,
@@ -89,20 +111,23 @@ public class AgentFactory {
 	}
 	
 	//TODO
-	//activity sequence 01010101...
-	//location sequence 01010101...
-	private List<int[][]> getCombinations(){
+	//random 
+	private List<int[][]> getRandomCombinations(){
 		
 		int maxCombinations = 100;
+		long totComb = (long) (dataset.getActivitiesIndex().getIndex().size() * dataset.getCitiesDsIndex().getIndex().size());
+		Random rand = new Random(); 
+		boolean homeDs = dataset.getCitiesDsIndex().getIndex().contains(this.homeLocationId);    //if the home is in the DS cities
+		
 		List<int[]> activitiesPlan = new ArrayList<>();
 		//they should be different now they are all the same
 		for(int i =0;i<maxCombinations;i++) {
 			int[] ll = new int[this.nPlanActivities];
 			for(int j = 0;j<this.nPlanActivities;j+=2) {
-				ll[j] = 0;
+				ll[j] = 0;  //default activity
 			}
 			for(int j = 1;j<this.nPlanActivities;j+=2) {
-				ll[j] = 1;
+				ll[j] = rand.nextInt(dataset.getActivitiesIndex().getIndex().size()-1)+1;
 			}
 			activitiesPlan.add(ll);
 		}
@@ -111,10 +136,23 @@ public class AgentFactory {
 		for(int i =0;i<maxCombinations;i++) {
 			int[] ll = new int[this.nPlanActivities];
 			for(int j = 0;j<this.nPlanActivities;j+=2) {
-				ll[j] = 0;  //home location
+				ll[j] = homeLocationIndex;  //home location
 			}
 			for(int j = 1;j<this.nPlanActivities;j+=2) {
-				ll[j] = 1;  //other location DS
+				int citiesDsSize = dataset.getCitiesDsIndex().getIndex().size();
+				
+				if(!homeDs) {
+					ll[j] = rand.nextInt(citiesDsSize);
+				}
+				else {
+					//I don't want to have the home location
+					int z = homeLocationIndex;
+					while(z == homeLocationIndex) {
+						z = rand.nextInt(citiesDsSize);
+					}
+					ll[j] = z;			
+				}
+				
 			}
 			locationsPlan.add(ll);
 		}
