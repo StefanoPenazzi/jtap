@@ -19,7 +19,7 @@ public class Utils {
 	public static <T extends CityNode> void insertCitiesIntoNeo4JFromCsv(Class<T> cityClass) throws Exception {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
-		core.graph.Utils.insertNodesIntoNeo4J(database,config.getGeoLocConfig().getCitiesFile(),config.getGeneralConfig().getTempDirectory(),cityClass);
+		core.graph.Utils.insertNodesIntoNeo4J(database,config.getDbScenarioConfig().getGeoLocConfig().getCitiesFile(),config.getGeneralConfig().getTempDirectory(),cityClass);
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			conn.query(database,"CREATE INDEX CityNodeIndex FOR (n:CityNode) ON (n.city_id)",AccessMode.WRITE);
 		}

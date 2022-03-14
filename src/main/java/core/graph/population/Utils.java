@@ -14,21 +14,21 @@ public class Utils {
 		//insert nodes 
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
-		core.graph.Utils.insertNodesIntoNeo4J(database,config.getPopulationConfig().getAgentFile(),config.getGeneralConfig().getTempDirectory(),sai);
+		core.graph.Utils.insertNodesIntoNeo4J(database,config.getDbScenarioConfig().getPopulationConfig().getAgentFile(),config.getGeneralConfig().getTempDirectory(),sai);
 		data.external.neo4j.Utils.createIndex(database,"AgentNodeIndex","AgentNode","agent_id");
 		
 		try( Neo4jConnection conn = new Neo4jConnection()){  
 			//city
-			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getResidenceFile(),
+			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getDbScenarioConfig().getPopulationConfig().getResidenceFile(),
 					AgentGeoLink.class,StdAgentNodeImpl.class,"agent_id","agent_id",CityNode.class,"city","city"),AccessMode.WRITE );
 			//families
-			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getFamilyFile(),
+			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getDbScenarioConfig().getPopulationConfig().getFamilyFile(),
 					AgentFamilyLink.class,StdAgentNodeImpl.class,"agent_id","agent_from_id",StdAgentNodeImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );
 			//friends
-			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getFriendFile(),
+			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getDbScenarioConfig().getPopulationConfig().getFriendFile(),
 					AgentFamilyLink.class,StdAgentNodeImpl.class,"agent_id","agent_from_id",StdAgentNodeImpl.class,"agent_id","agent_to_id"),AccessMode.WRITE );
 			//activities
-			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getPopulationConfig().getActivityFile(),
+			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getDbScenarioConfig().getPopulationConfig().getActivityFile(),
 					AgentActivityLink.class,StdAgentNodeImpl.class,"agent_id","agent_id",ActivityNode.class,"activity_id","activity_id"),AccessMode.WRITE );
 		}
 	}

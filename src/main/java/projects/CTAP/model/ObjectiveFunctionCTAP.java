@@ -1,5 +1,7 @@
 package projects.CTAP.model;
 
+import java.util.Arrays;
+
 import core.models.ObjectiveFunctionI;
 
 public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
@@ -24,7 +26,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	
 	
-	public ObjectiveFunctionCTAP( int nActivities,
+	public ObjectiveFunctionCTAP(int nActivities,
 			                     int[] activitiesSequence,
 								 int[] locations,
 								 double[] percentageOfTimeTarget,
@@ -64,6 +66,14 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 		res += getDiscomfortDurationTarget(ts, te);
 		res += getDiscomfortBudget(ts, te);
 		return res;
+	}
+	
+	@Override
+	public double getValue(double[] t) {
+		double[] ts = Arrays.copyOfRange(t,0,t.length/2);
+		double[] te = Arrays.copyOfRange(t,t.length/2,t.length);
+		return getValue(ts,te); 
+		
 	}
 	
 	
@@ -123,5 +133,10 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public int getVariablesLength() {
+		return this.nActivities*2;
 	}
 }

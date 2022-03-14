@@ -100,16 +100,6 @@ public class RoutesMap implements DatasetMapI {
     public void addNewRoutesFromCSV() {
 		
 	}
-    public void addNewRoutesFromJson() throws IOException {
-    	ObjectMapper mapper = new ObjectMapper();
-    	FileInputStream inputStream = new FileInputStream(config.getRoutingConfig().getJsonFile());
-    	try {
-    	    String json = IOUtils.toString(inputStream);
-    	    this.map = mapper.readValue(json, Map.class);
-    	} finally {
-    	    inputStream.close();
-    	}
-   	}
     
     
     public void saveJson() {

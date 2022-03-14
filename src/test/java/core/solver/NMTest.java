@@ -8,8 +8,7 @@ class NMTest {
 
 	@Test
 	void test() {
-		NelderMeadTest nmt = new NelderMeadTest();
-		nmt.run();
+		
 	}
 
 }

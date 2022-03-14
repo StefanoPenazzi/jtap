@@ -17,7 +17,7 @@ public class Utils {
 		//insert nodes 
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
-		core.graph.Utils.insertNodesIntoNeo4J(database,config.getActivitiesConfig().getActivitiesFile(),config.getGeneralConfig().getTempDirectory(),sai);
+		core.graph.Utils.insertNodesIntoNeo4J(database,config.getDbScenarioConfig().getActivitiesConfig().getActivitiesFile(),config.getGeneralConfig().getTempDirectory(),sai);
 		data.external.neo4j.Utils.createIndex(database,"ActivityNodeIndex","ActivityNode","activity_id");
 	}
 	
@@ -26,7 +26,7 @@ public class Utils {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
 		try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getActivitiesConfig().getActivitiesLocFile(),
+			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getDbScenarioConfig().getActivitiesConfig().getActivitiesLocFile(),
 					sai,ActivityNode.class,"activity_id","activity_id",CityNode.class,"city_id","city_id"),AccessMode.WRITE );
 		}
 	}

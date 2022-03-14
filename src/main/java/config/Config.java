@@ -15,33 +15,15 @@ import jakarta.xml.bind.annotation.XmlElement;
 //@XmlAccessorType(XmlAccessType.FIELD)
 public final class Config {
 	
-	private RailConfig railConfig;
-	private GeneralConfig generalConfig;
-	private GeoLocConfig geoLocConfig;
-	private PopulationConfig populationConfig;
-	private Neo4JConfig neo4JConfig;
-	private RoutingConfig routingConfig;
-	private ActivitiesConfig activitiesConfig;
-	private CtapModelConfig ctapModelConfig;
 	
-	@XmlElement(name = "railConfig")
-	public RailConfig getRailConfig() {
-		return this.railConfig;
-	}
+	private GeneralConfig generalConfig;
+	private Neo4JConfig neo4JConfig;
+	private CtapModelConfig ctapModelConfig;
+	private DbScenarioConfig dbScenarioConfig;
 	
 	@XmlElement(name = "generalConfig")
 	public GeneralConfig getGeneralConfig() {
 		return this.generalConfig;
-	}
-	
-	@XmlElement(name = "geoLocConfig")
-	public GeoLocConfig getGeoLocConfig() {
-		return this.geoLocConfig;
-	}
-	
-	@XmlElement(name = "populationConfig")
-	public PopulationConfig getPopulationConfig() {
-		return this.populationConfig;
 	}
 	
 	@XmlElement(name = "neo4JConfig")
@@ -49,60 +31,40 @@ public final class Config {
 		return this.neo4JConfig;
 	}
 	
-	@XmlElement(name = "routingConfig")
-	public RoutingConfig getRoutingConfig() {
-		return this.routingConfig;
-	}
-	
-	@XmlElement(name = "activitiesConfig")
-	public ActivitiesConfig getActivitiesConfig() {
-		return this.activitiesConfig;
-	}
-	
 	@XmlElement(name = "ctapModelConfig")
 	public CtapModelConfig getCtapModelConfig() {
 		return this.ctapModelConfig;
 	}
 	
-	public void setRailConfig(RailConfig railConfig) {
-		this.railConfig = railConfig;
+	@XmlElement(name = "dbScenarioConfig")
+	public DbScenarioConfig getDbScenarioConfig() {
+		return dbScenarioConfig;
 	}
+	
 	public void setGeneralConfig(GeneralConfig generalConfig) {
 		this.generalConfig = generalConfig;
 	}
-	public void setGeoLocConfig(GeoLocConfig geoLocConfig) {
-		this.geoLocConfig = geoLocConfig;
-	}
-	public void setPopulationConfig(PopulationConfig populationConfig) {
-		this.populationConfig = populationConfig;
-	}
+	
 	public void setNeo4JConfig(Neo4JConfig neo4JConfig) {
 		this.neo4JConfig = neo4JConfig;
 	}
-	public void setRoutingConfig(RoutingConfig routingConfig) {
-		this.routingConfig = routingConfig;
-	}
-	public void setActivitiesConfig(ActivitiesConfig activitiesConfig) {
-		this.activitiesConfig = activitiesConfig;
-	}
 	public void setCtapModelConfig(CtapModelConfig ctapModelConfig) {
 		this.ctapModelConfig = ctapModelConfig;
+	}
+	public void setDbScenarioConfig(DbScenarioConfig dbScenarioConfig) {
+		this.dbScenarioConfig = dbScenarioConfig;
 	}
 	
 	@Inject
 	public Config() {}
 	
-	public Config(RailConfig railConfig,GeneralConfig generalConfig,GeoLocConfig geoLocConfig,
-			PopulationConfig populationConfig,Neo4JConfig neo4JConfig,RoutingConfig routingConfig,
-			ActivitiesConfig activitiesConfig,CtapModelConfig ctapModelConfig) {
-		this.railConfig = railConfig;
+	public Config(GeneralConfig generalConfig,Neo4JConfig neo4JConfig,
+			CtapModelConfig ctapModelConfig,DbScenarioConfig dbScenarioConfig) {
+	
 		this.generalConfig = generalConfig;
-		this.geoLocConfig = geoLocConfig;
-		this.populationConfig = populationConfig;
 		this.neo4JConfig = neo4JConfig;
-		this.routingConfig = routingConfig;
-		this.activitiesConfig = activitiesConfig;
 		this.ctapModelConfig = ctapModelConfig;
+		this.dbScenarioConfig = dbScenarioConfig;
 	}
 	
 	public static Config of(File file) {

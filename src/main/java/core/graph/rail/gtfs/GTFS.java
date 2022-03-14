@@ -30,7 +30,7 @@ public final class GTFS {
 	public GTFS(Config config) throws IOException{
 		
 		this.config = config;
-		gtfsDirectory = this.config.getRailConfig().getGTFSDirectory();
+		gtfsDirectory = this.config.getDbScenarioConfig().getRailConfig().getGTFSDirectory();
 		initialize();
 	} 
 	
