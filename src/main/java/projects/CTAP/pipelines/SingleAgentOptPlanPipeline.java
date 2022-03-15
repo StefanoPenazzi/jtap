@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import config.Config;
 import controller.Controller;
+import core.population.PopulationFactoryI;
 import core.solver.SolverImpl;
 import picocli.CommandLine;
 import projects.CTAP.population.Agent;
@@ -43,8 +44,8 @@ public class SingleAgentOptPlanPipeline  implements Callable<Integer> {
 		controller.run();
 		controller.emptyTempDirectory();
 		
-		PopulationFactory populationFactory = controller.getInjector().getInstance(PopulationFactory.class);
-		Population population = populationFactory.run();
+		PopulationFactoryI populationFactory = controller.getInjector().getInstance(PopulationFactoryI.class);
+		Population population = (Population) populationFactory.run();
 		Agent ag = (Agent) population.getAgentsIterator().next();
 		
 		double[] initialGuess = new double[] {0,2000,4000,5000,6000,7000,10000,15000,20000,22000,1999,3999,4999,5999,6999,7999,14999,19999,21999,22999};

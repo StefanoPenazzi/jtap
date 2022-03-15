@@ -6,6 +6,9 @@ import java.util.List;
 import com.google.inject.Inject;
 
 import config.Config;
+import controller.Controller;
+import core.dataset.DatasetFactoryI;
+import core.population.AgentFactoryI;
 import core.population.PopulationFactoryI;
 import projects.CTAP.dataset.Dataset;
 import projects.CTAP.dataset.DatasetJsonFactory;
@@ -13,22 +16,23 @@ import projects.CTAP.dataset.DatasetJsonFactory;
 public class PopulationFactory implements PopulationFactoryI {
 	
 	private Config config;
+	private DatasetFactoryI datasetFactory;
 	
 	@Inject
-	public PopulationFactory(Config config) {
+	public PopulationFactory(Config config, DatasetFactoryI datasetFactory) {
 		this.config = config;
+		this.datasetFactory = datasetFactory;
 	}
 	
 	@Override
 	public Population run() {
-		DatasetJsonFactory dsf = new DatasetJsonFactory();
-		Dataset ds = dsf.run();
+		Dataset ds = (Dataset) datasetFactory.run();
 		Integer planSize = config.getCtapModelConfig().getCtapPopulationConfig().getCtapAgentConfig().getPlanSize();
 		List<Agent> agents = new ArrayList<>();
 		for(Long agId: ds.getAgentsIndex().getIndex()) {
 			for(Long locId: ds.getCitiesOsIndex().getIndex()) {
-				AgentFactory af = new AgentFactory(agId,locId,planSize,ds);
-				agents.add(af.run());
+				AgentFactoryI af = Controller.getInjector().getInstance(AgentFactory.class);
+				agents.add((Agent) af.run(agId,locId,ds));
 			}
 		}
 		return new Population(agents);

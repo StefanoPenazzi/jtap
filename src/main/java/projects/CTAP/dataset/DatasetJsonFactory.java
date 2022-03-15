@@ -6,17 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 
 import config.Config;
 import controller.Controller;
+import core.dataset.DatasetFactoryI;
 import core.dataset.ModelElementI;
 import core.dataset.ParameterI;
 
-public final class DatasetJsonFactory {
+public final class DatasetJsonFactory implements DatasetFactoryI {
 	
+	private Config config;
 	
+    @Inject
+	public DatasetJsonFactory(Config config) {
+		this.config = config;
+	}
+	
+	@Override
 	public Dataset run(){
-		Config config = Controller.getConfig();
 		ObjectMapper mapper = new ObjectMapper();
 		List<ModelElementI> modelElements = new ArrayList<>();
 		Dataset dataset = null;

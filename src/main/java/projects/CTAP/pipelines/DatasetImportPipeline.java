@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import config.Config;
 import controller.Controller;
+import core.dataset.DatasetFactoryI;
 import picocli.CommandLine;
 import projects.CTAP.dataset.Dataset;
 import projects.CTAP.dataset.DatasetJsonFactory;
@@ -39,9 +40,8 @@ public class DatasetImportPipeline implements Callable<Integer> {
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
-		DatasetJsonFactory dsf = new DatasetJsonFactory();
-		Dataset ds = dsf.run();
+		DatasetFactoryI dsf = controller.getInjector().getInstance(DatasetFactoryI.class);
+		Dataset ds = (Dataset) dsf.run();
 		return 1;
 	}
-
 }
