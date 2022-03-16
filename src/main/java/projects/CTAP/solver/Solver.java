@@ -1,14 +1,27 @@
 package projects.CTAP.solver;
 
-import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.math3.optim.PointValuePair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.inject.Inject;
 import config.Config;
-import core.population.PopulationI;
+import core.models.ModelI;
 import core.solver.SolverImpl;
 import projects.CTAP.population.Agent;
+import projects.CTAP.population.Plan;
 import projects.CTAP.population.Population;
 
 public class Solver {
+	
+	private static final Logger log = LogManager.getLogger(Solver.class);
 	
 	private Config config;
 	
@@ -20,19 +33,74 @@ public class Solver {
 	
 	public void run(Population population) {
 		
-		
-		//parallelization
+		int nThreads = this.config.getGeneralConfig().getThreads();
+		ExecutorService executor = Executors.newFixedThreadPool(nThreads);
 		
 		//split the agent list
+		List<List<Agent>> agentsSL = new ArrayList<>();
+		int nAgentsXThread = (int)Math.ceil(((double)population.getAgents().size())/((double)nThreads));
+		int start = 0;
+		int end = nAgentsXThread ;
+		for(int i=0;i<nThreads;i++) {
+			if (end >= population.getAgents().size()) {
+				end = population.getAgents().size();
+				agentsSL.add(population.getAgents().subList(start,end));
+				break;
+			}
+			else {
+				agentsSL.add(population.getAgents().subList(start,end));
+				start = end;
+				end = end+nAgentsXThread;
+			}
+		}	
 		
-        Agent ag = (Agent) population.getAgentsIterator().next();
+		for(List<Agent> la: agentsSL) {
+			executor.execute(new Task(la));
+		}	
 		
-		double[] initialGuess = new double[] {0,2000,4000,5000,6000,7000,10000,15000,20000,22000,1999,3999,4999,5999,6999,7999,14999,19999,21999,22999};
-		SolverImpl si = new SolverImpl.Builder((ag.getAgentModels().get(0)))
-				.initialGuess(initialGuess)
-				.build();
-		si.run();
+		awaitTerminationAfterShutdown(executor);
 		
+	}
+	
+	public void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+	    threadPool.shutdown();
+	    try {
+	        if (!threadPool.awaitTermination(60, TimeUnit.DAYS)) {
+	            threadPool.shutdownNow();
+	        }
+	    } catch (InterruptedException ex) {
+	        threadPool.shutdownNow();
+	        Thread.currentThread().interrupt();
+	    }
+	}
+	
+	private static final class Task implements Runnable {
+
+		private List<Agent> agents;
+
+		private Task(List<Agent> agents) {
+			this.agents = agents;
+		}
+			
+
+		@Override
+		public void run() {
+			log.info("Starting task optimization on thread: "+Thread.currentThread().getName()+". Number of agents :" + String.valueOf(agents.size()));
+			for(Agent agent: this.agents) {
+				List<Plan> agentPlans = new ArrayList<>();
+				for (ModelI model:agent.getAgentModels()) {
+					
+					SolverImpl si = new SolverImpl.Builder(model)
+								.initialGuess(model.getInitialGuess())
+								.build();
+					
+					org.apache.commons.math3.optim.PointValuePair pvp = (PointValuePair) si.run();
+					agentPlans.add(new Plan(pvp.getPoint(),pvp.getValue()));
+				}
+				agent.setOptimalPlans(agentPlans);
+			}
+			log.info("Task optimization finished on thread: "+Thread.currentThread().getName());
+		}
 	}
 
 }

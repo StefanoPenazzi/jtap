@@ -16,5 +16,9 @@ public final class Population implements PopulationI {
 	public Iterator getAgentsIterator() {
 		return this.agents.iterator();
 	}
+	
+	public List<Agent> getAgents(){
+		return this.agents;
+	}
 
 }

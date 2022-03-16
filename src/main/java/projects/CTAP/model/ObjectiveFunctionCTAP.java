@@ -139,4 +139,6 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	public int getVariablesLength() {
 		return this.nActivities*2;
 	}
+	
+	
 }

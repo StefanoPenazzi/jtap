@@ -19,12 +19,12 @@ public class SolverImpl implements SolverI {
  	private SimpleValueChecker sc = new SimpleValueChecker(1e-10, 1e-10,100000);
 	private SimplexOptimizer so = new SimplexOptimizer(sc);
 	private ModelI model;
-	private double[] initialGuess;
+	private double[] initialGuess = null;
 	
 	public static class Builder {
 		
 		private ModelI model;
-		private double[] initialGuess = null;
+		private double[] initialGuess_ = null;
 		
 		
 		
@@ -32,14 +32,14 @@ public class SolverImpl implements SolverI {
 			this.model = model;
 		}
 		
-		public Builder initialGuess(double[] initialGuess) {
-			this.initialGuess = initialGuess;
+		public Builder initialGuess(double[] initialGuess_) {
+			this.initialGuess_ = initialGuess_;
 			return this;
 		}
 		
 		public SolverImpl build() {
 			SolverImpl solver = new SolverImpl(this.model);
-			solver.initialGuess = this.initialGuess;
+			solver.initialGuess = this.initialGuess_;
 			return solver;
 		}
 	}
@@ -53,13 +53,17 @@ public class SolverImpl implements SolverI {
 	@Override
 	public Object run() {
 		
-		//optimizer.build(startpoint);
-		org.apache.commons.math3.optim.PointValuePair pvp = so.optimize(optimizer, 
-				new ObjectiveFunction(new MultivariateFunctionSolver(this.model)),GoalType.MINIMIZE,new MaxIter(100000),new MaxEval(100000),
-				new InitialGuess(this.initialGuess)); //
-		System.out.print(""); 
-		
-		return null;
+		org.apache.commons.math3.optim.PointValuePair pvp = null;
+		if(this.initialGuess != null) {
+			pvp = so.optimize(optimizer, 
+					new ObjectiveFunction(new MultivariateFunctionSolver(this.model)),GoalType.MINIMIZE,new MaxIter(100000),new MaxEval(100000),
+					new InitialGuess(this.initialGuess)); //
+		}
+		else {
+			pvp = so.optimize(optimizer, 
+					new ObjectiveFunction(new MultivariateFunctionSolver(this.model)),GoalType.MINIMIZE,new MaxIter(100000),new MaxEval(100000));
+		}
+		return pvp;
 	}
 	
 	class MultivariateFunctionSolver implements MultivariateFunction{
