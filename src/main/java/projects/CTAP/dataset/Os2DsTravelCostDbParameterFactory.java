@@ -134,7 +134,7 @@ public class Os2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 		parameterDescription.add(projections);
 		parameterDescription.add(citiesOs_ids);
 		parameterDescription.add(citiesDs_ids);
-		double[][][] parameter = this.toArray(parameterDescription);
+		double[][][] parameter = this.toArrayCost(parameterDescription);
 		os2dsParameter = new Os2DsTravelCostParameter(parameter,parameterDescription);
 		
 		try {

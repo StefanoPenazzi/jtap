@@ -7,8 +7,12 @@ public class Plan {
 	private final double value;
 	private final Double[] ts;
 	private final Double[] te;
-	
-	public Plan(double[] activitiesTime, double value) {
+	private final Long[] locations;
+	private final Long[] activities;
+ 	
+	public Plan(Long[] locations,Long[] activities,double[] activitiesTime, double value) {
+		this.locations = locations;
+		this.activities = activities;
 		this.ts = IntStream.range(0,(int)(activitiesTime.length/2))
                 .mapToObj(i -> activitiesTime[i])
                 .toArray(Double[]::new);
@@ -18,7 +22,9 @@ public class Plan {
 		this.value = value;
 	}
 	
-	public Plan(Double[] ts,Double[] te, double value) {
+	public Plan(Long[] locations,Long[] activities,Double[] ts,Double[] te, double value) {
+		this.locations = locations;
+		this.activities = activities;
 		this.ts = ts;
 		this.te = te;
 		this.value = value;

@@ -32,7 +32,7 @@ public class Ds2OsTravelCostDbParameterFactory extends RoutesMap implements Para
 	private final List<Long> citiesOs_ids;
 	private final List<Long> citiesDs_ids;
 	
-	@Inject
+
 	public Ds2OsTravelCostDbParameterFactory(Config config,RoutingManager rm,List<Long> citiesOs_ids,List<Long> citiesDs_ids) {
 		super(config,rm);
 		this.config = config;
@@ -106,7 +106,6 @@ public class Ds2OsTravelCostDbParameterFactory extends RoutesMap implements Para
 			os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,city,"avg_travel_time",citiesOs_ids));
 		});
 		
-		
 		/*
 		 * Collecting routes ---------------------------------------------------
 		 */
@@ -117,7 +116,6 @@ public class Ds2OsTravelCostDbParameterFactory extends RoutesMap implements Para
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		
 		
 		/*
 		 * Parameter array -----------------------------------------------------
@@ -130,7 +128,7 @@ public class Ds2OsTravelCostDbParameterFactory extends RoutesMap implements Para
 		parameterDescription.add(projections);
 		parameterDescription.add(citiesDs_ids);
 		parameterDescription.add(citiesOs_ids);
-		double[][][] parameter = this.toArray(parameterDescription);
+		double[][][] parameter = this.toArrayCost(parameterDescription);
 		ds2osParameter = new Ds2OsTravelCostParameter(parameter,parameterDescription);
 		
 		try {

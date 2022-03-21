@@ -13,8 +13,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
 import config.Config;
+import core.dataset.DatasetI;
 import core.models.ModelI;
 import core.solver.SolverImpl;
+import projects.CTAP.dataset.Dataset;
 import projects.CTAP.population.Agent;
 import projects.CTAP.population.Plan;
 import projects.CTAP.population.Population;
@@ -31,7 +33,7 @@ public class Solver {
 	}
 	
 	
-	public void run(Population population) {
+	public void run(Population population, DatasetI dataset) {
 		
 		int nThreads = this.config.getGeneralConfig().getThreads();
 		ExecutorService executor = Executors.newFixedThreadPool(nThreads);
@@ -55,7 +57,7 @@ public class Solver {
 		}	
 		
 		for(List<Agent> la: agentsSL) {
-			executor.execute(new Task(la));
+			executor.execute(new Task(la,dataset));
 		}	
 		
 		awaitTerminationAfterShutdown(executor);
@@ -77,9 +79,11 @@ public class Solver {
 	private static final class Task implements Runnable {
 
 		private List<Agent> agents;
+		private Dataset dataset;
 
-		private Task(List<Agent> agents) {
+		private Task(List<Agent> agents,DatasetI dataset) {
 			this.agents = agents;
+			dataset = (Dataset)dataset;
 		}
 			
 
@@ -95,7 +99,8 @@ public class Solver {
 								.build();
 					
 					org.apache.commons.math3.optim.PointValuePair pvp = (PointValuePair) si.run();
-					agentPlans.add(new Plan(pvp.getPoint(),pvp.getValue()));
+					//TODO loc-act
+					agentPlans.add(new Plan(null,null,pvp.getPoint(),pvp.getValue()));
 				}
 				agent.setOptimalPlans(agentPlans);
 			}

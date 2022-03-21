@@ -1,6 +1,5 @@
 package core.dataset;
 
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -8,28 +7,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.apache.commons.io.IOUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
-
 import config.Config;
 import core.graph.NodeGeoI;
+import core.graph.routing.PathRes;
 import core.graph.routing.RoutingGraph;
 import core.graph.routing.RoutingManager;
+
 
 
 public class RoutesMap implements DatasetMapI {
 	
 	private Long projectionsCount = 0L;
 	private Map<String,Long> projectionsMap = new HashMap<>();
-	private Map<Long,Map<Long,Map<Long,Double>>> map  = new ConcurrentHashMap<>();
+	private Map<Long,Map<Long,Map<Long,PathRes>>> map  = new ConcurrentHashMap<>();
 	private List<RoutingGraph> projections = new ArrayList<>();
 	private RoutingManager rm;
 	private Config config;
@@ -72,7 +66,7 @@ public class RoutesMap implements DatasetMapI {
      */
     public void addSourceRoutesFromNeo4j(List<SourceRoutesRequest> srr ) throws Exception {
     	for(@SuppressWarnings("rawtypes") SourceRoutesRequest req: srr) {
-    		Map<Long,Double> res = rm.getSSSP_AsMap(req.getRg(),
+    		Map<Long,PathRes> res = rm.getSSSP_AsMap(req.getRg(),
     				req.getSourceType(),
     				"city_id",
     				req.getSourceId(),
@@ -82,10 +76,16 @@ public class RoutesMap implements DatasetMapI {
     		if(req.getTargetsIds() != null) {
     			List<Long> ls = (List<Long>)req.getTargetsIds();
     			res.keySet().retainAll(ls);
+    			for(Long l:ls) {
+    				if(!res.containsKey(l)) {
+    					PathRes pr = new PathRes(-1,null);
+    					res.put(l,pr);
+    				}
+    			}
     		}
-    		Map<Long,Map<Long,Double>> m = map.get(projectionsMap.get(req.getRg()));
+    		Map<Long,Map<Long,PathRes>> m = map.get(projectionsMap.get(req.getRg()));
     		if(m.containsKey(req.getSourceId())) {
-    			Map<Long, Double> map3 = Stream.of(res, m.get(req.getSourceId()))
+    			Map<Long, PathRes> map3 = Stream.of(res, m.get(req.getSourceId()))
     					  .flatMap(map -> map.entrySet().stream())
     					  .collect(Collectors.toConcurrentMap(
     					    Map.Entry::getKey,
@@ -97,10 +97,39 @@ public class RoutesMap implements DatasetMapI {
     	}
 	}
     
-    public void addNewRoutesFromCSV() {
-		
+    public void addSourceRoutesWithPathsFromNeo4j(List<SourceRoutesRequest> srr ) throws Exception {
+    	for(@SuppressWarnings("rawtypes") SourceRoutesRequest req: srr) {
+    		Map<Long,PathRes> res = rm.getSSSP_AsMapWithPaths(req.getRg(),
+    				req.getSourceType(),
+    				"city_id",
+    				req.getSourceId(),
+    				"city_id",
+    				req.getWeightProperty());
+    		//filter the targets
+    		if(req.getTargetsIds() != null) {
+    			List<Long> ls = (List<Long>)req.getTargetsIds();
+    			res.keySet().retainAll(ls);
+    			for(Long l:ls) {
+    				if(!res.containsKey(l)) {
+    					PathRes pr = new PathRes(-1,null);
+    					res.put(l,pr);
+    				}
+    			}
+    		}
+    		Map<Long,Map<Long,PathRes>> m = map.get(projectionsMap.get(req.getRg()));
+    		if(m.containsKey(req.getSourceId())) {
+    			Map<Long, PathRes> map3 = Stream.of(res, m.get(req.getSourceId()))
+    					  .flatMap(map -> map.entrySet().stream())
+    					  .collect(Collectors.toConcurrentMap(
+    					    Map.Entry::getKey,
+    					    Map.Entry::getValue));
+    		}
+    		else {
+    			m.put(req.getSourceId(),res);
+    			System.out.println();
+    		}
+    	}
 	}
-    
     
     public void saveJson() {
     	ObjectMapper mapper = new ObjectMapper();
@@ -115,7 +144,7 @@ public class RoutesMap implements DatasetMapI {
     	//this.rm.close();
     }
     
-    public double[][][] toArray(List<List<Long>> parameterDescription){
+    public double[][][] toArrayCost(List<List<Long>> parameterDescription){
     	
     	int d1 = parameterDescription.get(0).size();
     	int d2 = parameterDescription.get(1).size();
@@ -127,7 +156,26 @@ public class RoutesMap implements DatasetMapI {
     			for(int k = 0;k < d3;k++) {
     				res[i][j][k] = map.get(parameterDescription.get(0).get(i))
     						.get(parameterDescription.get(1).get(j))
-    						.get(parameterDescription.get(2).get(k));
+    						.get(parameterDescription.get(2).get(k)).getTotalCost();
+    			}
+    		}
+    	}
+    	return res;
+    }
+    
+    public List<Long>[][][] toArrayPath(List<List<Long>> parameterDescription){
+    	
+    	int d1 = parameterDescription.get(0).size();
+    	int d2 = parameterDescription.get(1).size();
+    	int d3 = parameterDescription.get(2).size();
+    	
+    	List<Long>[][][] res = new ArrayList[d1][d2][d3];
+    	for(int i =0;i < d1;i++) {
+    		for(int j = 0;j < d2;j++) {
+    			for(int k = 0;k < d3;k++) {
+    				res[i][j][k] = map.get(parameterDescription.get(0).get(i))
+    						.get(parameterDescription.get(1).get(j))
+    						.get(parameterDescription.get(2).get(k)).getPath();
     			}
     		}
     	}

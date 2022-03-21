@@ -8,25 +8,26 @@ import com.google.inject.Inject;
 import config.Config;
 import controller.Controller;
 import core.dataset.DatasetFactoryI;
+import core.dataset.DatasetI;
 import core.population.AgentFactoryI;
 import core.population.PopulationFactoryI;
+import core.population.PopulationI;
 import projects.CTAP.dataset.Dataset;
 import projects.CTAP.dataset.DatasetJsonFactory;
 
 public class PopulationFactory implements PopulationFactoryI {
 	
 	private Config config;
-	private DatasetFactoryI datasetFactory;
 	
 	@Inject
-	public PopulationFactory(Config config, DatasetFactoryI datasetFactory) {
+	public PopulationFactory(Config config) {
 		this.config = config;
-		this.datasetFactory = datasetFactory;
 	}
-	
+
 	@Override
-	public Population run() {
-		Dataset ds = (Dataset) datasetFactory.run();
+	public PopulationI run(DatasetI ds_) {
+		
+		Dataset ds = (Dataset)ds_;
 		Integer planSize = config.getCtapModelConfig().getCtapPopulationConfig().getCtapAgentConfig().getPlanSize();
 		List<Agent> agents = new ArrayList<>();
 		for(Long agId: ds.getAgentsIndex().getIndex()) {

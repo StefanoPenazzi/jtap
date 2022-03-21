@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 import config.Config;
 import controller.Controller;
+import core.dataset.DatasetFactoryI;
+import core.dataset.DatasetI;
 import core.population.PopulationFactoryI;
 import picocli.CommandLine;
 import projects.CTAP.population.Population;
@@ -43,10 +45,12 @@ public class ParallelAgentOptPlanPipeline implements Callable<Integer> {
 		controller.emptyTempDirectory();
 		
 		PopulationFactoryI populationFactory = controller.getInjector().getInstance(PopulationFactoryI.class);
-		Population population = (Population) populationFactory.run();
+		DatasetFactoryI datasetFactory = controller.getInjector().getInstance(DatasetFactoryI.class);
+		DatasetI dataset = datasetFactory.run();
+		Population population = (Population) populationFactory.run(dataset);
 		
 		Solver ctapSolver = controller.getInjector().getInstance(Solver.class);
-		ctapSolver.run(population);
+		ctapSolver.run(population,dataset);
 		
 		return 1;
 		

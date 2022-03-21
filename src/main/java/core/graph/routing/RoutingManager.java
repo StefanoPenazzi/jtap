@@ -82,16 +82,57 @@ public final class RoutingManager {
 		return res;
 	}
 	
+	public <T extends NodeGeoI>  List<Record> getSSSPWithPaths(String rg, T source, String sourceIdKey, Long sourceId,
+			 String targetIdKey, String weightProperty) throws Exception {
+		
+		RoutingGraph rgg = routingGraphMap.get(rg);
+		if(rgg == null) {
+			//eccezione
+		}
+		
+		String query = " MATCH (source:"+((NodeGeoI)source).getLabels()[0] +" {"+sourceIdKey+": "+sourceId.toString()+"})\n"
+		+"CALL gds.beta.allShortestPaths.dijkstra.stream('"+rg+"', {\n"
+		+ "    sourceNode: ID(source), \n"
+		+ "    relationshipWeightProperty: '"+weightProperty+"' \n"
+		+ "}) \n"
+		+ "YIELD targetNode, totalCost, nodeIds \n"
+ 		+ "WHERE gds.util.asNode(targetNode)."+targetIdKey+" IS NOT NULL \n"
+		+ "WITH COLLECT(nodeIds) AS paths, targetNode AS targetNode, totalCost AS totalCost \n"
+		+ " UNWIND range(0,size(paths)-1) AS i \n"
+		+ " WITH paths[i] as path,targetNode AS targetNode, totalCost AS totalCost \n"
+		+ "  UNWIND range(0,size(path)-2) AS j \n"
+		+ "  match (m)-[r]->(n) where ID(m)=path[j] and ID(n)=path[j+1] \n"
+		+ "  with collect(ID(r)) as links_path,targetNode AS targetNode, totalCost AS totalCost \n"
+		+ "  return gds.util.asNode(targetNode)."+targetIdKey+",totalCost,links_path \n";
+	    
+	    List<Record> res= data.external.neo4j.Utils.runQuery(conn,database,query,AccessMode.READ);
+		return res;
+	}
+
+	
 	//single source shortest path
-	public <T extends NodeGeoI>  Map<Long,Double> getSSSP_AsMap(String rg, T source, String sourceIdKey, Long sourceId,
+	public <T extends NodeGeoI>  Map<Long,PathRes> getSSSP_AsMap(String rg, T source, String sourceIdKey, Long sourceId,
 			 String targetIdKey, String weightProperty) throws Exception {
 	    
 		List<Record> records = getSSSP(rg,source,sourceIdKey,sourceId,targetIdKey,weightProperty);
-		Map<Long,Double > map = new HashMap<>();
+		Map<Long,PathRes> map = new HashMap<>();
 		for(Record rec: records) {
 			if(!rec.values().get(0).isNull()) {
-				map.put(rec.values().get(0).asLong(),rec.values().get(1).asDouble());
+				map.put(rec.values().get(0).asLong(),new PathRes(rec.values().get(1).asDouble(),null));
 			}
+		}
+		return map;
+	}
+	  
+	public <T extends NodeGeoI>  Map<Long,PathRes> getSSSP_AsMapWithPaths(String rg, T source, String sourceIdKey, Long sourceId,
+				 String targetIdKey, String weightProperty) throws Exception {
+		    
+		List<Record> records = getSSSPWithPaths(rg,source,sourceIdKey,sourceId,targetIdKey,weightProperty);
+		Map<Long,PathRes> map = new HashMap<>();
+		for(Record rec: records) {
+			List<Long> linksPath = rec.values().get(2).asList().stream().map(e -> (Long)e).collect(Collectors.toList());;
+			map.put(rec.values().get(0).asLong(),new PathRes(rec.values().get(1).asDouble(),linksPath));
+			
 		}
 		return map;
 	}

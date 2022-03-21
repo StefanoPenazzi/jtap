@@ -45,5 +45,4 @@ public class ObjectiveFunctionCTAP_01 extends ObjectiveFunctionCTAP {
 	public double attractiveness(int i, double t) {
 		return 1;
 	}
-
 }

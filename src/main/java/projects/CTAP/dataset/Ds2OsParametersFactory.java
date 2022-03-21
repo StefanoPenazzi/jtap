@@ -2,16 +2,11 @@ package projects.CTAP.dataset;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import com.google.inject.Inject;
 
 import config.Config;
-import controller.Controller;
-import core.dataset.ParameterFactoryI;
 import core.dataset.ParameterI;
+import core.dataset.ParametersFactoryI;
 import core.dataset.RoutesMap;
-import core.dataset.RoutesMap.SourceRoutesRequest;
 import core.graph.LinkI;
 import core.graph.NodeGeoI;
 import core.graph.cross.CrossLink;
@@ -23,25 +18,33 @@ import core.graph.road.osm.RoadNode;
 import core.graph.routing.RoutingGraph;
 import core.graph.routing.RoutingManager;
 
-public class Ds2DsTravelCostDbParameterFactory extends RoutesMap implements ParameterFactoryI {
-	
+public class Ds2OsParametersFactory extends RoutesMap implements ParametersFactoryI {
+
 	private final Config config;
 	private final RoutingManager rm;
 	private final String RAIL_ROAD_GRAPH = "rail-road-graph";
 	private final String RAIL_GRAPH = "rail-graph";
 	private final String ROAD_GRAPH = "road-graph";
+	private final List<Long> citiesOs_ids;
 	private final List<Long> citiesDs_ids;
-
-	public Ds2DsTravelCostDbParameterFactory(Config config,RoutingManager rm, List<Long> citiesDs_ids) {
-		super(config,rm);
+	
+	
+	public Ds2OsParametersFactory(Config config,RoutingManager rm,List<Long> citiesOs_ids,List<Long> citiesDs_ids) {
+		super(config, rm);
 		this.config = config;
 		this.rm = rm;
-		this.citiesDs_ids = citiesDs_ids; 
+		this.citiesOs_ids = citiesOs_ids;
+		this.citiesDs_ids = citiesDs_ids;
+		// TODO Auto-generated constructor stub
 	}
-	
+
+
 	@Override
-	public ParameterI run() {
-		 Ds2DsTravelCostParameter ds2dsParameter = null;
+	public List<ParameterI> run() {
+		
+		List<ParameterI> res = new ArrayList<>();
+		Ds2OsTravelCostParameter ds2osTravelCostParameter = null;
+		Ds2OsPathParameter ds2osPathParameter = null;
 		/*
 		 * projections ---------------------------------------------------------
 		 */
@@ -98,24 +101,21 @@ public class Ds2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 		
 		CityNode cityNode = new CityNode();
 		citiesDs_ids.forEach(city ->{
-			os2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,city,"avg_travel_time",citiesDs_ids));
-			os2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,city,"avg_travel_time",citiesDs_ids));
-			os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,city,"avg_travel_time",citiesDs_ids));
+			os2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,city,"avg_travel_time",citiesOs_ids));
+			os2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,city,"avg_travel_time",citiesOs_ids));
+			os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,city,"avg_travel_time",citiesOs_ids));
 		});
-		
 		
 		/*
 		 * Collecting routes ---------------------------------------------------
 		 */
 		try {
-			this.addSourceRoutesFromNeo4j(os2dsRailRoad);
-			this.addSourceRoutesFromNeo4j(os2dsRail);
-			this.addSourceRoutesFromNeo4j(os2dsRoad);
+			this.addSourceRoutesWithPathsFromNeo4j(os2dsRailRoad);
+			this.addSourceRoutesWithPathsFromNeo4j(os2dsRail);
+			this.addSourceRoutesWithPathsFromNeo4j(os2dsRoad);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		
-		
 		
 		/*
 		 * Parameter array -----------------------------------------------------
@@ -127,9 +127,13 @@ public class Ds2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 		projections.add(2L);
 		parameterDescription.add(projections);
 		parameterDescription.add(citiesDs_ids);
-		parameterDescription.add(citiesDs_ids);
+		parameterDescription.add(citiesOs_ids);
 		double[][][] parameter = this.toArrayCost(parameterDescription);
-		ds2dsParameter = new Ds2DsTravelCostParameter(parameter,parameterDescription);
+		List<Long>[][][] pathParameter = this.toArrayPath(parameterDescription);
+		ds2osTravelCostParameter = new Ds2OsTravelCostParameter(parameter,parameterDescription);
+		ds2osPathParameter = new Ds2OsPathParameter(pathParameter,parameterDescription);
+		res.add(ds2osTravelCostParameter);
+		res.add(ds2osPathParameter);
 		
 		try {
 			this.close();
@@ -138,8 +142,7 @@ public class Ds2DsTravelCostDbParameterFactory extends RoutesMap implements Para
 			e1.printStackTrace();
 		}
 		
-		return ds2dsParameter;
+		return res;
 	}
-
 
 }
