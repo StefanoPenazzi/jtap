@@ -8,7 +8,13 @@ public class NewDatasetParams {
 	
 	private Integer destinationsPopThreshold;
 	
-	@XmlElement(name = "destinationsPopThreshold",required = false)
+	public NewDatasetParams() {}
+	
+	public NewDatasetParams(Integer destinationsPopThreshold) {
+		this.destinationsPopThreshold = destinationsPopThreshold;
+	}
+	
+	@XmlElement(name = "destinationsPopThreshold",required = true)
 	public Integer getDestinationsPopThreshold() {
 		return destinationsPopThreshold;
 	}
