@@ -17,6 +17,7 @@ import core.dataset.DatasetI;
 import core.models.ModelI;
 import core.solver.SolverImpl;
 import projects.CTAP.dataset.Dataset;
+import projects.CTAP.model.ObjectiveFunctionCTAP;
 import projects.CTAP.population.Agent;
 import projects.CTAP.population.Plan;
 import projects.CTAP.population.Population;
@@ -92,7 +93,8 @@ public class Solver {
 			log.info("Starting task optimization on thread: "+Thread.currentThread().getName()+". Number of agents :" + String.valueOf(agents.size()));
 			for(Agent agent: this.agents) {
 				List<Plan> agentPlans = new ArrayList<>();
-				for (ModelI model:agent.getAgentModels()) {
+				for (ModelI model: agent.getAgentModels()) {
+					ObjectiveFunctionCTAP ofc = (ObjectiveFunctionCTAP) model.getObjectiveFunction();
 					
 					SolverImpl si = new SolverImpl.Builder(model)
 								.initialGuess(model.getInitialGuess())
@@ -100,7 +102,7 @@ public class Solver {
 					
 					org.apache.commons.math3.optim.PointValuePair pvp = (PointValuePair) si.run();
 					//TODO loc-act
-					agentPlans.add(new Plan(null,null,pvp.getPoint(),pvp.getValue()));
+					agentPlans.add(new Plan(ofc.getLocations(),ofc.getActivities(),pvp.getPoint(),pvp.getValue()));
 				}
 				agent.setOptimalPlans(agentPlans);
 			}

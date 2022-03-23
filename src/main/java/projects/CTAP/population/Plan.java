@@ -7,10 +7,10 @@ public class Plan {
 	private final double value;
 	private final Double[] ts;
 	private final Double[] te;
-	private final Long[] locations;
-	private final Long[] activities;
+	private final int[] locations;
+	private final int[] activities;
  	
-	public Plan(Long[] locations,Long[] activities,double[] activitiesTime, double value) {
+	public Plan(int[] locations,int[] activities,double[] activitiesTime, double value) {
 		this.locations = locations;
 		this.activities = activities;
 		this.ts = IntStream.range(0,(int)(activitiesTime.length/2))
@@ -22,7 +22,7 @@ public class Plan {
 		this.value = value;
 	}
 	
-	public Plan(Long[] locations,Long[] activities,Double[] ts,Double[] te, double value) {
+	public Plan(int[] locations,int[] activities,Double[] ts,Double[] te, double value) {
 		this.locations = locations;
 		this.activities = activities;
 		this.ts = ts;
@@ -40,6 +40,14 @@ public class Plan {
 	
 	public Double[] getTs() {
 		return ts;
+	}
+	
+	public int[] getActivities() {
+		return activities;
+	}
+	
+	public int[] getLocations() {
+		return locations;
 	}
 
 }

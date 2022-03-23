@@ -8,7 +8,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	
 	private final int nActivities;
-	private final int[] activitiesSequence;
+	private final int[] activities;
 	private final int[] locations;
 	private final double[] percentageOfTimeTarget;
 	private final double[] timeDuration;
@@ -27,7 +27,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	
 	public ObjectiveFunctionCTAP(int nActivities,
-			                     int[] activitiesSequence,
+			                     int[] activities,
 								 int[] locations,
 								 double[] percentageOfTimeTarget,
 								 double[] timeDuration,
@@ -44,7 +44,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 								 ) {
 		
 		 this.nActivities = nActivities;
-		 this.activitiesSequence = activitiesSequence;
+		 this.activities = activities;
 		 this.locations = locations;
 		 this.percentageOfTimeTarget = percentageOfTimeTarget;
 		 this.timeDuration = timeDuration;
@@ -87,8 +87,8 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	private double getDiscomfortDurationTarget(double[] ts, double[] te) {
 		double res = 0;
-		for(int i = 0;i<activitiesSequence.length;i++) {
-			res += Math.pow(timeDuration[activitiesSequence[i]] - (te[i]-ts[i]),2);
+		for(int i = 0;i<activities.length;i++) {
+			res += Math.pow(timeDuration[activities[i]] - (te[i]-ts[i]),2);
 			res = res*this.durationDiscomfort[i];
 		}
 		return res;
@@ -96,7 +96,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	private double getDiscomfortBudget(double[] ts, double[] te) {
 		double res = 0;
-		for(int i =0;i<this.activitiesSequence.length;i++ ) {
+		for(int i =0;i<this.activities.length;i++ ) {
 			res += costActivityLocation(i,ts[i],te[i]);
 			res += travelCost[i];
 		}
@@ -124,8 +124,8 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	private double getStateValue(int activity,double[] ts, double[] te) {
 		double res = 0;
-		for(int i =0;i<this.activitiesSequence.length;i++ ) {
-			if(activitiesSequence[i] == activity) {
+		for(int i =0;i<this.activities.length;i++ ) {
+			if(activities[i] == activity) {
 				res = 1 + (res-1) * Math.pow(Math.E, -tauActivityCalibration[i]*(te[i]-ts[i])* getPullFactor(i,ts, te)); 
 			}
 			else {
@@ -140,5 +140,12 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 		return this.nActivities*2;
 	}
 	
+	public int[] getActivities() {
+		return activities;
+	}
+	
+	public int[] getLocations() {
+		return locations;
+	}
 	
 }
