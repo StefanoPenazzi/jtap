@@ -18,9 +18,9 @@ public class AttractivenessNormalizedLink implements LinkI {
 	@Neo4JPropertyElement(key="activity_id",type=Neo4JType.TOINTEGER)
 	private Long activityId;
 	
-	@CsvBindByName(column = "city")
-	@Neo4JPropertyElement(key="city",type=Neo4JType.TOINTEGER)
-	private String cityId;
+	@CsvBindByName(column = "city_id")
+	@Neo4JPropertyElement(key="city_id",type=Neo4JType.TOINTEGER)
+	private Long cityId;
 	
 	@CsvBindByName(column = "time")
 	@Neo4JPropertyElement(key="time",type=Neo4JType.TOFLOAT)
@@ -34,7 +34,7 @@ public class AttractivenessNormalizedLink implements LinkI {
 		
 	}
 	
-	public AttractivenessNormalizedLink(Long agentId,String cityId,Long activityId,Double time,Double attractiveness) {
+	public AttractivenessNormalizedLink(Long agentId,Long cityId,Long activityId,Double time,Double attractiveness) {
 		this.agentId = agentId;
 		this.activityId = activityId;
 		this.cityId = cityId; 
@@ -42,11 +42,11 @@ public class AttractivenessNormalizedLink implements LinkI {
 		this.attractiveness = attractiveness;
 	}
 	
-	public String getCity() {
+	public Long getCity() {
 		return cityId;
 	}
 	
-	public void setCity(String cityId) {
+	public void setCity(Long cityId) {
 		this.cityId = cityId;
 	}
 	

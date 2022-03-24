@@ -45,7 +45,7 @@ public class Utils {
 		
 		Integer intervals = (int) Math.ceil((finalTime-initialTime)/timeInterval);
 		//cities stat nodes
-		String query = "match (m:CityFacStatNode)-[r]-(n:CityNode) where n.population >= "+popThreshold+" return m";
+		String query = "match (m:CityFacStatNode)-[r]-(n:CityNode) where n.population >= "+popThreshold+" return m,n";
     	List<Record> cityFacStatNodeRecords = data.external.neo4j.Utils.runQuery(query,AccessMode.READ);
     	//agents
     	List<StdAgentNodeImpl> agents = data.external.neo4j.Utils.importNodes(StdAgentNodeImpl.class);
@@ -58,12 +58,13 @@ public class Utils {
     			for(Record rec: cityFacStatNodeRecords) {
     				Double[] variables = new Double[3];
     				Map<String,Object> cityStats = rec.values().get(0).asMap();
+    				Long cityId = rec.values().get(1).get("city_id").asLong();
     				maskMap(cityStats,variables);
 	        		for(int j = 0;j<intervals;j++) {
 	        			Double time = new Double(timeInterval*j);
 	        			variables[2] = time;
 	        			attractivenessList.add(new AttractivenessNormalizedLink(agentNode.getId(),
-	        					(String)cityStats.get("city"),
+	        					cityId,
 	        					activityNode.getActivityId(),
 	        					time,
 	        					an.getAttractiveness(variables,1,activityNode.getActivityName())));
@@ -89,9 +90,9 @@ public class Utils {
     		Double max_ = normal_.get(actpl.getAgentId()).get(actpl.getActivityId());
     		actpl.setAttractiveness(actpl.getAttractiveness()/max_);
     	}
-    					
+    	
     	//add the links into the database
-    	data.external.neo4j.Utils.insertLinks(attractivenessList,AttractivenessNormalizedLink.class,StdAgentNodeImpl.class,"agent_id",CityNode.class,"city");
+    	data.external.neo4j.Utils.insertLinks(attractivenessList,AttractivenessNormalizedLink.class,StdAgentNodeImpl.class,"agent_id",CityNode.class,"city_id");
     
 	}
 	
