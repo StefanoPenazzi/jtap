@@ -92,6 +92,9 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		//insert attractiveness-------------------------------------------------
 		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j();
 		
+		//insert transport links------------------------------------------------
+		projects.CTAP.transport.Utils.insertCTAPTransportLinkFactory();
+		
 		return 1;
 	}
 }

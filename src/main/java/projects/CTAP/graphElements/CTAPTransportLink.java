@@ -12,18 +12,29 @@ public class CTAPTransportLink implements LinkI {
 	
 	@CsvBindByName(column = "from_id")
 	@Neo4JPropertyElement(key="from_id",type=Neo4JType.TOINTEGER)
-	private Long from_id;
+	private Long fromId;
 	
 	@CsvBindByName(column = "to_id")
 	@Neo4JPropertyElement(key="to_id",type=Neo4JType.TOINTEGER)
-	private Long to_id;
+	private Long toId;
 	
-	@CsvBindByName(column = "transport_mode")
-	@Neo4JPropertyElement(key="transport_mode",type=Neo4JType.TOSTRING)
-	private String transportMode;
+	@CsvBindByName(column = "link_type")
+	@Neo4JPropertyElement(key="link_type",type=Neo4JType.TOSTRING)
+	private String linkType;
 	
 	@CsvBindByName(column = "weight")
 	@Neo4JPropertyElement(key="weight",type=Neo4JType.TOFLOAT)
 	private Double weight;
+	
+	public CTAPTransportLink(){
+		
+	}
+	
+    public CTAPTransportLink(Long fromId,Long toId,String linkType,Double weight){
+		this.fromId = fromId;
+		this.toId = toId;
+		this.linkType = linkType;
+		this.weight = weight;
+	}
 
 }
