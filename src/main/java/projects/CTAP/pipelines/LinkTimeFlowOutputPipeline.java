@@ -12,8 +12,8 @@ import core.dataset.DatasetFactoryI;
 import core.dataset.DatasetI;
 import core.population.PopulationFactoryI;
 import picocli.CommandLine;
-import projects.CTAP.output.LinkTimeFlow;
-import projects.CTAP.output.LinkTimeFlowDatasetJsonFactory;
+import projects.CTAP.outputAnalysis.LinkTimeFlow;
+import projects.CTAP.outputAnalysis.LinkTimeFlowDatasetJsonFactory;
 import projects.CTAP.population.Population;
 import projects.CTAP.solver.Solver;
 
