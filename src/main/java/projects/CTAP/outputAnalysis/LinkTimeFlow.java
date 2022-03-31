@@ -1,5 +1,8 @@
 package projects.CTAP.outputAnalysis;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,6 +31,8 @@ public class LinkTimeFlow {
 	private final LinkTimeFlowDataset linkTimeFlowDataset;
 	private Map<Long,AtomicIntegerArray> resMap = new ConcurrentHashMap<>();
 	private final Config config;
+	private final String OUTPUT_FILE = "LinkTimeFlow";
+	private final static Integer YEAR_HOURS = 8760;
 	
 	public  LinkTimeFlow(Population population,double timeInterval,LinkTimeFlowDataset linkTimeFlowDataset,Config config) {
 		this.timeInterval = timeInterval;
@@ -38,10 +43,6 @@ public class LinkTimeFlow {
 	}
 	
 	public void run() throws Exception {
-		
-		//initialize resMap
-		//String query = "";
-		//List<Record> res= data.external.neo4j.Utils.runQuery(query,AccessMode.READ);
 		
 		int nThreads = this.config.getGeneralConfig().getThreads();
 		ExecutorService executor = Executors.newFixedThreadPool(nThreads);
@@ -84,8 +85,32 @@ public class LinkTimeFlow {
 	    }
 	}
 	
-	public void saveResults() {
-		
+	public void saveCsvBase() throws IOException {
+		File file = new File(config.getGeneralConfig().getOutputDirectory()+OUTPUT_FILE+".csv");
+		 try {
+		        FileWriter writer = new FileWriter(file);
+		        for(Map.Entry<Long,AtomicIntegerArray> entry : resMap.entrySet()) {
+		        	StringBuffer s = new StringBuffer();
+		        	s.append(entry.getKey().toString());
+		        	s.append(",");
+		        	for(int i = 0; i < entry.getValue().length()-1 ;i++) {
+		        		s.append(entry.getValue().get(i));
+		        		s.append(",");
+		        	}
+		        	s.append(entry.getValue().get(entry.getValue().length()-1));
+		        	s.append("\n");
+		        	writer.write(s.toString());
+		        }
+		        writer.close();
+	    } catch(Exception e) {
+	        file.delete();
+	    }
+	}
+	
+	public void saveDb() throws Exception {
+		saveCsvBase();
+		data.external.neo4j.Utils.runQuery("match (n)-[r:CTAPTransportLink]->(m) SET r.flows = null", AccessMode.WRITE);
+		data.external.neo4j.Utils.runQuery("USING PERIODIC COMMIT 1000 LOAD CSV FROM \"file:///"+config.getGeneralConfig().getOutputDirectory()+OUTPUT_FILE+".csv"+"\" AS row match (n)-[r]->(m) where ID(r) = toInteger(row[0]) set r.flows = apoc.convert.toIntList(row[1..])", AccessMode.WRITE);
 	}
 	
 	private static final class Task implements Runnable {
@@ -109,7 +134,7 @@ public class LinkTimeFlow {
 				boolean homeDs = dataset.getCitiesDsIndex().getIndex().contains(agent.getLocationId());
 				Plan bestPlan = agent.getOptimalPlans().stream()
 						.max(Comparator.comparingDouble(Plan::getValue)).get();
-				for(int i = 0;i<bestPlan.getLocations().length;i++) {
+				for(int i = 0;i<bestPlan.getLocations().length-1;i++) {
 					List<Long> links = null;
 					if(i%2 == 0) {
 						if(homeDs) {
@@ -134,10 +159,10 @@ public class LinkTimeFlow {
 					
 					for(Long link: links) {
 						//TODO change 27 
-						resMap.putIfAbsent(link, new AtomicIntegerArray(27));
+						resMap.putIfAbsent(link, new AtomicIntegerArray((int) Math.ceil(YEAR_HOURS/timeInterval)));
 						//TODO avoid negative index
-						resMap.get(link).addAndGet(0, 1);
-						//resMap.get(link)[(int) Math.floor(bestPlan.getTs()[i]/timeInterval)].incrementAndGet();
+						//resMap.get(link).addAndGet(0, 1);
+						resMap.get(link).incrementAndGet((int) Math.floor(bestPlan.getTs()[i]/timeInterval));
 					}
 				}
 			}

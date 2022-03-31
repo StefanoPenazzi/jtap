@@ -45,6 +45,7 @@ public class LinkTimeFlowOutputPipeline implements Callable<Integer> {
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
+		controller.emptyOutputDirectory();
 		
 		PopulationFactoryI populationFactory = controller.getInjector().getInstance(PopulationFactoryI.class);
 		DatasetFactoryI datasetFactory = controller.getInjector().getInstance(DatasetFactoryI.class);
@@ -57,6 +58,7 @@ public class LinkTimeFlowOutputPipeline implements Callable<Integer> {
 		LinkTimeFlowDatasetJsonFactory lfd = controller.getInjector().getInstance(LinkTimeFlowDatasetJsonFactory.class);
 		LinkTimeFlow ltf = new LinkTimeFlow(population,336d,lfd.run(),config);
 		ltf.run();
+		ltf.saveDb();
 		
 		return 1;
 		

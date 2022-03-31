@@ -65,6 +65,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 		res += getDiscomfortPercentageOfTimeTarget(ts, te);
 		res += getDiscomfortDurationTarget(ts, te);
 		res += getDiscomfortBudget(ts, te);
+		res += getLagrangeMultipliers(ts, te);
 		return res;
 	}
 	
@@ -133,6 +134,20 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 			}
 		}
 		return 0;
+	}
+	
+	public double getLagrangeMultipliers(double[] ts, double[] te) {
+		double diff = 0;
+		for(int i =0;i<ts.length;i++) {
+			diff += te[i] - ts[i];
+		}
+		if(diff<0) {
+			return Double.MAX_VALUE;
+		}
+		else {
+			return 0;
+		}
+	 
 	}
 
 	@Override
