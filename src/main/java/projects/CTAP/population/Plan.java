@@ -1,6 +1,13 @@
 package projects.CTAP.population;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.stream.IntStream;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import controller.Controller;
 
 public class Plan {
 	
@@ -49,5 +56,4 @@ public class Plan {
 	public int[] getLocations() {
 		return locations;
 	}
-
 }

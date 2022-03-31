@@ -51,6 +51,7 @@ public class ParallelAgentOptPlanPipeline implements Callable<Integer> {
 		
 		Solver ctapSolver = controller.getInjector().getInstance(Solver.class);
 		ctapSolver.run(population,dataset);
+		population.save();
 		
 		return 1;
 		

@@ -2,12 +2,16 @@ package projects.CTAP.population;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import core.models.ModelI;
 import core.population.AgentI;
 
 public class Agent implements AgentI {
 	
+	@JsonIgnore
 	private final List<ModelI> agentModels;
+	
 	private final Long agentId;
 	private final Long locationId;
 	private List<Plan> optimalPlans;
