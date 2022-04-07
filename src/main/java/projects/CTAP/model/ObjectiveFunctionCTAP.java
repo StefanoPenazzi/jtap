@@ -63,8 +63,8 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	public double getValue(double[] ts, double[] te) {
 		double res = 0;
 		res += getDiscomfortPercentageOfTimeTarget(ts, te);
-		res += getDiscomfortDurationTarget(ts, te);
-		res += getDiscomfortBudget(ts, te);
+		//res += getDiscomfortDurationTarget(ts, te);
+		//res += getDiscomfortBudget(ts, te);
 		res += getLagrangeMultipliers(ts, te);
 		return res;
 	}
@@ -108,7 +108,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	private double getPullFactor(int i,double[] ts, double[] te) {
 		//TODO insert attractiveness function
-		return locationPerception[i]*1;                               
+		return 100;//locationPerception[i]*1;                               
 	}
 	
 	public double costActivityLocation(int i,double ts, double te) {
@@ -120,7 +120,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	}
 	
 	public double attractiveness(int i,double t) {
-		return 0;
+		return 1;
 	}
 	
 	private double getStateValue(int activity,double[] ts, double[] te) {
@@ -131,23 +131,26 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 			}
 			else {
 				res = res * Math.pow(Math.E, -sigmaActivityCalibration[i]*(te[i]-ts[i])); 
+				
 			}
 		}
-		return 0;
+		return res;
 	}
 	
 	public double getLagrangeMultipliers(double[] ts, double[] te) {
-		double diff = 0;
 		for(int i =0;i<ts.length;i++) {
-			diff += te[i] - ts[i];
+			double diff = te[i] - ts[i];
+			if(diff<=0) {
+				return Double.MAX_VALUE;
+			}
 		}
-		if(diff<0) {
-			return Double.MAX_VALUE;
+		for(int i =0;i<ts.length-1;i++) {
+			double diff = ts[i+1] - te[i];
+			if(diff<=0) {
+				return Double.MAX_VALUE;
+			}
 		}
-		else {
-			return 0;
-		}
-	 
+		return 0;
 	}
 
 	@Override

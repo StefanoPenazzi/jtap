@@ -1,18 +1,22 @@
 package projects.CTAP.population;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import com.google.inject.Inject;
 
 import config.Config;
+import core.models.ConstraintI;
 import core.models.ModelI;
 import core.population.AgentFactoryI;
 import projects.CTAP.dataset.Dataset;
 import projects.CTAP.model.ActivityLocationI;
+import projects.CTAP.model.LowerBoundCTAP;
 import projects.CTAP.model.ModelCTAP;
 import projects.CTAP.model.ObjectiveFunctionCTAP_01;
+import projects.CTAP.model.UpperBoundCTAP;
 
 public class AgentFactory implements AgentFactoryI {
 	
@@ -98,8 +102,15 @@ public class AgentFactory implements AgentFactoryI {
 					sigmaActivityCalibration,tauActivityCalibration,gammaActivityCalibration,
 					travelCost,travelTime,monetaryBudget, timeRelatedBudget, activityLocationCostRate,
 					valueOfTime,attractiveness);
+			List<ConstraintI> constraints = new ArrayList<>();
+			double[] lb = new double[nPlanActivities*2];
+			double[] ub = new double[nPlanActivities*2];
+			Arrays.fill(lb, 0d);
+			Arrays.fill(ub, 8760d);
+			constraints.add(new LowerBoundCTAP(lb));
+			constraints.add(new UpperBoundCTAP(ub));
 			
-			models.add(new ModelCTAP(objF,null));
+			models.add(new ModelCTAP(objF,constraints));
 			
 		}
 		

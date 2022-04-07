@@ -7,20 +7,18 @@ import com.google.inject.Inject;
 
 import config.Config;
 import controller.Controller;
-import core.dataset.DatasetFactoryI;
 import core.dataset.DatasetI;
 import core.population.AgentFactoryI;
 import core.population.PopulationFactoryI;
 import core.population.PopulationI;
 import projects.CTAP.dataset.Dataset;
-import projects.CTAP.dataset.DatasetJsonFactory;
 
-public class PopulationFactory implements PopulationFactoryI {
+public class PopulationSingleAgentFactory implements PopulationFactoryI {
 	
 	private Config config;
 	
 	@Inject
-	public PopulationFactory(Config config) {
+	public PopulationSingleAgentFactory(Config config) {
 		this.config = config;
 	}
 
@@ -30,13 +28,10 @@ public class PopulationFactory implements PopulationFactoryI {
 		Dataset ds = (Dataset)ds_;
 		Integer planSize = config.getCtapModelConfig().getCtapPopulationConfig().getCtapAgentConfig().getPlanSize();
 		List<Agent> agents = new ArrayList<>();
-		for(Long agId: ds.getAgentsIndex().getIndex()) {
-			for(Long locId: ds.getCitiesOsIndex().getIndex()) {
-				AgentFactoryI af = Controller.getInjector().getInstance(AgentFactoryI.class);
-				agents.add((Agent) af.run(agId,locId,ds));
-			}
-		}
+		AgentFactoryI af = Controller.getInjector().getInstance(AgentFactoryI.class);
+		agents.add((Agent) af.run(ds.getAgentsIndex().getIndex().get(0),ds.getCitiesOsIndex().getIndex().get(0),ds));
 		return new Population(agents);
 	}
 
 }
+

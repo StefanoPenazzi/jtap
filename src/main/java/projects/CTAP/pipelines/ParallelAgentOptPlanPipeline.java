@@ -13,6 +13,7 @@ import core.dataset.DatasetI;
 import core.population.PopulationFactoryI;
 import picocli.CommandLine;
 import projects.CTAP.population.Population;
+import projects.CTAP.population.PopulationSingleAgentFactory;
 import projects.CTAP.solver.Solver;
 
 public class ParallelAgentOptPlanPipeline implements Callable<Integer> {
@@ -44,7 +45,8 @@ public class ParallelAgentOptPlanPipeline implements Callable<Integer> {
 		controller.run();
 		controller.emptyTempDirectory();
 		
-		PopulationFactoryI populationFactory = controller.getInjector().getInstance(PopulationFactoryI.class);
+		//PopulationFactoryI populationFactory = controller.getInjector().getInstance(PopulationFactoryI.class);
+		PopulationSingleAgentFactory populationFactory = controller.getInjector().getInstance(PopulationSingleAgentFactory .class);
 		DatasetFactoryI datasetFactory = controller.getInjector().getInstance(DatasetFactoryI.class);
 		DatasetI dataset = datasetFactory.run();
 		Population population = (Population) populationFactory.run(dataset);

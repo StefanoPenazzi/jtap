@@ -23,7 +23,7 @@ import core.graph.population.StdAgentNodeImpl;
 import projects.CTAP.attractiveness.AttractivenessAbstract;
 import projects.CTAP.graphElements.CTAPCityStatNode;
 
-public class Model extends AttractivenessAbstract {
+public class AttractivenessModelImpl extends AttractivenessAbstract {
 	
 	private List<String> paramsVector_ = new ArrayList<>(Arrays.asList("restaurant", "theater", "parking_space","parking"));
 	private final List<String> paramsVector;
@@ -32,7 +32,7 @@ public class Model extends AttractivenessAbstract {
 	private Map<Integer,Map<String,Double[]>> parametersMap = new HashMap<>();
 	
 	@Inject
-	public Model (Config config) throws IOException {
+	public AttractivenessModelImpl (Config config) throws IOException {
 		//TODO
 		super((double)config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getInitialTime(),
 				(double)config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getFinalTime());

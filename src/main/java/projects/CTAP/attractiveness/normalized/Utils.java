@@ -19,6 +19,7 @@ import core.graph.Activity.ActivityNode;
 import core.graph.geo.CityNode;
 import core.graph.population.StdAgentNodeImpl;
 import data.external.neo4j.Neo4jConnection;
+import projects.CTAP.attractiveness.AttractivenessI;
 import projects.CTAP.graphElements.AttractivenessNormalizedLink;
 
 
@@ -36,7 +37,7 @@ public class Utils {
 		
 		Config config = Controller.getConfig();
 		AttractivenessNormalizedConfig anc = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig();
-		Model an = Controller.getInjector().getInstance(Model.class);
+		AttractivenessModelImpl an = (AttractivenessModelImpl)Controller.getInjector().getInstance(AttractivenessI.class);
 		
 		Integer popThreshold = config.getCtapModelConfig().getDatasetConfig().getNewDatasetParams().getDestinationsPopThreshold();
 		Integer initialTime = (int)anc.getInitialTime();
