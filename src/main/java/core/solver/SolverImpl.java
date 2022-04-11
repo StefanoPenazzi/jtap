@@ -1,15 +1,22 @@
 package core.solver;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
+import org.apache.commons.math3.optim.ConvergenceChecker;
 import org.apache.commons.math3.optim.InitialGuess;
 import org.apache.commons.math3.optim.MaxEval;
 import org.apache.commons.math3.optim.MaxIter;
+import org.apache.commons.math3.optim.PointValuePair;
+import org.apache.commons.math3.optim.SimpleBounds;
 import org.apache.commons.math3.optim.SimpleValueChecker;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.apache.commons.math3.optim.nonlinear.scalar.MultivariateFunctionMappingAdapter;
+import org.apache.commons.math3.optim.nonlinear.scalar.MultivariateOptimizer;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
+import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.CMAESOptimizer;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.NelderMeadSimplex;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.util.Pair;
 
 import core.models.ModelI;
 import core.solver.NelderMeadTest.MultivariateFunctionTest1;
@@ -18,9 +25,9 @@ import projects.CTAP.model.UpperBoundCTAP;
 
 public class SolverImpl implements SolverI {
 	
-	private NelderMeadSimplex optimizer;
- 	private SimpleValueChecker sc = new SimpleValueChecker(-1,-1,100000);
-	private SimplexOptimizer so = new SimplexOptimizer(sc);
+	private MultivariateOptimizer optimizer;
+	//private SimplexOptimizer so = new SimplexOptimizer(1e-10,1e-30);
+	//private SimplexOptimizer so = new SimplexOptimizer(-1,1e-30);
 	private ModelI model;
 	private double[] initialGuess = null;
 	
@@ -49,31 +56,29 @@ public class SolverImpl implements SolverI {
 	
 	public SolverImpl(ModelI model) {
 		this.model = model;
-		optimizer = new NelderMeadSimplex(model.getObjectiveFunction().getVariablesLength());
+		//optimizer = new NelderMeadSimplex(model.getObjectiveFunction().getVariablesLength());
+		ConvergenceChecker<PointValuePair> convergenceChecker = new SimpleValueChecker(1.e-6, 1.e-14);
+        optimizer = new CMAESOptimizer(1000, 0.01, true, 0, 1, new MersenneTwister(), true,
+                convergenceChecker);
 	}
 	
 
 	@Override
-	public Object run() {
-		
+	public PointValuePair run() {
+		//new MaxIter(1000000),new MaxEval(1000000),
 		org.apache.commons.math3.optim.PointValuePair pvp = null;
 		double[] lower = ((LowerBoundCTAP)this.model.getConstraints().get(0)).getConstraint();
 		double[] upper = ((UpperBoundCTAP)this.model.getConstraints().get(1)).getConstraint();
-		if(this.initialGuess != null) {
-			pvp = so.optimize(optimizer, 
-					new ObjectiveFunction(new MultivariateFunctionSolver_1(
-							new MultivariateFunctionSolver(this.model),lower,upper)),
-					GoalType.MINIMIZE,new MaxIter(1000000),new MaxEval(1000000),
-					new InitialGuess(this.initialGuess)); //
-		}
-		else {
-			this.initialGuess = new double[this.model.getObjectiveFunction().getVariablesLength()];
-			pvp = so.optimize(optimizer, 
-					new ObjectiveFunction(new MultivariateFunctionSolver_1(
-							new MultivariateFunctionSolver(this.model),lower,upper)),
-					GoalType.MINIMIZE,new MaxIter(1000000),new MaxEval(1000000),
-					new InitialGuess(this.initialGuess));
-		}
+		pvp = optimizer.optimize(
+				new ObjectiveFunction(new MultivariateFunctionSolver(this.model)),
+				GoalType.MINIMIZE,
+				new MaxIter(1000),
+				MaxEval.unlimited(),
+				new InitialGuess(this.initialGuess),
+				new CMAESOptimizer.PopulationSize(3),
+				new SimpleBounds(lower, upper),
+				new CMAESOptimizer.Sigma(upper)
+				); //
 		return pvp;
 	}
 	
@@ -89,11 +94,4 @@ public class SolverImpl implements SolverI {
 			return this.model.getObjectiveFunction().getValue(point);
 		}
 	}
-	
-	class MultivariateFunctionSolver_1 extends MultivariateFunctionMappingAdapter{
-		public MultivariateFunctionSolver_1(MultivariateFunction bounded, double[] lower, double[] upper) {
-			super(bounded, lower, upper);
-		}
-	}
-
 }

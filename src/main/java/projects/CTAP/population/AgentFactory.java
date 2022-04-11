@@ -34,18 +34,24 @@ public class AgentFactory implements AgentFactoryI {
 		
 		int agentIndex = dataset.getAgentsIndex().getIndex().indexOf(agentId);
 		int nPlanActivities = this.config.getCtapModelConfig().getCtapPopulationConfig().getCtapAgentConfig().getPlanSize();
+		
 		boolean homeDs = dataset.getCitiesDsIndex().getIndex().contains(homeLocationId); 
 		List<ModelI> models = new ArrayList<>();
 		
 		//cost
 		double monetaryBudget = dataset.getMonetaryBudgetParameter().getParameter()[agentIndex];
 		double timeRelatedBudget = dataset.getMonetaryBudgetParameter().getParameter()[agentIndex];
-		double valueOfTime = dataset.getValueOfTimeParameter().getParameter()[agentIndex];;
+		double valueOfTime = dataset.getValueOfTimeParameter().getParameter()[agentIndex];
+		
+		//activities index
+		double[] percOfTimeTargetParameter = dataset.getPercOfTimeTargetParameter().getParameter()[agentIndex];
+		
+		//time
+		double attractivenessTimeInterval = this.config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getIntervalTime();
 		
 		for(int[][] al: this.activityLocation.run(agentId, homeLocationId, dataset)) {
 			
 			//activities seq
-			double[] percOfTimeTargetParameter =  new double[nPlanActivities];
 			double[] timeDuration =  new double[nPlanActivities];
 			
 			//locations seq
@@ -64,7 +70,6 @@ public class AgentFactory implements AgentFactoryI {
             	int actIndex = al[0][i];
             	int locIndex = al[1][i];
             	
-            	percOfTimeTargetParameter[i] = dataset.getPercOfTimeTargetParameter().getParameter()[agentIndex][actIndex ];
 				timeDuration[i] = dataset.getTimeDurationParameter().getParameter()[agentIndex][actIndex];
             	
             	//locationPerception[i] = this.dataset.getLocationPerceptionParameter().getParameter()[al[1][i]];
@@ -101,7 +106,7 @@ public class AgentFactory implements AgentFactoryI {
 					al[0], al[1], percOfTimeTargetParameter, timeDuration, locationPerception,
 					sigmaActivityCalibration,tauActivityCalibration,gammaActivityCalibration,
 					travelCost,travelTime,monetaryBudget, timeRelatedBudget, activityLocationCostRate,
-					valueOfTime,attractiveness);
+					valueOfTime,attractiveness,attractivenessTimeInterval);
 			List<ConstraintI> constraints = new ArrayList<>();
 			double[] lb = new double[nPlanActivities*2];
 			double[] ub = new double[nPlanActivities*2];
@@ -109,8 +114,10 @@ public class AgentFactory implements AgentFactoryI {
 			Arrays.fill(ub, 8760d);
 			constraints.add(new LowerBoundCTAP(lb));
 			constraints.add(new UpperBoundCTAP(ub));
+			double[] initGuess = new double[nPlanActivities*2];
+			Arrays.fill(ub, 4000d);
 			
-			models.add(new ModelCTAP(objF,constraints));
+			models.add(new ModelCTAP(objF,constraints,initGuess));
 			
 		}
 		

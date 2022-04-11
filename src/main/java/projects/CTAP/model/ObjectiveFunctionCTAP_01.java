@@ -22,10 +22,11 @@ public class ObjectiveFunctionCTAP_01 extends ObjectiveFunctionCTAP {
 			double timeRelatedBudget,
 			double[] activityLocationCostRate, 
 			double valueOfTime,
-			float[][] attractiveness) {
+			float[][] attractiveness,
+			double attractivenessTimeInterval) {
 		super(nActivities, activitiesSequence, locations, percentageOfTimeTarget, timeDuration,
 				locationPerception, sigmaActivityCalibration, tauActivityCalibration, durationDiscomfort, travelCost,
-				travelTime,attractiveness,valueOfTime,monetaryBudget, timeRelatedBudget);
+				travelTime,attractiveness,valueOfTime,monetaryBudget, timeRelatedBudget,attractivenessTimeInterval);
 		this.activityLocationCostRate = activityLocationCostRate;
 		this.valueOfTime = valueOfTime;
 	}

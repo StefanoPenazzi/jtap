@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.math3.optim.PointValuePair;
+import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -100,9 +100,9 @@ public class Solver {
 								.initialGuess(model.getInitialGuess())
 								.build();
 					
-					org.apache.commons.math3.optim.PointValuePair pvp = (PointValuePair) si.run();
-					//TODO loc-act
-					agentPlans.add(new Plan(ofc.getLocations(),ofc.getActivities(),pvp.getPoint(),pvp.getValue()));
+					PointValuePair pvp =  si.run();
+					
+					agentPlans.add(new Plan(ofc.getLocations(),ofc.getActivities(),pvp.getFirst(),pvp.getSecond()));
 				}
 				agent.setOptimalPlans(agentPlans);
 			}

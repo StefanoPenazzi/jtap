@@ -17,7 +17,7 @@ public class Plan {
 	private final int[] locations;
 	private final int[] activities;
  	
-	public Plan(int[] locations,int[] activities,double[] activitiesTime, double value) {
+	public Plan(int[] locations,int[] activities,double[] activitiesTime, Double value) {
 		this.locations = locations;
 		this.activities = activities;
 		this.ts = IntStream.range(0,(int)(activitiesTime.length/2))

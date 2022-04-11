@@ -20,6 +20,8 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	private final double[] travelTime;
 	private final float[][] attractiveness;
 	
+	private final double attractivenessTimeInterval;
+	
 	private final double monetaryBudget;
 	private final double timeRelatedBudget;
 	private final double valueOfTime;
@@ -40,7 +42,8 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 								 float[][] attractiveness,
 								 double valueOfTime,
 								 double monetaryBudget,
-								 double timeRelatedBudget
+								 double timeRelatedBudget,
+								 double attractivenessTimeInterval
 								 ) {
 		
 		 this.nActivities = nActivities;
@@ -58,14 +61,19 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 		 this.timeRelatedBudget = timeRelatedBudget;
 		 this.attractiveness = attractiveness ;
 		 this.valueOfTime = valueOfTime;
+		 this.attractivenessTimeInterval = attractivenessTimeInterval;
 	}
 	
 	public double getValue(double[] ts, double[] te) {
 		double res = 0;
 		res += getDiscomfortPercentageOfTimeTarget(ts, te);
-		//res += getDiscomfortDurationTarget(ts, te);
-		//res += getDiscomfortBudget(ts, te);
-		res += getLagrangeMultipliers(ts, te);
+		res += getDiscomfortDurationTarget(ts, te);
+		res += getDiscomfortBudget(ts, te);
+		res += getLagrangeMultipliers_1(ts, te);
+		res += getLagrangeMultipliers_2(ts, te);
+		//res += getLagrangeMultipliers_3(ts, te);
+		//res += getLagrangeMultipliers_4(ts, te);
+		
 		return res;
 	}
 	
@@ -80,7 +88,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	private double getDiscomfortPercentageOfTimeTarget(double[] ts, double[] te) {
 		double res = 0;
-		for(int i = 0;i<nActivities;i++) {
+		for(int i = 0;i<percentageOfTimeTarget.length;i++) {
 			res += Math.pow(percentageOfTimeTarget[i] - getStateValue(i,ts,te),2);
 		}
 		return res;
@@ -89,8 +97,8 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	private double getDiscomfortDurationTarget(double[] ts, double[] te) {
 		double res = 0;
 		for(int i = 0;i<activities.length;i++) {
-			res += Math.pow(timeDuration[activities[i]] - (te[i]-ts[i]),2);
-			res = res*this.durationDiscomfort[i];
+			res += Math.pow(timeDuration[i] - (te[i]-ts[i]),2);
+			res = res*1;//this.durationDiscomfort[i];
 		}
 		return res;
 	}
@@ -106,9 +114,24 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 		return res;
 	}
 	
-	private double getPullFactor(int i,double[] ts, double[] te) {
-		//TODO insert attractiveness function
-		return 100;//locationPerception[i]*1;                               
+	private double getPullFactor(int i,double ts,double te) {
+	    if(te < ts) {
+			return Math.abs(te-ts)*1000;
+		}
+		int ts_ = (int) Math.floor(ts / attractivenessTimeInterval);
+		int _te = (int) Math.ceil(ts / attractivenessTimeInterval);
+		if(ts_ == _te) {
+			return locationPerception[i] *  attractiveness[i][ts_]*(te-ts) ;     
+		}
+		else {
+			double res = 0;
+			for(int j = ts_+1;j < _te; j++) {
+				res += attractivenessTimeInterval*(attractiveness[i][j]);
+			}
+			res += attractiveness[i][ts_] * ((ts_+1)*attractivenessTimeInterval-ts);
+			res += attractiveness[i][_te] * (te - attractivenessTimeInterval*(_te-1));
+			return locationPerception[i] * res  ;     
+		}                         
 	}
 	
 	public double costActivityLocation(int i,double ts, double te) {
@@ -127,31 +150,58 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 		double res = 0;
 		for(int i =0;i<this.activities.length;i++ ) {
 			if(activities[i] == activity) {
-				res = 1 + (res-1) * Math.pow(Math.E, -tauActivityCalibration[i]*(te[i]-ts[i])* getPullFactor(i,ts, te)); 
+				res = 1 + (res-1) * Math.pow(Math.E, -tauActivityCalibration[i]*(te[i]-ts[i])* getPullFactor(i,ts[i], te[i])); 
 			}
 			else {
 				res = res * Math.pow(Math.E, -sigmaActivityCalibration[i]*(te[i]-ts[i])); 
-				
 			}
 		}
 		return res;
 	}
 	
-	public double getLagrangeMultipliers(double[] ts, double[] te) {
-		for(int i =0;i<ts.length;i++) {
+	public double getLagrangeMultipliers_1(double[] ts, double[] te) {
+	   double res = 0;
+       for(int i =0;i<ts.length;i++) {
 			double diff = te[i] - ts[i];
-			if(diff<=0) {
-				return Double.MAX_VALUE;
+			if(diff <= 0) {
+				res += (1+Math.abs(diff));
 			}
 		}
-		for(int i =0;i<ts.length-1;i++) {
-			double diff = ts[i+1] - te[i];
-			if(diff<=0) {
-				return Double.MAX_VALUE;
-			}
-		}
-		return 0;
+		return res;
 	}
+	
+	public double getLagrangeMultipliers_2(double[] ts, double[] te) {
+		double res = 0;
+		for(int j =0;j<ts.length-1;++j) {
+			int k = j+1;
+			double diff = ts[k] - te[j];
+			if(diff <= 0) {
+				res = res + (1 + Math.abs(diff));
+			}
+		}
+		return res;
+	}
+	
+	public double getLagrangeMultipliers_3(double[] ts, double[] te) {
+		double res = 0;
+		for(int j =0;j<ts.length-1;++j) {
+			res += costActivityLocation(activities[j],ts[j],te[j]);
+			res += travelCost[j];
+		}
+		if(res > monetaryBudget) {
+			return (res-monetaryBudget)*1000;
+		}
+		else {
+			return 0;
+		}
+		
+	}
+	
+	public double getLagrangeMultipliers_4(double[] ts, double[] te) {
+		double res = 0;
+		return res;
+	}
+
 
 	@Override
 	public int getVariablesLength() {
