@@ -1,6 +1,6 @@
 package projects.CTAP.attractiveness;
 
-public abstract class AttractivenessAbstract implements AttractivenessI {
+public abstract class AttractivenessAbstract implements AttractivenessModelI {
 	
 	
 	private final Double initialTime;
@@ -49,5 +49,5 @@ public abstract class AttractivenessAbstract implements AttractivenessI {
 		return 0;
 	}
 	
-	
+    
 }

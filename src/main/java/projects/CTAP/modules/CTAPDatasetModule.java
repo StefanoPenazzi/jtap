@@ -4,8 +4,8 @@ import controller.AbstractModule;
 import core.dataset.DatasetFactoryI;
 import core.population.AgentFactoryI;
 import core.population.PopulationFactoryI;
-import projects.CTAP.attractiveness.AttractivenessI;
-import projects.CTAP.attractiveness.normalized.AttractivenessModelImpl;
+import projects.CTAP.attractiveness.AttractivenessModelI;
+import projects.CTAP.attractiveness.normalized.DefaultAttractivenessModelImpl;
 import projects.CTAP.dataset.DatasetJsonFactory;
 import projects.CTAP.model.ActivityLocationI;
 import projects.CTAP.model.RandomEvenHomeActivityLocation;
@@ -21,7 +21,7 @@ public class CTAPDatasetModule extends AbstractModule{
 		 binder().bind(DatasetFactoryI.class).to(DatasetJsonFactory.class);
 		 binder().bind(AgentFactoryI.class).to(AgentFactory.class);
 		 binder().bind(ActivityLocationI.class).to(RandomEvenHomeActivityLocation.class);
-		 binder().bind(AttractivenessI.class).to(AttractivenessModelImpl.class);
+		 binder().bind(AttractivenessModelI.class).to(DefaultAttractivenessModelImpl.class);
 		 
 		
 	}

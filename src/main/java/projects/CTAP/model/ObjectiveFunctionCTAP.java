@@ -66,9 +66,9 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	
 	public double getValue(double[] ts, double[] te) {
 		double res = 0;
-		res += getDiscomfortPercentageOfTimeTarget(ts, te);
+		//res += getDiscomfortPercentageOfTimeTarget(ts, te);
 		res += getDiscomfortDurationTarget(ts, te);
-		res += getDiscomfortBudget(ts, te);
+		//res += getDiscomfortBudget(ts, te);
 		res += getLagrangeMultipliers_1(ts, te);
 		res += getLagrangeMultipliers_2(ts, te);
 		//res += getLagrangeMultipliers_3(ts, te);

@@ -9,10 +9,6 @@ class UtilsTest {
 
 	@Test
 	void CTAPTransportLinkFactoryTest() throws Exception {
-		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
-		Controller controller = new Controller(config);
-		controller.run();
-		controller.emptyTempDirectory();	
-		projects.CTAP.transport.Utils.insertCTAPTransportLinkFactory();
+		
 	}
 }

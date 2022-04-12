@@ -23,7 +23,7 @@ import core.graph.population.StdAgentNodeImpl;
 import projects.CTAP.attractiveness.AttractivenessAbstract;
 import projects.CTAP.graphElements.CTAPCityStatNode;
 
-public class AttractivenessModelImpl extends AttractivenessAbstract {
+public class DefaultAttractivenessModelImpl extends AttractivenessAbstract {
 	
 	private List<String> paramsVector_ = new ArrayList<>(Arrays.asList("restaurant", "theater", "parking_space","parking"));
 	private final List<String> paramsVector;
@@ -32,8 +32,7 @@ public class AttractivenessModelImpl extends AttractivenessAbstract {
 	private Map<Integer,Map<String,Double[]>> parametersMap = new HashMap<>();
 	
 	@Inject
-	public AttractivenessModelImpl (Config config) throws IOException {
-		//TODO
+	public DefaultAttractivenessModelImpl (Config config) throws IOException {
 		super((double)config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getInitialTime(),
 				(double)config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getFinalTime());
 		this.config = config;
@@ -83,6 +82,7 @@ public class AttractivenessModelImpl extends AttractivenessAbstract {
 		return seasonalitySummerSinglePeakSineFunction(params[0]*variables[0],variables[2]);
 	}
 	
+	@Override
 	public Double getAttractiveness(Double[] variables,Integer agentId, String activity) {
 		return getAttractiveness(parametersMap.get(agentId).get(activity),variables);
 	}

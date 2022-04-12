@@ -9,25 +9,17 @@ import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.SimpleBounds;
 import org.apache.commons.math3.optim.SimpleValueChecker;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
-import org.apache.commons.math3.optim.nonlinear.scalar.MultivariateFunctionMappingAdapter;
 import org.apache.commons.math3.optim.nonlinear.scalar.MultivariateOptimizer;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.CMAESOptimizer;
-import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.NelderMeadSimplex;
-import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
 import org.apache.commons.math3.random.MersenneTwister;
-import org.apache.commons.math3.util.Pair;
-
 import core.models.ModelI;
-import core.solver.NelderMeadTest.MultivariateFunctionTest1;
 import projects.CTAP.model.LowerBoundCTAP;
 import projects.CTAP.model.UpperBoundCTAP;
 
 public class SolverImpl implements SolverI {
 	
 	private MultivariateOptimizer optimizer;
-	//private SimplexOptimizer so = new SimplexOptimizer(1e-10,1e-30);
-	//private SimplexOptimizer so = new SimplexOptimizer(-1,1e-30);
 	private ModelI model;
 	private double[] initialGuess = null;
 	
@@ -35,9 +27,7 @@ public class SolverImpl implements SolverI {
 		
 		private ModelI model;
 		private double[] initialGuess_ = null;
-		
-		
-		
+	
 		public Builder(ModelI model) {
 			this.model = model;
 		}
@@ -62,10 +52,8 @@ public class SolverImpl implements SolverI {
                 convergenceChecker);
 	}
 	
-
 	@Override
 	public PointValuePair run() {
-		//new MaxIter(1000000),new MaxEval(1000000),
 		org.apache.commons.math3.optim.PointValuePair pvp = null;
 		double[] lower = ((LowerBoundCTAP)this.model.getConstraints().get(0)).getConstraint();
 		double[] upper = ((UpperBoundCTAP)this.model.getConstraints().get(1)).getConstraint();

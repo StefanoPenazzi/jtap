@@ -13,7 +13,7 @@ class AttractivenessTest {
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
-		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j();
+		//projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j();
 		//System.out.println();
 	}
 	

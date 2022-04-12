@@ -17,7 +17,10 @@ import core.graph.rail.gtfs.GTFS;
 import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadNode;
 import picocli.CommandLine;
+import projects.CTAP.attractiveness.normalized.DefaultAttractivenessModelImpl;
+import projects.CTAP.attractiveness.normalized.DefaultAttractivenessModelVarImpl;
 import projects.CTAP.graphElements.ActivityCityLink;
+import projects.CTAP.transport.DefaultCTAPTransportLinkFactory;
 
 public class ScenarioBuildingPipeline implements Callable<Integer> {
 	
@@ -90,10 +93,14 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		core.graph.population.Utils.insertStdPopulationFromCsv(StdAgentNodeImpl.class);
 		
 		//insert attractiveness-------------------------------------------------
-		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j();
+		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j(
+				(DefaultAttractivenessModelImpl)Controller.getInjector().getInstance(DefaultAttractivenessModelImpl.class),
+				new DefaultAttractivenessModelVarImpl());
 		
 		//insert transport links------------------------------------------------
-		projects.CTAP.transport.Utils.insertCTAPTransportLinkFactory();
+		DefaultCTAPTransportLinkFactory ctapTranspFactory = new DefaultCTAPTransportLinkFactory();
+		ctapTranspFactory.insertCTAPTransportLinkFactory(config.getCtapModelConfig()
+				.getTransportConfig().getCtapTransportLinkConfig());
 		
 		return 1;
 	}
