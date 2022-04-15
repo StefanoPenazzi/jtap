@@ -12,7 +12,7 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 public final class RailNode implements NodeGeoI {
 	
 	@CsvBindByName(column = "stop_id")
-	@Neo4JPropertyElement(key="id",type=Neo4JType.TOSTRING)
+	@Neo4JPropertyElement(key="stop_id",type=Neo4JType.TOSTRING)
 	private String stopId;
 	@CsvBindByName(column = "stop_name")
 	@Neo4JPropertyElement(key="name",type=Neo4JType.TOSTRING)
@@ -40,7 +40,7 @@ public final class RailNode implements NodeGeoI {
 	private String parentStation;
 	
 	
-	public String stopId() {
+	public String getStopId() {
 		return this.stopId;
 	}
 	public String getStopName() {

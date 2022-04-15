@@ -34,30 +34,38 @@ public final class Utils {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
 		String tempDirectory = config.getGeneralConfig().getTempDirectory();
-		data.external.neo4j.Utils.insertNodes(database,tempDirectory,gtfs.getStops());
-		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs,day)
-				,RailLink.class,core.graph.rail.gtfs.RailNode.class,"id","stop_from",core.graph.rail.gtfs.RailNode.class,"id","stop_to");
-		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailTransferLinks(gtfs)
-				,RailLink.class,core.graph.rail.gtfs.RailNode.class,"id","stop_from",core.graph.rail.gtfs.RailNode.class,"id","stop_to");
-		try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query(database,"CREATE INDEX RailNodeIndex FOR (n:RailNode) ON (n.id)",AccessMode.WRITE);
+		List<RailNode> rnodes = gtfs.getStops().stream().filter(x -> x.getStopId().contains("StopArea") == false).collect(Collectors.toList());
+ 		data.external.neo4j.Utils.insertNodes(database,tempDirectory,rnodes);
+ 		
+ 		try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,"CREATE INDEX RailNodeIndex FOR (n:RailNode) ON (n.stop_id)",AccessMode.WRITE);
 		}
+ 		
+		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailLinks(gtfs,day)
+				,RailLink.class,core.graph.rail.gtfs.RailNode.class,"stop_id","stop_from",core.graph.rail.gtfs.RailNode.class,"stop_id","stop_to");
+		data.external.neo4j.Utils.insertLinks(database,tempDirectory,getRailTransferLinks(gtfs)
+				,RailLink.class,core.graph.rail.gtfs.RailNode.class,"stop_id","stop_from",core.graph.rail.gtfs.RailNode.class,"stop_id","stop_to");
+		
 	}
 	
 	public static void insertAndConnectRailGTFSIntoNeo4J(GTFS gtfs,String day,Map<Class<? extends NodeGeoI>,String> nodeArrivalMap) throws Exception {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
 		insertRailGTFSintoNeo4J(gtfs,day);
-		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"id", nodeArrivalMap,1);
+		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"stop_id", nodeArrivalMap,1);
 	}
 	
 	public static void deleteRailGTFS() throws Exception {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();
          try( Neo4jConnection conn = new Neo4jConnection()){  
-        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
-        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r]->(m) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
-        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n)-[r]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r:RailLink|CTAPTransportLink]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	//conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r:CTAPTransportLink]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r:RailTransferLink|CTAPTransportLink]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r:CrossLink|CTAPTransportLink]->(m:CityNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:CityNode)-[r:CrossLink|CTAPTransportLink]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode)-[r:CrossLink|CTAPTransportLink]->(m:RoadNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+        	conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RoadNode)-[r:CrossLink|CTAPTransportLink]->(m:RailNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
 			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:RailNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
 			conn.query(database,"DROP INDEX RailNodeIndex IF EXISTS",AccessMode.WRITE );
          }

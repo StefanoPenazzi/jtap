@@ -58,6 +58,15 @@ public class Utils {
 		}
 	}
 	
+	public static void deleteCityFacStatNode() throws Exception {
+		Config config = Controller.getConfig();
+		String database = config.getNeo4JConfig().getDatabase();
+		try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:CityNode)-[r:STAT]->(m:CityFacStatNode) RETURN r limit 10000000\", \"delete r\",{batchSize:100000});",AccessMode.WRITE );
+			conn.query(database,"Call apoc.periodic.iterate(\"cypher runtime=slotted Match (n:CityFacStatNode) RETURN n limit 10000000\", \"delete n\",{batchSize:100000});",AccessMode.WRITE );
+		}
+	}
+	
 	public static void deleteCities() throws Exception {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();

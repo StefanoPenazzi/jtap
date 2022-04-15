@@ -77,12 +77,12 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		//Connections between RoadNetwork and RailNetwork-----------------------
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
 		railConnMap.put(RoadNode.class,"node_osm_id");
-		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"id",railConnMap,2);
+		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"stop_id",railConnMap,2);
 		
 		//Connections between Cities and RoadNetwork/RailNetwork----------------
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
 		cityConnMap.put(RoadNode.class,"node_osm_id");
-		cityConnMap.put(RailNode.class, "id");
+		cityConnMap.put(RailNode.class, "stop_id");
 		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city_id",cityConnMap,3);
 		
 		//insert activities-----------------------------------------------------

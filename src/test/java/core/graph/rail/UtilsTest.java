@@ -35,10 +35,10 @@ class UtilsTest {
 		//connections between subgraphs
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
 		railConnMap.put(RoadNode.class,"node_osm_id");
-		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"id",railConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(RailNode.class,"stop_id",railConnMap,3);
 		
 		Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
-		cityConnMap.put(RailNode.class, "id");
+		cityConnMap.put(RailNode.class, "stop_id");
 		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city",cityConnMap,3);
 		
 	}
