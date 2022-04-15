@@ -29,7 +29,7 @@ public class DefaultAttractivenessModelImpl extends AttractivenessAbstract {
 	private final List<String> paramsVector;
 	
 	private Config config;
-	private Map<Integer,Map<String,Double[]>> parametersMap = new HashMap<>();
+	protected Map<Integer,Map<String,Double[]>> parametersMap = new HashMap<>();
 	
 	@Inject
 	public DefaultAttractivenessModelImpl (Config config) throws IOException {
