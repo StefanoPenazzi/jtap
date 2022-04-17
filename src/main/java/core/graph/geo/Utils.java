@@ -58,6 +58,24 @@ public class Utils {
 		}
 	}
 	
+	public static void addCityFacStatNodeWithHistorical() throws Exception {
+        Config config = Controller.getConfig();
+        String database = config.getNeo4JConfig().getDatabase();
+        try( Neo4jConnection conn = new Neo4jConnection()){  
+                        conn.query(database,"MATCH (cit:CityNode) WITH DISTINCT cit.city_id AS cities UNWIND cities AS cn CREATE (g:CityFacStatNode {city_id:cn}) With g,cn Match(cit:CityNode) where cit.city_id=cn create(cit)-[j:STAT]->(g);",AccessMode.WRITE);
+                        conn.query(database,"match (n:CityNode)<-[r:CrossLink]-(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
+                                                        + "WITH DISTINCT f.tourism AS tourism,n.city_id AS cn,f AS ot UNWIND tourism AS tt WITH count(ot.tourism = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city_id=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
+                                                        + "RETURN count(*);",AccessMode.WRITE);
+                        conn.query(database,"match (n:CityNode)<-[r:CrossLink]-(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
+                                                        + "WITH DISTINCT f.amenity AS amenities,n.city_id AS cn,f AS ot UNWIND amenities AS tt WITH count(ot.amenity = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city_id=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
+                                                        + "RETURN count(*); ",AccessMode.WRITE);
+                         conn.query(database,"match (n:CityNode)<-[r:CrossLink]-(m:FacilityNode)-[k:TAGS]->(f:OSMTags) \n"
+                                                        + "WITH DISTINCT f.historic AS historics,n.city_id AS cn,f AS ot UNWIND historics AS tt WITH count(ot.historic = tt) AS c,tt,cn MATCH (g:CityFacStatNode) WHERE g.city_id=cn  CALL apoc.create.setProperty(g,tt,c) YIELD node\n"
+                                                        + "RETURN count(*); ",AccessMode.WRITE);
+        }
+}
+
+	
 	public static void deleteCityFacStatNode() throws Exception {
 		Config config = Controller.getConfig();
 		String database = config.getNeo4JConfig().getDatabase();

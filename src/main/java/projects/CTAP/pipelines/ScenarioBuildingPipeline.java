@@ -72,7 +72,7 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		core.graph.Utils.setShortestDistCrossLink(FacilityNode.class,"node_osm_id",facilityConnMap,3);
 		
 		//create the CityFacStatNodes-------------------------------------------
-		core.graph.geo.Utils.addCityFacStatNode();
+		core.graph.geo.Utils.addCityFacStatNodeWithHistorical();
 		
 		//Connections between RoadNetwork and RailNetwork-----------------------
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
