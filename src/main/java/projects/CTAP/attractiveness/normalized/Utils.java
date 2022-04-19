@@ -61,9 +61,10 @@ public class Utils {
     				Map<String,Object> cityStats = rec.values().get(0).asMap();
     				Long cityId = rec.values().get(1).get("city_id").asLong();
     				List<Double> vars = variables.getVariables(cityStats);
+    				vars.add(0d);
 	        		for(int j = 0;j<intervals;j++) {
 	        			Double time = new Double(timeInterval*j);
-	        			vars.add(time);
+	        			vars.set(vars.size()-1, time);
 	        			attractivenessList.add(new AttractivenessNormalizedLink(agentNode.getId(),
 	        					cityId,
 	        					activityNode.getActivityId(),
