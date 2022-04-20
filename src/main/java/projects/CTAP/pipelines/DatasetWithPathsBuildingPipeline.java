@@ -67,7 +67,7 @@ public class DatasetWithPathsBuildingPipeline implements Callable<Integer> {
 		//indexes
 		List<Long> agents_ids = data.external.neo4j.Utils.importNodes(StdAgentNodeImpl.class).stream().map(x -> x.getId()).collect(Collectors.toList());
 		List<Long> activities_ids = data.external.neo4j.Utils.importNodes(ActivityNode.class).stream().map(x -> x.getActivityId()).collect(Collectors.toList());
-		List<CityNode> cities = data.external.neo4j.Utils.importNodes(config.getNeo4JConfig().getDatabase(),CityNode.class);
+		List<CityNode> cities = data.external.neo4j.Utils.importNodes(CityNode.class);
 		List<Long> citiesDs_ids = cities.stream().filter(e -> e.getId() == 0L).map(CityNode::getId).collect(Collectors.toList());    //just for test
 		List<Long> citiesOs_ids = cities.stream().filter(e -> e.getId() == 3L).map(CityNode::getId).collect(Collectors.toList());     //just for test
 		Integer initialTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getInitialTime();
