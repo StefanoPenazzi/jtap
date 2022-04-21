@@ -35,6 +35,10 @@ public class PopulationFactory implements PopulationFactoryI {
 				AgentFactoryI af = Controller.getInjector().getInstance(AgentFactoryI.class);
 				agents.add((Agent) af.run(agId,locId,ds));
 			}
+			//for(Long locId: ds.getCitiesDsIndex().getIndex()) {
+			//	AgentFactoryI af = Controller.getInjector().getInstance(AgentFactoryI.class);
+			//	agents.add((Agent) af.run(agId,locId,ds));
+			//}
 		}
 		return new Population(agents);
 	}

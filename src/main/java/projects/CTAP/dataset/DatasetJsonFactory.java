@@ -50,6 +50,7 @@ public final class DatasetJsonFactory implements DatasetFactoryI {
 			ActivityLocationCostParameter activityLocationCostParameter = mapper.readValue(new File(dir+"ActivityLocationCostParameter.json"), ActivityLocationCostParameter.class);
 			ValueOfTimeParameter valueOfTimeParameter = mapper.readValue(new File(dir+"ValueOfTimeParameter.json"), ValueOfTimeParameter.class);
 			AgentHomeLocationParameter agentHomeLocationParameter = mapper.readValue(new File(dir+"AgentHomeLocationParameter.json"), AgentHomeLocationParameter.class);
+			DestinationsProbDistParameter destinationsProbDistParameter = mapper.readValue(new File(dir+"DestinationsProbDistParameter.json"), DestinationsProbDistParameter.class);
 		
 	
 		dataset = new Dataset( agentsIndex,
@@ -69,7 +70,8 @@ public final class DatasetJsonFactory implements DatasetFactoryI {
 				 //locationPerceptionParameter,
 				 activityLocationCostParameter,
 				 valueOfTimeParameter,
-				 agentHomeLocationParameter);
+				 agentHomeLocationParameter,
+				 destinationsProbDistParameter);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

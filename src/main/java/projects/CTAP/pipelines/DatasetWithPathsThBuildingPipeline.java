@@ -70,8 +70,8 @@ public class DatasetWithPathsThBuildingPipeline implements Callable<Integer> {
 		List<Long> agents_ids = data.external.neo4j.Utils.importNodes(StdAgentNodeImpl.class).stream().map(x -> x.getId()).collect(Collectors.toList());
 		List<Long> activities_ids = data.external.neo4j.Utils.importNodes(ActivityNode.class).stream().map(x -> x.getActivityId()).collect(Collectors.toList());
 		List<CityNode> cities = data.external.neo4j.Utils.importNodes(CityNode.class);
-		List<Long> citiesDs_ids = cities.stream().filter(e -> e.getId() == 0L).map(CityNode::getId).collect(Collectors.toList());    //just for test
-		List<Long> citiesOs_ids = cities.stream().filter(e -> e.getId() == 3L).map(CityNode::getId).collect(Collectors.toList());     //just for test
+		List<Long> citiesDs_ids = cities.stream().filter(e -> e.getPopulation() > config.getCtapModelConfig().getDatasetConfig().getNewDatasetParams().getDestinationsPopThreshold()).map(CityNode::getId).collect(Collectors.toList()); 
+		List<Long> citiesOs_ids = cities.stream().filter(e -> e.getPopulation() <= config.getCtapModelConfig().getDatasetConfig().getNewDatasetParams().getDestinationsPopThreshold()).map(CityNode::getId).collect(Collectors.toList()); 
 		Integer initialTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getInitialTime();
 		Integer finalTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getFinalTime();
 		Integer intervalTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getIntervalTime();
@@ -93,7 +93,7 @@ public class DatasetWithPathsThBuildingPipeline implements Callable<Integer> {
 		Ds2DsParametersFactory dsds = new Ds2DsParametersFactory(config,rm,citiesDs_ids);
 		List<Long> testCities = new ArrayList<>() {{add(3L);}};                     //just for test
 		AgentHomeLocationParameterFactory agLoc = new AgentHomeLocationParameterFactory(agents_ids,testCities);
-		List<Long> testActLoc = new ArrayList<>() {{add(0L);}};            //just for test
+		List<Long> testActLoc = new ArrayList<>() {{add(0L);}};
 		ActivityLocationCostParameterFactory actLoc = new ActivityLocationCostParameterFactory(testActLoc,activities_ids);
 		
 		List<ParameterFactoryI> res = Stream.of(agentActivtyParams, agentParams)

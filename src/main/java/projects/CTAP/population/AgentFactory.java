@@ -79,22 +79,23 @@ public class AgentFactory implements AgentFactoryI {
     			if(i%2==0 && i < nPlanActivities-1) {
     				int nextLocIndex = al[1][i+1];
     				if(homeDs) {
-    					travelCost[i] = dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+    					travelCost[i] = dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   
             			travelTime[i] = 0;
     				}
     				else {
-    					travelCost[i] = dataset.getOs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+    					travelCost[i] = dataset.getOs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];  
             			travelTime[i] = 0;
     				}
     			}
+    			//TODO use the same travel cost A->B B->A
     			else if(i%2!=0 && i < nPlanActivities-1) {
     				int nextLocIndex = al[1][i+1];
     				if(homeDs) {
-	    				travelCost[i] = dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+	    				travelCost[i] = dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];  
 	        			travelTime[i] = 0;
     				}
     				else {
-    					travelCost[i] = dataset.getDs2OsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO check if this is not DsDs, and which project to use
+    					travelCost[i] = dataset.getDs2OsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];  
 	        			travelTime[i] = 0;
     				}
     				activityLocationCostRate[i] = dataset.getActivityLocationCostParameter().getParameter()[locIndex][actIndex];
