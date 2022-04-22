@@ -28,6 +28,7 @@ import projects.CTAP.dataset.AgentsIndex;
 import projects.CTAP.dataset.AttractivenessParameterFactory;
 import projects.CTAP.dataset.CitiesDsIndex;
 import projects.CTAP.dataset.CitiesOsIndex;
+import projects.CTAP.dataset.DestinationsProbDistParameterFactory;
 import projects.CTAP.dataset.Ds2DsParametersFactory;
 import projects.CTAP.dataset.Ds2OsParametersFactory;
 import projects.CTAP.dataset.Os2DsParametersFactory;
@@ -93,6 +94,7 @@ public class DatasetWithPathsBuildingPipeline implements Callable<Integer> {
 		AgentHomeLocationParameterFactory agLoc = new AgentHomeLocationParameterFactory(agents_ids,testCities);
 		List<Long> testActLoc = new ArrayList<>() {{add(0L);}};            //just for test
 		ActivityLocationCostParameterFactory actLoc = new ActivityLocationCostParameterFactory(testActLoc,activities_ids);
+		DestinationsProbDistParameterFactory dpd = new DestinationsProbDistParameterFactory(citiesOs_ids,citiesDs_ids);
 		
 		List<ParameterFactoryI> res = Stream.of(agentActivtyParams, agentParams)
                  .flatMap(x -> x.stream())
@@ -101,6 +103,7 @@ public class DatasetWithPathsBuildingPipeline implements Callable<Integer> {
 		res.add(attractivenessParams);
 		res.add(agLoc);
 		res.add(actLoc);
+		res.add(dpd);
 		
 		//parameters
 		List<ModelElementI> prs = new ArrayList<>();

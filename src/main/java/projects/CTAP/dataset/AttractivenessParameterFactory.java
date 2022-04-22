@@ -33,8 +33,6 @@ public class AttractivenessParameterFactory implements ParameterFactoryI {
 	@Override
 	public ParameterI run() {
 
-		AttractivenessParameter res = null;
-
 		float[][][][] parameter = new float[this.parameterDescription.get(0).size()][this.parameterDescription.get(1)
 				.size()][this.parameterDescription.get(2).size()][this.parameterDescription.get(3).size()];
 

@@ -102,6 +102,9 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		ctapTranspFactory.insertCTAPTransportLinkFactory(config.getCtapModelConfig()
 				.getTransportConfig().getCtapTransportLinkConfig());
 		
+		//insert destinationProbLinks-------------------------------------------
+		projects.CTAP.activityLocationSequence.Utils.insertDestinationProbIntoNeo4j();
+		
 		return 1;
 	}
 }
