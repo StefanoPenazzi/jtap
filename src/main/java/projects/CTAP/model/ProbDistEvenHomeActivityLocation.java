@@ -67,6 +67,7 @@ public class ProbDistEvenHomeActivityLocation implements ActivityLocationI {
 			
 			for(int j = 1;j<nPlanActivities;j+=2) {
 				double rr = rand.nextDouble();
+				//binarySearchForIndex doesn't manage values smaller than destProbCDF[0]
 				if(rr <= destProbCDF[0] ) {
 					ll[j] = 0;
 				}

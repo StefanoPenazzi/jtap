@@ -69,7 +69,13 @@ public class DatasetWithPathsBuildingPipeline implements Callable<Integer> {
 		List<Long> agents_ids = data.external.neo4j.Utils.importNodes(StdAgentNodeImpl.class).stream().map(x -> x.getId()).collect(Collectors.toList());
 		List<Long> activities_ids = data.external.neo4j.Utils.importNodes(ActivityNode.class).stream().map(x -> x.getActivityId()).collect(Collectors.toList());
 		List<CityNode> cities = data.external.neo4j.Utils.importNodes(CityNode.class);
-		List<Long> citiesDs_ids = cities.stream().filter(e -> e.getId() == 0L).map(CityNode::getId).collect(Collectors.toList());    //just for test
+		//List<Long> citiesDs_ids = cities.stream().filter(e -> e.getId() == 0L).map(CityNode::getId).collect(Collectors.toList());    //just for test
+		List<Long> citiesDs_ids = new ArrayList<>(){
+            {
+                add(0L);
+                add(1L);
+            }
+        };
 		List<Long> citiesOs_ids = cities.stream().filter(e -> e.getId() == 3L).map(CityNode::getId).collect(Collectors.toList());     //just for test
 		Integer initialTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getInitialTime();
 		Integer finalTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getFinalTime();
@@ -90,8 +96,7 @@ public class DatasetWithPathsBuildingPipeline implements Callable<Integer> {
 		Os2DsParametersFactory osds = new Os2DsParametersFactory(config,rm,citiesOs_ids,citiesDs_ids);
 		Ds2OsParametersFactory dsos = new Ds2OsParametersFactory(config,rm,citiesOs_ids,citiesDs_ids);
 		Ds2DsParametersFactory dsds = new Ds2DsParametersFactory(config,rm,citiesDs_ids);
-		List<Long> testCities = new ArrayList<>() {{add(3L);}};                     //just for test
-		AgentHomeLocationParameterFactory agLoc = new AgentHomeLocationParameterFactory(agents_ids,testCities);
+		AgentHomeLocationParameterFactory agLoc = new AgentHomeLocationParameterFactory(agents_ids,citiesOs_ids);
 		List<Long> testActLoc = new ArrayList<>() {{add(0L);}};            //just for test
 		ActivityLocationCostParameterFactory actLoc = new ActivityLocationCostParameterFactory(testActLoc,activities_ids);
 		DestinationsProbDistParameterFactory dpd = new DestinationsProbDistParameterFactory(citiesOs_ids,citiesDs_ids);

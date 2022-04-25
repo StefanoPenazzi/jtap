@@ -15,19 +15,12 @@ public class Utils {
 	public static void insertDestinationProbIntoNeo4j() throws Exception {
 		Config config = Controller.getConfig();
 		
-		List<DestinationProbLink> destinationProbList = new ArrayList<>();
-		
 		//delete existent links
 		deleteDestinationProbLinks();
-		
-		//add the links into the database
-    	data.external.neo4j.Utils.insertLinks(destinationProbList,DestinationProbLink.class,CityNode.class,"from_id",CityNode.class,"to_id");
     	
-    	String database = config.getNeo4JConfig().getDatabase();
-		try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(config.getCtapModelConfig().getCtapActivityLocationConfig().getDestinationsProbDistFile(),
-					DestinationProbLink.class,CityNode.class,"city_id","from_id",CityNode.class,"city_id","to_id"),AccessMode.WRITE );
-		}
+		data.external.neo4j.Utils.insertLinks(config.getCtapModelConfig().getCtapActivityLocationConfig().getDestinationsProbDistFile(),
+					DestinationProbLink.class,CityNode.class,"city_id","from_id",CityNode.class,"city_id","to_id");
+		
 		
 	}
 	

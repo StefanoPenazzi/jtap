@@ -63,6 +63,9 @@ public class DeleteScenarioPipeline implements Callable<Integer> {
 		//delete GTFS-----------------------------------------------------------
 		core.graph.rail.Utils.deleteRailGTFS();
 		
+		//delete AIR NETWORK-----------------------------------------------------------
+		core.graph.air.Utils.deleteAirNetwork();
+		
 		//delete cities---------------------------------------------------------
 		core.graph.geo.Utils.deleteCities();
 		
