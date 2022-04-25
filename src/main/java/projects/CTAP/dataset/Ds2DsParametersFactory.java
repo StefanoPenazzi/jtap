@@ -88,15 +88,15 @@ public class Ds2DsParametersFactory extends RoutesMap implements ParametersFacto
 			/*
 			 * SourceRoutesRequest -------------------------------------------------
 			 */
-			List<SourceRoutesRequest> os2dsRailRoad = new ArrayList<>();
-			List<SourceRoutesRequest> os2dsRail = new ArrayList<>();
-			List<SourceRoutesRequest> os2dsRoad = new ArrayList<>();
+			List<SourceRoutesRequest> ds2dsRailRoad = new ArrayList<>();
+			List<SourceRoutesRequest> ds2dsRail = new ArrayList<>();
+			List<SourceRoutesRequest> ds2dsRoad = new ArrayList<>();
 			
 			CityNode cityNode = new CityNode();
 			citiesDs_ids.forEach(city ->{
-				os2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,city,"weight",citiesDs_ids));
-				os2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,city,"weight",citiesDs_ids));
-				os2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,city,"weight",citiesDs_ids));
+				ds2dsRailRoad.add(this.new SourceRoutesRequest(RAIL_ROAD_GRAPH,cityNode,city,"weight",citiesDs_ids));
+				ds2dsRail.add(this.new SourceRoutesRequest(RAIL_GRAPH,cityNode,city,"weight",citiesDs_ids));
+				ds2dsRoad.add(this.new SourceRoutesRequest(ROAD_GRAPH,cityNode,city,"weight",citiesDs_ids));
 			});
 			
 			
@@ -104,9 +104,9 @@ public class Ds2DsParametersFactory extends RoutesMap implements ParametersFacto
 			 * Collecting routes ---------------------------------------------------
 			 */
 			try {
-				this.addSourceRoutesWithPathsFromNeo4j(os2dsRailRoad);
-				this.addSourceRoutesWithPathsFromNeo4j(os2dsRail);
-				this.addSourceRoutesWithPathsFromNeo4j(os2dsRoad);
+				this.addSourceRoutesWithPathsFromNeo4j(ds2dsRailRoad);
+				this.addSourceRoutesWithPathsFromNeo4j(ds2dsRail);
+				this.addSourceRoutesWithPathsFromNeo4j(ds2dsRoad);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

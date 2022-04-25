@@ -24,9 +24,11 @@ import core.graph.NodeI;
 import core.graph.annotations.GraphElementAnnotation.Neo4JLinkElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
+import core.graph.geo.CityNode;
 import core.graph.rail.RailLink;
 import data.utils.io.CSV;
 import data.utils.io.OS;
+import projects.CTAP.graphElements.DestinationProbLink;
 
 /**
  * @author stefanopenazzi
@@ -237,6 +239,14 @@ public class Utils {
 		//OS.delete(new File(tempDirectory+"/"+fileName));
     }
     
+    public static <T extends NodeI> void insertNodes(String csvFile, Class<? extends NodeI> element) throws Exception {
+    	String database = Controller.getConfig().getNeo4JConfig().getDatabase();
+    	try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,data.external.neo4j.Utils.getLoadCSVNodeQuery(csvFile,element),AccessMode.WRITE );
+	    }
+    }
+   
+    
     /**
      * @param <T>
      * @param database
@@ -310,6 +320,14 @@ public class Utils {
     	
     }
     
+    public static <T extends LinkI> void insertLinks(String csvFile,Class<? extends LinkI> linkElement, Class<? extends NodeI> sfNodeElement, String sfProperty, String sfCsvProperty,
+			Class<? extends NodeI> stNodeElement, String stProperty, String stCsvProperty) throws Exception {
+    	String database = Controller.getConfig().getNeo4JConfig().getDatabase();
+		try( Neo4jConnection conn = new Neo4jConnection()){  
+			conn.query(database,data.external.neo4j.Utils.getLoadCSVLinkQuery(csvFile,
+					linkElement,sfNodeElement,sfProperty,sfCsvProperty,stNodeElement,stProperty,stCsvProperty),AccessMode.WRITE );
+		}
+    }
     
     public static <T extends NodeI> List<T> importNodes(Neo4jConnection conn,String database,Class<T> nodeClass) throws Exception{
     	List<T> result = new ArrayList<>(); 

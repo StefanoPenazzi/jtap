@@ -24,6 +24,7 @@ public final class Dataset implements DatasetI {
 	private final ActivityLocationCostParameter activityLocationCostParameter ;
 	private final ValueOfTimeParameter valueOfTimeParameter;
 	private final AgentHomeLocationParameter agentHomeLocationParameter;
+	private final DestinationsProbDistParameter destinationsProbDistParameter;
 	
 	
 	
@@ -44,7 +45,8 @@ public final class Dataset implements DatasetI {
 	 //LocationPerceptionParameter  locationPerceptionParameter,
 	 ActivityLocationCostParameter activityLocationCostParameter,
 	 ValueOfTimeParameter valueOfTimeParameter,
-	 AgentHomeLocationParameter agentHomeLocationParameter) {
+	 AgentHomeLocationParameter agentHomeLocationParameter,
+	 DestinationsProbDistParameter destinationsProbDistParameter) {
 		
 		this.agentsIndex = agentsIndex ;
 		this.activitiesIndex = activitiesIndex;
@@ -64,6 +66,7 @@ public final class Dataset implements DatasetI {
 		this.activityLocationCostParameter = activityLocationCostParameter;
 		this.valueOfTimeParameter = valueOfTimeParameter;
 		this.agentHomeLocationParameter = agentHomeLocationParameter;
+		this.destinationsProbDistParameter = destinationsProbDistParameter;
 		
 	}
 	public ActivitiesIndex getActivitiesIndex() {
@@ -119,5 +122,8 @@ public final class Dataset implements DatasetI {
 	}
 	public AgentHomeLocationParameter getAgentHomeLocationParameter() {
 		return agentHomeLocationParameter;
+	}
+	public DestinationsProbDistParameter getDestinationsProbDistParameter() {
+		return destinationsProbDistParameter;
 	}
 }

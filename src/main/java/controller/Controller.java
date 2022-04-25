@@ -59,4 +59,9 @@ public class Controller implements ControllerI {
 		  file.delete();
 		}
 	}
+	
+	public final Controller addOverridingModule( AbstractModule abstractModule ) {
+		this.overrides = AbstractModule.override(Collections.singletonList(this.overrides), abstractModule);
+		return this ;
+	}
 }

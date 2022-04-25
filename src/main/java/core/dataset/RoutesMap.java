@@ -99,23 +99,29 @@ public class RoutesMap implements DatasetMapI {
     
     public void addSourceRoutesWithPathsFromNeo4j(List<SourceRoutesRequest> srr ) throws Exception {
     	for(@SuppressWarnings("rawtypes") SourceRoutesRequest req: srr) {
-    		Map<Long,PathRes> res = rm.getSSSP_AsMapWithPaths(req.getRg(),
+    		Map<Long,PathRes> res_ = rm.getSSSP_AsMapWithPaths(req.getRg(),
     				req.getSourceType(),
     				"city_id",
     				req.getSourceId(),
     				"city_id",
     				req.getWeightProperty());
+    		
+    		Map<Long,PathRes> res = new HashMap<>();
     		//filter the targets
     		if(req.getTargetsIds() != null) {
     			List<Long> ls = (List<Long>)req.getTargetsIds();
-    			res.keySet().retainAll(ls);
     			for(Long l:ls) {
-    				if(!res.containsKey(l)) {
+    				if(!res_.containsKey(l)) {
     					PathRes pr = new PathRes(-1,null);
+    					res.put(l,pr);
+    				}
+    				else {
+    					PathRes pr = (PathRes)res_.get(l).clone();
     					res.put(l,pr);
     				}
     			}
     		}
+    		res_ = null;
     		Map<Long,Map<Long,PathRes>> m = map.get(projectionsMap.get(req.getRg()));
     		if(m.containsKey(req.getSourceId())) {
     			Map<Long, PathRes> map3 = Stream.of(res, m.get(req.getSourceId()))
@@ -126,7 +132,6 @@ public class RoutesMap implements DatasetMapI {
     		}
     		else {
     			m.put(req.getSourceId(),res);
-    			System.out.println();
     		}
     	}
 	}

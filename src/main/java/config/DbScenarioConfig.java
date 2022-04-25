@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class DbScenarioConfig {
 	
 	private RailConfig railConfig;
+	private AirConfig airConfig;
 	private GeoLocConfig geoLocConfig;
 	private PopulationConfig populationConfig;
 	private ActivitiesConfig activitiesConfig;
@@ -14,6 +15,11 @@ public class DbScenarioConfig {
 	@XmlElement(name = "railConfig")
 	public RailConfig getRailConfig() {
 		return this.railConfig;
+	}
+	
+	@XmlElement(name = "airConfig")
+	public AirConfig getAirConfig() {
+		return this.airConfig;
 	}
 	
 	@XmlElement(name = "geoLocConfig")
@@ -42,5 +48,8 @@ public class DbScenarioConfig {
 	}
 	public void setActivitiesConfig(ActivitiesConfig activitiesConfig) {
 		this.activitiesConfig = activitiesConfig;
+	}
+	public void setAirConfig(AirConfig airConfig) {
+		this.airConfig = airConfig;
 	}
 }
