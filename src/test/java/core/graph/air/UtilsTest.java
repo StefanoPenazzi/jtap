@@ -25,11 +25,11 @@ class UtilsTest {
 		
 		core.graph.air.Utils.insertAirNetworkNeo4j();
 		
-		//connections between subgraphs
+		//air connections 
 		Map<Class<? extends NodeGeoI>,String> airConnMap = new HashMap<>();
 		airConnMap.put(RoadNode.class,"node_osm_id");
 		airConnMap.put(RailNode.class,"stop_id");
-		core.graph.Utils.setShortestDistCrossLink(AirNode.class,"id",airConnMap,3);
+		core.graph.Utils.setShortestDistCrossLink(AirNode.class,"airport_id",airConnMap,3);
 				
 	
 	}

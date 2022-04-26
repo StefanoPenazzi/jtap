@@ -10,9 +10,9 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 @Neo4JNodeElement(labels={"AirNode"})
 public final class AirNode implements NodeGeoI {
 	
-	@CsvBindByName(column = "id")
-	@Neo4JPropertyElement(key="id",type=Neo4JType.TOINTEGER)
-	private Long id;
+	@CsvBindByName(column = "airport_id")
+	@Neo4JPropertyElement(key="airport_id",type=Neo4JType.TOINTEGER)
+	private Long airportId;
 	@CsvBindByName(column = "name")
 	@Neo4JPropertyElement(key="name",type=Neo4JType.TOSTRING)
 	private String name;
@@ -26,7 +26,7 @@ public final class AirNode implements NodeGeoI {
 	
 	@Override
 	public Long getId() {
-		return this.id;
+		return this.airportId;
 	}
 	public String getName() {
 		return this.name;

@@ -20,11 +20,12 @@ public class Utils {
 		
 		//index
 		try( Neo4jConnection conn = new Neo4jConnection()){  
-			conn.query("CREATE INDEX AirNodeIndex FOR (n:AirNode) ON (n.id)",AccessMode.WRITE);
+			conn.query(config.getNeo4JConfig().getDatabase(),"CREATE INDEX AirNodeIndex FOR (n:AirNode) ON (n.airport_id)",AccessMode.WRITE);
 		}
 		
 		//insert links
-		data.external.neo4j.Utils.insertLinks(config.getDbScenarioConfig().getAirConfig().getConnectionsDirectory(),AirLink.class,AirNode.class,"","",AirNode.class,"","");
+		data.external.neo4j.Utils.insertLinks(config.getDbScenarioConfig().getAirConfig().getConnectionsDirectory(),
+				AirLink.class,AirNode.class,"airport_id","id_from",AirNode.class,"airport_id","id_to");
 	}
 
 	public static void deleteAirNetwork() throws Exception {
