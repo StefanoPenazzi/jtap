@@ -10,6 +10,7 @@ import config.Config;
 import controller.Controller;
 import core.graph.NodeGeoI;
 import core.graph.Activity.ActivityNode;
+import core.graph.air.AirNode;
 import core.graph.facility.osm.FacilityNode;
 import core.graph.geo.CityNode;
 import core.graph.population.StdAgentNodeImpl;
@@ -59,6 +60,8 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		core.graph.rail.Utils.deleteRailGTFS();
 		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18");
 		
+		//insert air network
+		core.graph.air.Utils.insertAirNetworkNeo4j();
 		
 		//insert cities---------------------------------------------------------
 		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(CityNode.class);
@@ -73,6 +76,12 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		
 		//create the CityFacStatNodes-------------------------------------------
 		core.graph.geo.Utils.addCityFacStatNode();
+		
+		//Connections between AirNetwork RoadNetwork/RailNetwork----------------
+		Map<Class<? extends NodeGeoI>,String> airConnMap = new HashMap<>();
+		airConnMap.put(RoadNode.class,"node_osm_id");
+		airConnMap.put(RailNode.class,"stop_id");
+		core.graph.Utils.setShortestDistCrossLink(AirNode.class,"airport_id",airConnMap,3);
 		
 		//Connections between RoadNetwork and RailNetwork-----------------------
 		Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();

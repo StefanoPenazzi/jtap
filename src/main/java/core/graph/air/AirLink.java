@@ -10,17 +10,17 @@ import core.graph.annotations.GraphElementAnnotation.Neo4JLinkElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JType;
 
-@Neo4JLinkElement(label="RailLink")
+@Neo4JLinkElement(label="AirLink")
 public class AirLink implements LinkI{
 	
 	@CsvBindByName(column = "id_from")
 	@CsvBindByPosition(position = 0)
-	@Neo4JPropertyElement(key="id_from",type=Neo4JType.TOSTRING)
-	private String idFrom;
+	@Neo4JPropertyElement(key="id_from",type=Neo4JType.TOINTEGER)
+	private Long idFrom;
 	@CsvBindByName(column = "id_to")
 	@CsvBindByPosition(position = 1)
-	@Neo4JPropertyElement(key="id_to",type=Neo4JType.TOSTRING)
-	private String idTo;
+	@Neo4JPropertyElement(key="id_to",type=Neo4JType.TOINTEGER)
+	private Long idTo;
 	@CsvBindByName(column = "avg_travel_time")
 	@CsvBindByPosition(position = 2)
 	@Neo4JPropertyElement(key="avg_travel_time",type=Neo4JType.TOFLOAT)
@@ -41,7 +41,7 @@ public class AirLink implements LinkI{
 	
 	public AirLink() {}
 	
-	public AirLink( String from,String to,Double avgTravelTime,
+	public AirLink( Long from,Long to,Double avgTravelTime,
 			Integer connectionsPerDay,LocalTime firstDepartureTime,
 			LocalTime lastDepartureTime) {
 		this.idFrom = from;
@@ -52,11 +52,11 @@ public class AirLink implements LinkI{
 		this.lastDepartureTime = lastDepartureTime;
 	}
 	
-	public String getIdFrom() {
+	public Long getIdFrom() {
 		return this.idFrom;
 	}
 	
-	public String getIdTo(){
+	public Long getIdTo(){
 		return this.idTo;
 	}
 	
