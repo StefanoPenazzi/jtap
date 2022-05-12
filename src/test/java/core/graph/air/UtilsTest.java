@@ -18,7 +18,7 @@ class UtilsTest {
 
 	@Test
 	void test() throws Exception {
-		Config config = Config.of(new File("/home/stefanopenazzi/projects/jtap/config_.xml")); 
+		Config config = Config.of(new File("/home/clivings/Documents/EU_TRANSIT/Data/inputFiles_cvl_tests/config_.xml")); 
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();

@@ -53,7 +53,8 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		controller.emptyTempDirectory();
 		
 		//Road------------------------------------------------------------------
-		core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j();
+		//core.graph.road.osm.Utils.setOSMRoadNetworkIntoNeo4j();
+		
 		
 		//insert GTFS-----------------------------------------------------------
 		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);

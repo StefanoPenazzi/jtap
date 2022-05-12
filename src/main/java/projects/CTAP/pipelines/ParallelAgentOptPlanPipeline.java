@@ -12,6 +12,8 @@ import core.dataset.DatasetFactoryI;
 import core.dataset.DatasetI;
 import core.population.PopulationFactoryI;
 import picocli.CommandLine;
+import projects.CTAP.outputAnalysis.LinkTimeFlow;
+import projects.CTAP.outputAnalysis.LinkTimeFlowDatasetJsonFactory;
 import projects.CTAP.population.Population;
 import projects.CTAP.population.PopulationSingleAgentFactory;
 import projects.CTAP.solver.Solver;
@@ -54,6 +56,11 @@ public class ParallelAgentOptPlanPipeline implements Callable<Integer> {
 		Solver ctapSolver = controller.getInjector().getInstance(Solver.class);
 		ctapSolver.run(population,dataset);
 		population.save();
+		
+		LinkTimeFlowDatasetJsonFactory lfd = controller.getInjector().getInstance(LinkTimeFlowDatasetJsonFactory.class);
+		LinkTimeFlow ltf = new LinkTimeFlow(population,336d,lfd.run(),config);
+		ltf.run();
+		ltf.saveDb();
 		
 		return 1;
 		

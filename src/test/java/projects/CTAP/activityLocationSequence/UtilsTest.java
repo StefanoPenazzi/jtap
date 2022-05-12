@@ -13,7 +13,7 @@ class UtilsTest {
 
 	@Test
 	void test() throws Exception {
-		Config config = Config.of (Paths.get("/home/stefanopenazzi/projects/jtap/config_.xml").toFile()); 
+		Config config = Config.of (Paths.get("/home/clivings/Documents/EU_TRANSIT/Data/inputFiles_cvl_tests/config_.xml").toFile()); 
 		Controller controller = new Controller(config);
 		controller.run();
 		controller.emptyTempDirectory();
