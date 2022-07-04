@@ -26,6 +26,8 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	private final double timeRelatedBudget;
 	private final double valueOfTime;
 	
+	//TODO to check if more than one routed path is used, check if "origin and destination" use only one projection? 
+	// Need to have a for loop amoung all projections
 	
 	
 	public ObjectiveFunctionCTAP(int nActivities,
@@ -67,7 +69,7 @@ public class ObjectiveFunctionCTAP implements ObjectiveFunctionI {
 	public double getValue(double[] ts, double[] te) {
 		double res = 0;
 		//res += getDiscomfortPercentageOfTimeTarget(ts, te);
-		res += getDiscomfortDurationTarget(ts, te);
+		res += getDiscomfortDurationTarget(ts, te);//TODO Check each method to make sure it is correct, wasn't quite finished
 		//res += getDiscomfortBudget(ts, te);
 		res += getLagrangeMultipliers_1(ts, te);
 		res += getLagrangeMultipliers_2(ts, te);

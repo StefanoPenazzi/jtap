@@ -89,7 +89,7 @@ public class DatasetWithPathsThBuildingPipeline implements Callable<Integer> {
 		List<? extends ParameterFactoryI> agentActivtyParams = AgentActivityParameterFactory.getAgentActivityParameterFactories(agents_ids,activities_ids);
 		List<? extends ParameterFactoryI> agentParams = AgentParametersFactory.getAgentParameterFactories(agents_ids);
 		AttractivenessParameterFactory attractivenessParams = new AttractivenessParameterFactory(agents_ids,activities_ids,citiesDs_ids,time);
-		Os2DsParametersFactory osds = new Os2DsParametersFactory(config,rm,citiesOs_ids,citiesDs_ids);
+		Os2DsParametersFactory osds = new Os2DsParametersFactory(config,rm,citiesOs_ids,citiesDs_ids);  
 		Ds2OsParametersFactory dsos = new Ds2OsParametersFactory(config,rm,citiesOs_ids,citiesDs_ids);
 		Ds2DsParametersFactory dsds = new Ds2DsParametersFactory(config,rm,citiesDs_ids);
 		List<Long> testCities = new ArrayList<>() {{add(3L);}};                     //just for test
@@ -110,10 +110,10 @@ public class DatasetWithPathsThBuildingPipeline implements Callable<Integer> {
 		//parameters
 		List<ModelElementI> prs = new ArrayList<>();
 		
-		List<ParameterI> osdsParams = osds.run();
+		List<ParameterI> osdsParams = osds.run();//cvl comment: these "parameter factories" are where the routes and costs are calculated...or rather, which call the methods that do that.
 		List<ParameterI> dsosParams = dsos.run();
 		List<ParameterI> dsdsParams = dsds.run();
-		prs.add(osdsParams.get(0));
+		prs.add(osdsParams.get(0));//TODO cvl question: what is happening here? why only get two entries from each "parameter" list, aka list of possible shortest paths? 
 		prs.add(osdsParams.get(1));
 		prs.add(dsosParams.get(0));
 		prs.add(dsosParams.get(1));
@@ -131,7 +131,7 @@ public class DatasetWithPathsThBuildingPipeline implements Callable<Integer> {
 		
 		
 		for(ModelElementI pr:prs) {
-			pr.save();
+			pr.save(); //TODO cvl question: how does this make all these routes and other objects available to the solver?! 
 		}
 		
 		rm.close();

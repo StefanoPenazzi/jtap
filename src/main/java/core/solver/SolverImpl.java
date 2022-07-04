@@ -52,6 +52,7 @@ public class SolverImpl implements SolverI {
                 convergenceChecker);
 	}
 	
+	// to use an external solver, override the following function and instead of using CMAESOptimizer, use your external one. 
 	@Override
 	public PointValuePair run() {
 		org.apache.commons.math3.optim.PointValuePair pvp = null;

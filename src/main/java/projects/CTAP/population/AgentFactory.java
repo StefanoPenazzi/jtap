@@ -31,6 +31,7 @@ public class AgentFactory implements AgentFactoryI {
 	
 	@Override
 	public Agent run(Long agentId,Long homeLocationId,Dataset dataset){
+		//TODO This class would be were to specify which projection of the network to use to calculate the travel cost. 
 		
 		int agentIndex = dataset.getAgentsIndex().getIndex().indexOf(agentId);
 		int nPlanActivities = this.config.getCtapModelConfig().getCtapPopulationConfig().getCtapAgentConfig().getPlanSize();
@@ -79,7 +80,7 @@ public class AgentFactory implements AgentFactoryI {
     			if(i%2==0 && i < nPlanActivities-1) {
     				int nextLocIndex = al[1][i+1];
     				if(homeDs) {
-    					travelCost[i] = dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   
+    					travelCost[i] = dataset.getDs2DsTravelCostParameter().getParameter()[0][locIndex][nextLocIndex];   //TODO this is just an example! It currently only uses car (index 0) so this would need to be changed or made into a for loop
             			travelTime[i] = 0;
     				}
     				else {

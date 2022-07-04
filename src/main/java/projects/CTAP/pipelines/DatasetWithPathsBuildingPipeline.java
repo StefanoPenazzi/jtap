@@ -70,13 +70,13 @@ public class DatasetWithPathsBuildingPipeline implements Callable<Integer> {
 		List<Long> activities_ids = data.external.neo4j.Utils.importNodes(ActivityNode.class).stream().map(x -> x.getActivityId()).collect(Collectors.toList());
 		List<CityNode> cities = data.external.neo4j.Utils.importNodes(CityNode.class);
 		//List<Long> citiesDs_ids = cities.stream().filter(e -> e.getId() == 0L).map(CityNode::getId).collect(Collectors.toList());    //just for test
-		List<Long> citiesDs_ids = new ArrayList<>(){
+		List<Long> citiesDs_ids = new ArrayList<>(){ //	TODO cvl question: is this importing a list of destinations, or just creating a blank list? A random list?
             {
                 add(0L);
                 add(1L);
             }
         };
-		List<Long> citiesOs_ids = cities.stream().filter(e -> e.getId() == 3L).map(CityNode::getId).collect(Collectors.toList());     //just for test
+		List<Long> citiesOs_ids = cities.stream().filter(e -> e.getId() == 3L).map(CityNode::getId).collect(Collectors.toList());     //just for test // TODO cvl question: how do we know that these are the origins, aka agent residence nodes? Origins are agent resident nodes, correct?
 		Integer initialTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getInitialTime();
 		Integer finalTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getFinalTime();
 		Integer intervalTime = config.getCtapModelConfig().getAttractivenessModelConfig().getAttractivenessNormalizedConfig().getIntervalTime();

@@ -90,6 +90,9 @@ public final class RoutingManager {
 			//eccezione
 		}
 		
+		//TODO cvl comment: looks like this is creating a query that will make Neo4j use dijkstra to route the path between the "sourceIdKey" and the "targetIdKey". 
+		//TODO cvl question: I assume this returns the shortest path?! And just the shortest path?! 
+		//TODO cvl question: if the weight property is simply the string "weight" - as the Os2DsParametersFactory.java gives - what does that mean for the algorihthm's results?
 		String query = " MATCH (source:"+((NodeGeoI)source).getLabels()[0] +" {"+sourceIdKey+": "+sourceId.toString()+"})\n"
 		+"CALL gds.beta.allShortestPaths.dijkstra.stream('"+rg+"', {\n"
 		+ "    sourceNode: ID(source), \n"
@@ -105,7 +108,7 @@ public final class RoutingManager {
 		+ "  with collect(ID(r)) as links_path,targetNode AS targetNode, totalCost AS totalCost \n"
 		+ "  return gds.util.asNode(targetNode)."+targetIdKey+",totalCost,links_path \n";
 	    
-	    List<Record> res= data.external.neo4j.Utils.runQuery(conn,database,query,AccessMode.READ);
+	    List<Record> res= data.external.neo4j.Utils.runQuery(conn,database,query,AccessMode.READ); //TODO I assume this is returning a routed path? 
 		return res;
 	}
 

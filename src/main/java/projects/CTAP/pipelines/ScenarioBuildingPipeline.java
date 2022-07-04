@@ -82,6 +82,9 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		Map<Class<? extends NodeGeoI>,String> airConnMap = new HashMap<>();
 		airConnMap.put(RoadNode.class,"node_osm_id");
 		airConnMap.put(RailNode.class,"stop_id");
+		//should we connect them to cities? In the spain model, metro is not included, so in Spain the cities are directly connected to the cities
+		//perhaps similar for France? Because of metro? Because in France the regional trains are included in the rail network. 
+		//Idea: make sure cross link from city to airport, reflects the kinds of travel times/transfers, etc. that the city transport network has
 		core.graph.Utils.setShortestDistCrossLink(AirNode.class,"airport_id",airConnMap,3);
 		
 		//Connections between RoadNetwork and RailNetwork-----------------------

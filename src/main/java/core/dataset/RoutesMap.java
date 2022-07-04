@@ -99,15 +99,15 @@ public class RoutesMap implements DatasetMapI {
     
     public void addSourceRoutesWithPathsFromNeo4j(List<SourceRoutesRequest> srr ) throws Exception {
     	for(@SuppressWarnings("rawtypes") SourceRoutesRequest req: srr) {
-    		Map<Long,PathRes> res_ = rm.getSSSP_AsMapWithPaths(req.getRg(),
+    		Map<Long,PathRes> res_ = rm.getSSSP_AsMapWithPaths(req.getRg(), //cvl comment: this calls a method that uses Neo4j to do the routing, and then returns...a path, I hope...
     				req.getSourceType(),
     				"city_id",
-    				req.getSourceId(),
-    				"city_id",
+    				req.getSourceId(), 
+    				"city_id", //TODO in RoutingManager.getSSP_AsMapWithPaths, the argument in this position is the the "target id key". I am just not sure how we are passing the target cities to the routing manager!?
     				req.getWeightProperty());
     		
     		Map<Long,PathRes> res = new HashMap<>();
-    		//filter the targets
+    		//filter the targets // TODO cvl comment: looks like it is filtering out the targets that are equal to the origin.
     		if(req.getTargetsIds() != null) {
     			List<Long> ls = (List<Long>)req.getTargetsIds();
     			for(Long l:ls) {
@@ -122,7 +122,7 @@ public class RoutesMap implements DatasetMapI {
     			}
     		}
     		res_ = null;
-    		Map<Long,Map<Long,PathRes>> m = map.get(projectionsMap.get(req.getRg()));
+    		Map<Long,Map<Long,PathRes>> m = map.get(projectionsMap.get(req.getRg())); // TODO cvl comment: the method AddProjection or AddProjections needs to be run before addSourceRoutesWithPathsFromNeo4j, it seems
     		if(m.containsKey(req.getSourceId())) {
     			Map<Long, PathRes> map3 = Stream.of(res, m.get(req.getSourceId()))
     					  .flatMap(map -> map.entrySet().stream())
