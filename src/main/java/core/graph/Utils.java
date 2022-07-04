@@ -15,9 +15,13 @@ import org.neo4j.driver.Value;
 
 import config.Config;
 import controller.Controller;
+import core.graph.air.AirNode;
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.cross.CrossLink;
+import core.graph.geo.CityNode;
+import core.graph.rail.gtfs.RailNode;
+import core.graph.road.osm.RoadNode;
 import data.external.neo4j.Neo4jConnection;
 import data.utils.geo.Gis;
 import data.utils.io.CSV;
@@ -175,11 +179,16 @@ public class Utils {
 								lat,lon,null));
 				        int dist = Gis.longDist(lat,lon,n.getCoords()[0],n.getCoords()[1]);
 				        int avgTravelTime = (int)(dist/CARSPEED);
+				        String DepartureNodeType = "dummyFromNodeType_CheckLine183ofCoreGraphUtils";
+				        String ArrivalNodeType = "dummyToNodeType_CheckLine183ofCoreGraphUtils"; 
+				        DepartureNodeType = core.graph.Utils.getNodeTypeAsString(nodeDeparture); // get the node type as a string. the sid getting passed is really just an id and not helpful for calculating cross link weights! 
+				        ArrivalNodeType = core.graph.Utils.getNodeTypeAsString(nodeArrival); // get the node type as a string. the sid getting passed is really just an id and not helpful for calculating cross link weights!
+				        
 				        if(direction == 1 || direction == 3) {
-				        	links.add(new CrossLink(sid,n.getValue().toString(),dist,avgTravelTime));
+				        	links.add(new CrossLink(sid,DepartureNodeType, n.getValue().toString(), ArrivalNodeType, dist,avgTravelTime));
 				        }
 						if(direction == 2 || direction == 3) {
-							links2Dir.add(new CrossLink(n.getValue().toString(),sid,dist,avgTravelTime));
+							links2Dir.add(new CrossLink(n.getValue().toString(),ArrivalNodeType, sid, DepartureNodeType, dist,avgTravelTime));
 						}
 						break;	
 			        }
@@ -227,6 +236,26 @@ public class Utils {
 		return  FieldUtils.getFieldsListWithAnnotation(graphElement, Neo4JPropertyElement.class).stream()
 				.filter(f -> f.getAnnotation(Neo4JPropertyElement.class)
 						.key().equals(property)).toArray().length == 1? true:false;
+	}
+	
+	
+	//Method that returns a string representing the type of node, given a Node object (like AirNode, RailNode, RoadNode, CityNode) and throws error when it isn't one of those
+	
+	public static String getNodeTypeAsString (Class<? extends NodeGeoI> node) throws Exception {
+		String nodeType = null;
+		
+		if (AirNode.class.isInstance(node)) {
+			nodeType = "air";
+		} else if (RailNode.class.isInstance(node)) {
+			nodeType = "rail";
+		} else if (RoadNode.class.isInstance(node)) {
+			nodeType = "road";
+		} else if (CityNode.class.isInstance(node)) {
+			nodeType = "city";
+		} else {
+			throw new Exception("either the depature or the arrival node of a cross link being created is not an air, rail, road, or city node. Please check.");
+		}
+		return nodeType; 
 	}
 	
 	/**
@@ -286,7 +315,9 @@ public class Utils {
 				}
 		}
 		return tsp;
-	} 
+	}
+	
+
 	
 
 }
