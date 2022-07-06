@@ -21,7 +21,10 @@ public class TransitCTAPTransportLinkFactory1 extends AbstractCTAPTransportLinkF
 			//TODO make the 100 be a function of the average transfer time between the rail and air node
 			if(inputData.get("from_node_type").equals("rail")) {
 				CrossLinkValue = (long) (((Long) inputData.get("distance")).doubleValue() * 1.42 * tlc.getMvTransferTime().getWalk() +
-						(5400 * tlc.getMvWaitingTime()) + 100); // the 100 at the end is a dummy value for the TooShortPenalty for having a too short connection
+						(5400 * tlc.getMvWaitingTime()) + 25); // the 25 at the end is a dummy value for the TooShortPenalty for having a too short connection
+			/*if(inputData.get("from_node_type").equals("rail")) {
+				CrossLinkValue = (long) (((Long) inputData.get("distance")).doubleValue() * 1.42 * tlc.getMvTransferTime().getWalk() +
+						(5400 * tlc.getMvWaitingTime()) + extraWaitDueToSchedule * tlc.getMvWaitingTime + HowMuchShorterTheWaitTimeISDueToScheulde*tlc.gettrain2plane); */ 
 			} else if(inputData.get("from_node_type").equals("road")){
 				CrossLinkValue = (long) (((Long) inputData.get("distance")).doubleValue() * 1.42 * tlc.getMvTransferTime().getWalk() +
 						(5400 * tlc.getMvWaitingTime()));
@@ -68,7 +71,7 @@ public class TransitCTAPTransportLinkFactory1 extends AbstractCTAPTransportLinkF
 			e.printStackTrace();
 		}
 		
-		Long diff = (lastDepTime.getTime() - firstDepTime.getTime())/1000;
+		Long diff = (lastDepTime.getTime() - firstDepTime.getTime());
 		Long connPerDay = (Long)inputData.get("connections_per_day");
 		
 		if(connPerDay == null) {
