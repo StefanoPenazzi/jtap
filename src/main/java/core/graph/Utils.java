@@ -19,6 +19,7 @@ import core.graph.air.AirNode;
 import core.graph.annotations.GraphElementAnnotation.Neo4JNodeElement;
 import core.graph.annotations.GraphElementAnnotation.Neo4JPropertyElement;
 import core.graph.cross.CrossLink;
+import core.graph.facility.osm.FacilityNode;
 import core.graph.geo.CityNode;
 import core.graph.rail.gtfs.RailNode;
 import core.graph.road.osm.RoadNode;
@@ -26,6 +27,7 @@ import data.external.neo4j.Neo4jConnection;
 import data.utils.geo.Gis;
 import data.utils.io.CSV;
 import data.utils.woods.kdTree.KdTree;
+import projects.CTAP.graphElements.CTAPCityStatNode;
 
 
 /**
@@ -241,7 +243,7 @@ public class Utils {
 	
 	//Method that returns a string representing the type of node, given a Node object (like AirNode, RailNode, RoadNode, CityNode) and throws error when it isn't one of those
 	
-	public static String getNodeTypeAsString (Class<? extends NodeGeoI> node) throws Exception {
+	public static String getNodeTypeAsString (Class<? extends NodeGeoI> node) {
 		String nodeType = null;
 		
 		if (AirNode.class.isInstance(node)) {
@@ -252,8 +254,13 @@ public class Utils {
 			nodeType = "road";
 		} else if (CityNode.class.isInstance(node)) {
 			nodeType = "city";
+		} else if (FacilityNode.class.isInstance(node)) {
+			nodeType = "facility";
+		} else if (CTAPCityStatNode.class.isInstance(node)) {
+			nodeType = "ctapcitystatnode";
 		} else {
-			throw new Exception("either the depature or the arrival node of a cross link being created is not an air, rail, road, or city node. Please check.");
+			//throw new Exception("either the depature or the arrival node of a cross link being created is not an air, rail, road, city, facility, or CTAPCityStat node. Please check.");
+			nodeType = "other";
 		}
 		return nodeType; 
 	}

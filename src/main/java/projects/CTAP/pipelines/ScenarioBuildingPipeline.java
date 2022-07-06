@@ -57,18 +57,18 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		
 		
 		//insert GTFS-----------------------------------------------------------
-		GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
+		/*GTFS gtfs = controller.getInjector().getInstance(GTFS.class);
 		core.graph.rail.Utils.deleteRailGTFS();
-		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18");
+		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18");*/
 		
 		//insert air network
-		core.graph.air.Utils.insertAirNetworkNeo4j();
+		//core.graph.air.Utils.insertAirNetworkNeo4j();
 		
 		//insert cities---------------------------------------------------------
-		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(CityNode.class);
+		//core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(CityNode.class);
 		
 		//create FacilityNodes from osm-----------------------------------------
-		core.graph.facility.osm.Utils.facilitiesIntoNeo4j(config);
+		//core.graph.facility.osm.Utils.facilitiesIntoNeo4j(config);
 		
 		//connect FacilityNodes with Cities-------------------------------------
 		Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
@@ -99,16 +99,16 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city_id",cityConnMap,3);
 		
 		//insert activities-----------------------------------------------------
-		core.graph.Activity.Utils.insertActivitiesFromCsv(ActivityNode.class);
-		core.graph.Activity.Utils.insertActivitiesLocFromCsv(ActivityCityLink.class);
+		//core.graph.Activity.Utils.insertActivitiesFromCsv(ActivityNode.class);
+		//core.graph.Activity.Utils.insertActivitiesLocFromCsv(ActivityCityLink.class);
 		
 		//insert population-----------------------------------------------------
-		core.graph.population.Utils.insertStdPopulationFromCsv(StdAgentNodeImpl.class);
+		//core.graph.population.Utils.insertStdPopulationFromCsv(StdAgentNodeImpl.class);
 		
 		//insert attractiveness-------------------------------------------------
-		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j(
-				(DefaultAttractivenessModelImpl)Controller.getInjector().getInstance(DefaultAttractivenessModelImpl.class),
-				new DefaultAttractivenessModelVarImpl());
+		//projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j(
+			//	(DefaultAttractivenessModelImpl)Controller.getInjector().getInstance(DefaultAttractivenessModelImpl.class),
+				//new DefaultAttractivenessModelVarImpl());
 		
 		//insert transport links------------------------------------------------
 		DefaultCTAPTransportLinkFactory ctapTranspFactory = new DefaultCTAPTransportLinkFactory();
@@ -116,7 +116,7 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 				.getTransportConfig().getCtapTransportLinkConfig());
 		
 		//insert destinationProbLinks-------------------------------------------
-		projects.CTAP.activityLocationSequence.Utils.insertDestinationProbIntoNeo4j();
+		//projects.CTAP.activityLocationSequence.Utils.insertDestinationProbIntoNeo4j();
 		
 		return 1;
 	}

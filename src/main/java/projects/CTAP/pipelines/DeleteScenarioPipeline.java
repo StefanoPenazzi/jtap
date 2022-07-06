@@ -46,28 +46,28 @@ public class DeleteScenarioPipeline implements Callable<Integer> {
 		data.external.neo4j.Utils.deleteLinks(CTAPTransportLink.class);
 		
 		//delete attractiveness-------------------------------------------------
-		data.external.neo4j.Utils.deleteLinks(AttractivenessNormalizedLink.class);
+		//data.external.neo4j.Utils.deleteLinks(AttractivenessNormalizedLink.class);
 		
 		//delete population-----------------------------------------------------
-		core.graph.population.Utils.deletePopulation();
+		//core.graph.population.Utils.deletePopulation();
 		
 		//delete activities-----------------------------------------------------
-		core.graph.Activity.Utils.deleteActivities();
+		//core.graph.Activity.Utils.deleteActivities();
 		
 		//delete CityFacStatNodes-----------------------------------------------
 		core.graph.geo.Utils.deleteCityFacStatNode();
 		
 		//delete FacilityNodes from osm-----------------------------------------
-		core.graph.facility.osm.Utils.deleteFacilities();
+		//core.graph.facility.osm.Utils.deleteFacilities();
 		
 		//delete GTFS-----------------------------------------------------------
-		core.graph.rail.Utils.deleteRailGTFS();
+		//core.graph.rail.Utils.deleteRailGTFS();
 		
 		//delete AIR NETWORK-----------------------------------------------------------
-		core.graph.air.Utils.deleteAirNetwork();
+		//core.graph.air.Utils.deleteAirNetwork();
 		
 		//delete cities---------------------------------------------------------
-		core.graph.geo.Utils.deleteCities();
+		//core.graph.geo.Utils.deleteCities();
 		
 		//road network can not be deleted. In case a new road network needs to be updated a new database must be used  
 		
