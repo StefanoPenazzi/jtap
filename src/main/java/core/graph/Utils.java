@@ -243,20 +243,20 @@ public class Utils {
 	
 	//Method that returns a string representing the type of node, given a Node object (like AirNode, RailNode, RoadNode, CityNode) and throws error when it isn't one of those
 	
-	public static String getNodeTypeAsString (Class<? extends NodeGeoI> node) {
+	private String getNodeTypeAsString (Class<? extends NodeGeoI> node) {
 		String nodeType = null;
-		
-		if (AirNode.class.isInstance(node)) {
+		//node.getClass().get
+		if (node.getClass().isInstance(AirNode.class) ) {
 			nodeType = "air";
-		} else if (RailNode.class.isInstance(node)) {
+		} else if (node.getClass().isInstance(AirNode.class)) {
 			nodeType = "rail";
-		} else if (RoadNode.class.isInstance(node)) {
+		} else if (node.getClass().isInstance(AirNode.class)) {
 			nodeType = "road";
-		} else if (CityNode.class.isInstance(node)) {
+		} else if (node.getClass().isInstance(AirNode.class)) {
 			nodeType = "city";
-		} else if (FacilityNode.class.isInstance(node)) {
+		} else if (node.getClass().isInstance(AirNode.class)) {
 			nodeType = "facility";
-		} else if (CTAPCityStatNode.class.isInstance(node)) {
+		} else if (node.getClass().isInstance(AirNode.class)) {
 			nodeType = "ctapcitystatnode";
 		} else {
 			//throw new Exception("either the depature or the arrival node of a cross link being created is not an air, rail, road, city, facility, or CTAPCityStat node. Please check.");
