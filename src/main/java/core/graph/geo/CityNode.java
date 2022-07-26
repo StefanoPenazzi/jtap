@@ -59,5 +59,4 @@ public class CityNode implements NodeGeoI{
 		return this.population;
 	}
 	
-
 }

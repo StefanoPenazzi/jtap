@@ -62,64 +62,72 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		core.graph.rail.Utils.insertRailGTFSintoNeo4J(gtfs,"2021-07-18");
 		
 		//insert air network
-		//core.graph.air.Utils.insertAirNetworkNeo4j();
+		core.graph.air.Utils.insertAirNetworkNeo4j();
 		
 		//insert cities---------------------------------------------------------
-		//core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(CityNode.class);
-		
+		core.graph.geo.Utils.insertCitiesIntoNeo4JFromCsv(CityNode.class);
+	
 		//create FacilityNodes from osm-----------------------------------------
-		//core.graph.facility.osm.Utils.facilitiesIntoNeo4j(config);
+		core.graph.facility.osm.Utils.facilitiesIntoNeo4j(config);
 		
 		//connect FacilityNodes with Cities-------------------------------------
-		//Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
-		//facilityConnMap.put(CityNode.class,"city_id");
-		core.graph.Utils.setShortestDistCrossLink(FacilityNode.class,"node_osm_id",facilityConnMap,3);
-		
+		Map<Class<? extends NodeGeoI>,String> facilityConnMap = new HashMap<>();
+		facilityConnMap.put(CityNode.class,"city_id");
+		core.graph.Utils.setShortestDistCrossLinkCityFacility(FacilityNode.class,"node_osm_id",facilityConnMap,3);
+	
 		//create the CityFacStatNodes-------------------------------------------
-		//core.graph.geo.Utils.addCityFacStatNodeWithHistorical();
+		core.graph.geo.Utils.addCityFacStatNodeWithHistorical();
 		
-		//Connections between AirNetwork RoadNetwork/RailNetwork----------------
-		//Map<Class<? extends NodeGeoI>,String> airConnMap = new HashMap<>();
-		//airConnMap.put(RoadNode.class,"node_osm_id");
-		//airConnMap.put(RailNode.class,"stop_id");
+		//Connections between AIR Network and RAIL Network----------------
+		Map<Class<? extends NodeGeoI>,String> airRailConnMap = new HashMap<>();
+		airRailConnMap.put(RailNode.class,"stop_id");
+		core.graph.Utils.setShortestDistCrossLinkAirRail(AirNode.class,"airport_id",airRailConnMap,3);
 		
-		//should we connect them to cities? In the spain model, metro is not included, so in Spain the cities are directly connected to the cities
+		//TODO Should we connect them to cities? In the spain model, metro is not included, so in Spain the cities are directly connected to the cities
 		//perhaps similar for France? Because of metro? Because in France the regional trains are included in the rail network. 
 		//Idea: make sure cross link from city to airport, reflects the kinds of travel times/transfers, etc. that the city transport network has
-		//core.graph.Utils.setShortestDistCrossLink(AirNode.class,"airport_id",airConnMap,3);
+		
+		//Connections between AIR Network and ROAD Network----------------
+		Map<Class<? extends NodeGeoI>,String> airRoadConnMap = new HashMap<>();
+		airRoadConnMap.put(RoadNode.class,"node_osm_id");
+		core.graph.Utils.setShortestDistCrossLinkAirRoad(AirNode.class,"airport_id",airRoadConnMap,3);
 		
 		//Connections between RoadNetwork and RailNetwork-----------------------
-		//Map<Class<? extends NodeGeoI>,String> railConnMap = new HashMap<>();
-		//railConnMap.put(RoadNode.class,"node_osm_id");
-		//core.graph.Utils.setShortestDistCrossLink(RailNode.class,"stop_id",railConnMap,2);
+		Map<Class<? extends NodeGeoI>,String> railRoadConnMap = new HashMap<>();
+		railRoadConnMap.put(RoadNode.class,"node_osm_id");
+		core.graph.Utils.setShortestDistCrossLinkRailRoad(RailNode.class,"stop_id",railRoadConnMap,2);
 		
-		//Connections between Cities and RoadNetwork/RailNetwork----------------
-		//Map<Class<? extends NodeGeoI>,String> cityConnMap = new HashMap<>();
-		//cityConnMap.put(RoadNode.class,"node_osm_id");
-		//cityConnMap.put(RailNode.class, "stop_id");
-		//core.graph.Utils.setShortestDistCrossLink(CityNode.class,"city_id",cityConnMap,3);
+		//Connections between Cities and RoadNetwork----------------
+		Map<Class<? extends NodeGeoI>,String> cityRoadConnMap = new HashMap<>();
+		cityRoadConnMap.put(RoadNode.class,"node_osm_id");
+		core.graph.Utils.setShortestDistCrossLinkCityRoad(CityNode.class,"city_id",cityRoadConnMap,3);
+		
+		//Connections between Cities and RailNetwork----------------
+		Map<Class<? extends NodeGeoI>,String> cityRailConnMap = new HashMap<>();
+		cityRailConnMap.put(RailNode.class, "stop_id");
+		core.graph.Utils.setShortestDistCrossLinkCityRail(CityNode.class,"city_id",cityRailConnMap,3);
 		
 		//insert activities-----------------------------------------------------
-		//core.graph.Activity.Utils.insertActivitiesFromCsv(ActivityNode.class);
-		//core.graph.Activity.Utils.insertActivitiesLocFromCsv(ActivityCityLink.class);
+		core.graph.Activity.Utils.insertActivitiesFromCsv(ActivityNode.class);
+		core.graph.Activity.Utils.insertActivitiesLocFromCsv(ActivityCityLink.class);
 		
 		//insert population-----------------------------------------------------
-		//core.graph.population.Utils.insertStdPopulationFromCsv(StdAgentNodeImpl.class);
+		core.graph.population.Utils.insertStdPopulationFromCsv(StdAgentNodeImpl.class);
 		
 		//insert attractiveness-------------------------------------------------
-		/*projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j(
+		projects.CTAP.attractiveness.normalized.Utils.insertAttractivenessNormalizedIntoNeo4j(
 				(DefaultAttractivenessModelImpl)Controller.getInjector().getInstance(DefaultAttractivenessModelImpl.class),
 				new DefaultAttractivenessModelVarImpl());
-		*/
+		
 		
 		//insert transport links------------------------------------------------
-		/*DefaultCTAPTransportLinkFactory ctapTranspFactory = new DefaultCTAPTransportLinkFactory();
+		DefaultCTAPTransportLinkFactory ctapTranspFactory = new DefaultCTAPTransportLinkFactory();
 		ctapTranspFactory.insertCTAPTransportLinkFactory(config.getCtapModelConfig()
 				.getTransportConfig().getCtapTransportLinkConfig());
-		*/
+		
 		
 		//insert destinationProbLinks-------------------------------------------
-		//projects.CTAP.activityLocationSequence.Utils.insertDestinationProbIntoNeo4j();
+		projects.CTAP.activityLocationSequence.Utils.insertDestinationProbIntoNeo4j();
 		
 		return 1;
 	}
