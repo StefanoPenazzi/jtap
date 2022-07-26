@@ -22,6 +22,7 @@ import projects.CTAP.attractiveness.normalized.DefaultAttractivenessModelImpl;
 import projects.CTAP.attractiveness.normalized.DefaultAttractivenessModelVarImpl;
 import projects.CTAP.graphElements.ActivityCityLink;
 import projects.CTAP.transport.DefaultCTAPTransportLinkFactory;
+import projects.CTAP.transport.TransitCTAPTransportLinkFactory1;
 
 public class ScenarioBuildingPipeline implements Callable<Integer> {
 	
@@ -121,7 +122,7 @@ public class ScenarioBuildingPipeline implements Callable<Integer> {
 		
 		
 		//insert transport links------------------------------------------------
-		DefaultCTAPTransportLinkFactory ctapTranspFactory = new DefaultCTAPTransportLinkFactory();
+		TransitCTAPTransportLinkFactory1 ctapTranspFactory = new TransitCTAPTransportLinkFactory1();
 		ctapTranspFactory.insertCTAPTransportLinkFactory(config.getCtapModelConfig()
 				.getTransportConfig().getCtapTransportLinkConfig());
 		
